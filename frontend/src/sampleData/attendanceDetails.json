@@ -1,0 +1,100 @@
+{
+    "date": "2024-01-08",
+    "course": "Math",
+    "section": ["A", "B", "C"],
+    "percentage": 85,
+    "teacher": "Mr. Smith",
+    "studentsList": [
+          {
+            "name": "Alice Johnson",
+            "studentID": "202100001",
+            "gender": "Female",
+            "email": "alice.johnson@example.com",
+            "mobile": 1234567890,
+            "section": "A",
+            "isPresent": true
+          },
+          {
+            "name": "Bob Williams",
+            "studentID": "202100002",
+            "gender": "Male",
+            "email": "bob.williams@example.com",
+            "mobile": 9876543210,
+            "section": "B",
+            "isPresent": false
+          },
+          {
+            "name": "Eva Davis",
+            "studentID": "202100003",
+            "gender": "Female",
+            "email": "eva.davis@example.com",
+            "mobile": 5555555555,
+            "section": "C",
+            "isPresent": true
+          },
+          {
+            "name": "Charlie Brown",
+            "studentID": "202100004",
+            "gender": "Male",
+            "email": "charlie.brown@example.com",
+            "mobile": 1111222233,
+            "section": "A",
+            "isPresent": false
+          },
+          {
+            "name": "Grace Smith",
+            "studentID": "202100005",
+            "gender": "Female",
+            "email": "grace.smith@example.com",
+            "mobile": 9998887777,
+            "section": "B",
+            "isPresent": true
+          },
+          {
+            "name": "David Lee",
+            "studentID": "202100006",
+            "gender": "Male",
+            "email": "david.lee@example.com",
+            "mobile": 4444333322,
+            "section": "C",
+            "isPresent": false
+          },
+          {
+            "name": "Sophia Miller",
+            "studentID": "202100007",
+            "gender": "Female",
+            "email": "sophia.miller@example.com",
+            "mobile": 6666777788,
+            "section": "A",
+            "isPresent": true
+          },
+          {
+            "name": "Jack Robinson",
+            "studentID": "202100008",
+            "gender": "Male",
+            "email": "jack.robinson@example.com",
+            "mobile": 1212121212,
+            "section": "B",
+            "isPresent": false
+          },
+          {
+            "name": "Olivia Turner",
+            "studentID": "202100009",
+            "gender": "Female",
+            "email": "olivia.turner@example.com",
+            "mobile": 9898989898,
+            "section": "C",
+            "isPresent": true
+          },
+          {
+            "name": "William Harris",
+            "studentID": "202100010",
+            "gender": "Male",
+            "email": "william.harris@example.com",
+            "mobile": 7878787878,
+            "section": "A",
+            "isPresent": false
+          }
+
+    ]
+}
