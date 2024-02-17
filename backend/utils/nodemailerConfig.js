@@ -6,10 +6,10 @@ const nodemailerConfig = {
   // },
   host: "smtp.ethereal.email",
   port: 587,
-  auth: {
-    user: "nolan45@ethereal.email",
-    pass: "BXjWKpXhMEEp1NkFfD",
-  },
+    auth: {
+        user: 'zachary.goldner@ethereal.email',
+        pass: '7hgsvTvpMPsZHUEQq5'
+    }
 };
 
 module.exports = nodemailerConfig;
