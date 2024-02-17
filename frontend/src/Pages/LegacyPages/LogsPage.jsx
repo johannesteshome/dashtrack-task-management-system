@@ -3,7 +3,7 @@ import { Button } from "antd";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { ExportDataLocal, FetchLogs } from "../Redux/features/dataActions";
+import { ExportDataLocal, FetchLogs } from "../../Redux/features/dataActions";
 import { useEffect } from "react";
 import download from "downloadjs";
 

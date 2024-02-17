@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Input, InputNumber } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { AdminRegister } from "../Redux/features/authActions";
+import { AdminRegister } from "../../Redux/features/authActions";
 const notify = (text) => toast(text);
 
 const formItemLayout = {

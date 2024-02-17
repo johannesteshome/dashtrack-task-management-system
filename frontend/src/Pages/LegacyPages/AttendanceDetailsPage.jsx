@@ -1,7 +1,7 @@
 import { Button, Table } from "antd";
 import { useSelector } from "react-redux";
 
-const attendanceDetails = require("../sampleData/attendanceDetails.json");
+const attendanceDetails = require("../../sampleData/attendanceDetails.json");
 
 let sectionFilter = [];
 let studentSections = [];
@@ -12,25 +12,23 @@ attendanceDetails.section.map((section) => {
 });
 
 for (let i = 0; i < attendanceDetails.length; i++) {
-  attendanceDetails[i].key = attendanceDetails[i].studentID
+  attendanceDetails[i].key = attendanceDetails[i].studentID;
 }
 
 const attendaceFilter = [
-    {text: "Present",
-        value: true,
-    },
-    {
-        text: "Absent",
-        value: false,
-    }
-]
+  { text: "Present", value: true },
+  {
+    text: "Absent",
+    value: false,
+  },
+];
 
 const columns = [
   {
     title: "Student Name",
     dataIndex: "name",
     sorter: (a, b) => a.name.length - b.name.length,
-        sortDirections: ["descend"],
+    sortDirections: ["descend"],
     fixed: "left",
   },
   {
@@ -63,16 +61,20 @@ const columns = [
   {
     title: "Attendace",
     dataIndex: "isPresent",
-    render: (isPresent) => (isPresent ? <span className="text-green-500">Present</span> : <span className="text-red-500">Absent</span>),
+    render: (isPresent) =>
+      isPresent ? (
+        <span className='text-green-500'>Present</span>
+      ) : (
+        <span className='text-red-500'>Absent</span>
+      ),
     fixed: "right",
     filters: attendaceFilter,
     onFilter: (value, record) => record.isPresent === value,
   },
 ];
 
-
 const AttendanceDetailsPage = () => {
-    const {user} = useSelector((state)=> state.auth)
+  const { user } = useSelector((state) => state.auth);
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex items-center'>

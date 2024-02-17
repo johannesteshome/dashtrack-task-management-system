@@ -15,7 +15,6 @@ const notify = (text) => toast(text);
 
 
 const DashboardScreen = () => {
-  const { loggedInUser } = useSelector((state) => state.data);
   
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
@@ -60,14 +59,15 @@ const DashboardScreen = () => {
   }, []);
 
 
-  function getItem(label, key, icon, children, danger, disabled) {
+  function getItem(label, key, icon, children, type, danger, disabled) {
     return {
       key,
       icon,
       children,
       label,
       danger,
-      disabled
+      disabled,
+      type
     };
   }
   const adminItems = [
@@ -77,39 +77,29 @@ const DashboardScreen = () => {
       <Icon icon='akar-icons:dashboard' />
     ),
     getItem(
-      <Link to='teachers-page'>Teachers</Link>,
-      "2",
-      <Icon icon='ph:chalkboard-teacher-light' />
-    ),
-    getItem(
-      <Link to='students-page'>Students</Link>,
-      "3",
-      <Icon icon='ph:student-light' />
-    ),
-    getItem(
-      <Link to='admins-page'>Admins</Link>,
-      "4",
-      <Icon icon='eos-icons:admin-outlined' />
-    ),
-    getItem(
-      <Link to='courses-page'>Courses</Link>,
-      "5",
-      <Icon icon='tdesign:course' />
-    ),
-    getItem(
-      <Link to='departments-page'>Departments</Link>,
-      "6",
-      <Icon icon='cil:school' />
-    ),
-    getItem(
-      <Link to='logs-page'>Log</Link>,
-      "7",
-      <Icon icon='icon-park-outline:log' />
+      "Your Projects",
+      "grp",
+      <Icon icon='icon-park-outline:workbench' />,
+      [
+        getItem(
+          <Link to=''>Capstone project</Link>,
+          "grp",
+          <Icon icon='icon-park-outline:workbench' />,
+          [
+            getItem(<Link to='project'>Project Details</Link>, "2"),
+            getItem(<Link to=''>Frontend Team</Link>, "3"),
+            getItem(<Link to=''>Backend Team</Link>, "4"),
+            getItem(<Link to=''>Design Team</Link>, "5"),
+          ]
+        ),
+      ],
+      "group"
     ),
     getItem(
       <span onClick={() => dispatch(authLogout())}>Logout</span>,
-      "8",
+      "6",
       <Icon icon='humbleicons:logout' />,
+      null,
       null,
       true
     ),
@@ -182,13 +172,7 @@ const DashboardScreen = () => {
           theme='light'
           defaultSelectedKeys={["1"]}
           mode='inline'
-          items={ 
-            loggedInUser?.role === "admin"
-              ? adminItems
-              : loggedInUser?.role === "teacher"
-              ? teacherItems
-              : studentItems
-          }
+          items= {adminItems}
         />
       </Sider>
       <Layout>
@@ -198,7 +182,7 @@ const DashboardScreen = () => {
             padding: 16,
             background: colorBgContainer,
           }}>
-          <h1 className='text-2xl'>Hello there, {loggedInUser?.name}</h1>
+          <h1 className='text-2xl'>Hello there, Admin</h1>
           <Link to="profile">
             <Avatar
               className='cursor-pointer flex items-center justify-center'
@@ -218,7 +202,6 @@ const DashboardScreen = () => {
           style={{
             textAlign: "center",
           }}>
-          ©{new Date().getFullYear()} Made by Yohannes Teshome
         </Footer>
       </Layout>
     </Layout>

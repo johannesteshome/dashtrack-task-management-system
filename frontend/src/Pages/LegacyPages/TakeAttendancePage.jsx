@@ -1,11 +1,11 @@
 import { Button, Table } from "antd";
 import { useState } from "react";
-const studentData = require("../sampleData/studentData.json");
+const studentData = require("../../sampleData/studentData.json");
 
 let sectionFilter = [];
 let studentSections = [];
 studentData.map((student) => {
-    student.key = student.studentID
+  student.key = student.studentID;
   if (studentSections.includes(student.section)) return;
   sectionFilter.push({ text: student.section, value: student.section });
   studentSections.push(student.section);
@@ -40,10 +40,10 @@ const columns = [
 ];
 
 const TakeAttendancePage = () => {
-//   console.log(sectionFilter, "sectionFilter");
-//   console.log(studentData);
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    
+  //   console.log(sectionFilter, "sectionFilter");
+  //   console.log(studentData);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -68,8 +68,8 @@ const TakeAttendancePage = () => {
           rowSelection={rowSelection}
           columns={columns}
           dataSource={studentData}
-                  pagination={false}
-                  className="w-full"
+          pagination={false}
+          className='w-full'
         />
         <Button
           type='default'
