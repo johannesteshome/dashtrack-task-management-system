@@ -1,6 +1,6 @@
-const { UserModel } = require("../../models/User.model");
-const { TokenModel } = require("../../models/Token.model");
-const { OTPModel } = require("../../models/OTP.model");
+const { UserModel } = require("../models/user.model");
+const { TokenModel } = require("../models/Token.model");
+const { OTPModel } = require("../models/OTP.model");
 const { StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
@@ -10,88 +10,71 @@ const {
 	createTokenUser,
 	sendVerificationEmail,
 	sendResetPasswordEmail,
-} = require("../../utils/");
+} = require("../utils");
+const { catchAsync } = require("../utils/asyncHandler");
 
 let generator = require("generate-password");
+const { encrypt } = require("../utils/auth");
+const { cloudinaryUploader } = require("../middlewares/fileUpload");
+const userServices = require("../services/user.services");
+const configs = require("../configs/configs");
 
-const origin = "http://localhost:3000";
+const origin = `http://localhost:${configs.port}`;
 
-const register = async (req, res) => {
-	const password = generator.generate({
-		length: 10,
-		numbers: true,
+const register = catchAsync(async (req, res, next) => {
+	console.log(req.body);
+	const { name, email, password, mobile, gender, role } = req.body;
+	const image = "";
+	// const response = await axios.post(
+	// 	`https://www.google.com/recaptcha/api/siteverify?secret=6LcWdU8pAAAAAACjGfKHyYwhbXbXVITsjEdTnXNP&response=${token}`
+	// );
+
+	// if (!response.data.success) {
+	// 	return res
+	// 		.status(500)
+	// 		.send({ message: "Error Verifying Captcha.", success: false });
+	// }
+
+	const userExists = await userServices.findOne({ email });
+	if (userExists) {
+		return res.status(409).json({
+			success: false,
+			message: "User already exists",
+		});
+	}
+
+	const verificationToken = crypto.randomBytes(40).toString("hex");
+
+	if (req.file) {
+		const result = await cloudinaryUploader(req.file.path);
+		console.log(result);
+		image = result.secure_url;
+	}
+	const user = await userServices.create({
+		email,
+		password,
+		name,
+		verificationToken,
+		mobile,
+		gender,
+		role,
+		image,
 	});
 
-	const { token, email, name, mobile, gender, age, role } = req.body;
-	try {
-		const response = await axios.post(
-			`https://www.google.com/recaptcha/api/siteverify?secret=6LcWdU8pAAAAAACjGfKHyYwhbXbXVITsjEdTnXNP&response=${token}`
-		);
+	const info = await sendVerificationEmail({
+		name,
+		email,
+		token: verificationToken,
+		origin,
+		role,
+	});
 
-		if (!response.data.success) {
-			return res
-				.status(500)
-				.send({ message: "Error Verifying Captcha.", success: false });
-		}
-
-		const userExists = await UserModel.findOne({ email });
-		if (userExists) {
-			return res.send({
-				success: false,
-				message: "User already exists",
-			});
-		}
-
-		const verificationToken = crypto.randomBytes(40).toString("hex");
-
-		const user = await UserModel.create({
-			email,
-			password,
-			name,
-			verificationToken,
-			mobile,
-			gender,
-			age,
-			role,
-		});
-
-		if (role === "student") {
-			const { studentID, section, department, year } = req.body;
-			const studentData = await StudentDataModel.create({
-				studentID,
-				section,
-				department,
-				year,
-				userId: user._id,
-			});
-		}
-		if (role === "teacher") {
-			const teacherData = await TeacherDataModel.create({
-				userId: user._id,
-				course: [],
-				isAdmin: false,
-			});
-		}
-
-		await sendVerificationEmail({
-			name,
-			email,
-			token: verificationToken,
-			origin,
-			password,
-			role,
-		});
-
-		res.status(StatusCodes.CREATED).json({
-			success: true,
-			message:
-				"User created successfully. Please check your email for verification",
-		});
-	} catch (error) {
-		console.log(error);
-		res.send({ message: error, success: false });
-	}
-};
+	res.status(StatusCodes.CREATED).json({
+		success: true,
+		message:
+			"User created successfully. Please check your email for verification",
+	});
+});
 
 const sendOTP = async (req, res) => {
 	const { email, password } = req.body;
@@ -124,6 +107,7 @@ const sendOTP = async (req, res) => {
 			.status(StatusCodes.BAD_REQUEST)
 			.json({ message: "Please verify your email first" });
 	}
+
 	console.log("here we are");
 	const otpExists = await OTPModel.findOne({ email });
 
@@ -141,8 +125,9 @@ const sendOTP = async (req, res) => {
 };
 
 const login = async (req, res) => {
+	console.log(req.body);
 	const { email, otp } = req.body;
-
+	console.log(email, otp);
 	if (!email || !otp) {
 		return res
 			.status(StatusCodes.BAD_REQUEST)
@@ -187,8 +172,12 @@ const login = async (req, res) => {
 		}
 
 		refreshToken = existingToken.refreshToken;
-		attachCookiesToResponse({ res, user: tokenUser, refreshToken });
-		res.status(StatusCodes.OK).json({ user: tokenUser });
+		const tokens = attachCookiesToResponse({
+			res,
+			user: tokenUser,
+			refreshToken,
+		});
+		res.status(StatusCodes.OK).json({ user: tokenUser, tokens });
 		return;
 	}
 
@@ -203,29 +192,39 @@ const login = async (req, res) => {
 	res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
+const verificationHelper = (given, required) => {
+	if (given !== required) {
+		console.log("comparison failed");
+		return res
+			.status(StatusCodes.UNAUTHORIZED)
+			.json({ message: "Verification Failed" });
+	}
+};
+
 const verifyEmail = async (req, res) => {
-	const { verificationToken, email } = req.body;
-	const user = await UserModel.findOne({ email });
+	const { token, email } = req.query;
+	console.log(token, email);
+	const user = await userServices.findOne({ email });
 
 	if (!user) {
+		console.log("no user found");
 		return res
 			.status(StatusCodes.UNAUTHORIZED)
 			.json({ message: "Verification Failed" });
 	}
 
-	if (user.verificationToken !== verificationToken) {
-		return res
-			.status(StatusCodes.UNAUTHORIZED)
-			.json({ message: "Verification Failed" });
-	}
+	verificationHelper(token, user.verificationToken);
 
-	user.isVerified = true;
-	user.verified = Date.now();
-	user.verificationToken = "";
+	const newUser = await userServices.update(user._id, {
+		isVerified: true,
+		verified: Date.now(),
+		verificationToken: "",
+	});
 
-	await user.save();
-
-	res.status(StatusCodes.OK).json({ success: true, message: "Email verified" });
+	user.password = undefined;
+	res
+		.status(StatusCodes.OK)
+		.json({ success: true, message: "Email verified", newUser });
 };
 
 const logout = async (req, res) => {
@@ -247,12 +246,10 @@ const changePassword = async (req, res) => {
 	const id = req.params.userId;
 
 	if (!oldPassword || !newPassword) {
-		return res
-			.status(StatusCodes.BAD_REQUEST)
-			.json({
-				message: "Please provide new and old passwords",
-				success: false,
-			});
+		return res.status(StatusCodes.BAD_REQUEST).json({
+			message: "Please provide new and old passwords",
+			success: false,
+		});
 	}
 
 	const user = await UserModel.findOne({ _id: id });

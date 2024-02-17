@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const configs = require("../configs/configs");
 
 const createJWT = ({ payload }) => {
+	console.log(configs.jwtSecret);
 	const token = jwt.sign(payload, configs.jwtSecret, {
 		expiresIn: configs.tokenExpiresIn,
 	});
@@ -28,6 +29,8 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
 		signed: true,
 		maxAge: 1000 * 60 * 15,
 	});
+
+	return { accessTokenJWT, refreshTokenJWT };
 };
 
 module.exports = {

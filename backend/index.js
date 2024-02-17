@@ -6,11 +6,13 @@ const cookieParser = require("cookie-parser");
 
 //TODO Error Messages
 
-const userAuthRouter = require("./routes/authRoutes/UsersAuthRoute");
+const authRouter = require("./routes/auth.route");
+const userRouter = require("./routes/user.route");
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser(configs.cookieSecret));
 app.use(
@@ -22,7 +24,8 @@ app.use(
 );
 // app.set("trust proxy", 1);
 
-app.use("/user/auth", userAuthRouter);
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 app.listen(configs.port, async () => {
 	try {
