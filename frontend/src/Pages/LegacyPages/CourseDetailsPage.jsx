@@ -1,28 +1,26 @@
-import { Button, Card, Table } from "antd"
-import Meta from "antd/es/card/Meta"
-import { useSelector } from "react-redux"
+import { Button, Card, Table } from "antd";
+import Meta from "antd/es/card/Meta";
+import { useSelector } from "react-redux";
 import Chart from "react-apexcharts";
 import { Link } from "react-router-dom";
 
+const courseDetailTeacher = require("../../sampleData/courseDetailTeacher.json");
+const courseDetails = courseDetailTeacher[0].courseDetails;
+const attendances = courseDetailTeacher[1].attendances;
+const lineData = courseDetailTeacher[1].attendancePerSectionOverDays;
 
-
-const courseDetailTeacher = require("../sampleData/courseDetailTeacher.json")
-const courseDetails = courseDetailTeacher[0].courseDetails
-const attendances = courseDetailTeacher[1].attendances
-const lineData = courseDetailTeacher[1].attendancePerSectionOverDays
-
-let lineD = []
+let lineD = [];
 
 for (let i = 0; i < courseDetails.sections.length; i++) {
-      lineD.push({
-        name: "Section " + courseDetails.sections[i],
-        data: lineData[i],
-      })
+  lineD.push({
+    name: "Section " + courseDetails.sections[i],
+    data: lineData[i],
+  });
 }
 
-let xaxis = []
-for (let i = 0; i < lineData[0].length; i++){
-  xaxis.push("Day " + (i + 1))
+let xaxis = [];
+for (let i = 0; i < lineData[0].length; i++) {
+  xaxis.push("Day " + (i + 1));
 }
 
 const attendancePerSection = [
@@ -108,7 +106,6 @@ const studentAttendanceColumns = [
     render: () => <Link to='attendances/:attendanceId'>View</Link>,
   },
 ];
-
 
 const CourseDetailsPage = () => {
   console.log(courseDetailTeacher, "here");
@@ -200,30 +197,32 @@ const CourseDetailsPage = () => {
         </div>
       )}
 
-      { user.role !== 'student' && <div className='flex flex-wrap gap-4'>
-        <Card
-          title='Attendances per Section'
-          className='w-fit'
-          bordered={false}>
-          <Chart
-            options={attendancePerSection[0]}
-            series={attendancePerSection[1]}
-            type='line'
-            width='500'
-          />
-        </Card>
-        <Card
-          title='Sections Percentages'
-          className='w-fit'
-          bordered={false}>
-          <Chart
-            options={sectionsPercentage[0]}
-            series={sectionsPercentage[1]}
-            type='polarArea'
-            width='500'
-          />
-        </Card>
-      </div>}
+      {user.role !== "student" && (
+        <div className='flex flex-wrap gap-4'>
+          <Card
+            title='Attendances per Section'
+            className='w-fit'
+            bordered={false}>
+            <Chart
+              options={attendancePerSection[0]}
+              series={attendancePerSection[1]}
+              type='line'
+              width='500'
+            />
+          </Card>
+          <Card
+            title='Sections Percentages'
+            className='w-fit'
+            bordered={false}>
+            <Chart
+              options={sectionsPercentage[0]}
+              series={sectionsPercentage[1]}
+              type='polarArea'
+              width='500'
+            />
+          </Card>
+        </div>
+      )}
 
       <div>
         {user.role == "teacher" ? (
@@ -240,5 +239,5 @@ const CourseDetailsPage = () => {
       </div>
     </div>
   );
-}
-export default CourseDetailsPage
+};
+export default CourseDetailsPage;

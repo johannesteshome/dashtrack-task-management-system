@@ -1,18 +1,16 @@
-import { Card } from "antd"
-import { useDispatch, useSelector } from "react-redux"
-import { FetchCourse } from "../Redux/features/dataActions"
-import { useState, useEffect } from "react"
-const { Meta } = Card
+import { Card } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchCourse } from "../../Redux/features/dataActions";
+import { useState, useEffect } from "react";
+const { Meta } = Card;
 
 // const courses = require("../sampleData/courseData.json")
 
 const MyCoursesPage = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.user.role);
   const courses = useSelector((state) => state.data.loggedInUser.courses);
-  const coursesTemp = []
-
-  
+  const coursesTemp = [];
 
   return (
     <div>
@@ -44,5 +42,5 @@ const MyCoursesPage = () => {
       </div>
     </div>
   );
-}
-export default MyCoursesPage
+};
+export default MyCoursesPage;

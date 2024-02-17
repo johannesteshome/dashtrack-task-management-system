@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Input, InputNumber, Select } from "antd";
 import ReCAPTCHA from "react-google-recaptcha";
 import { ToastContainer, toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { UserRegister } from "../Redux/features/authActions";
+import { useDispatch, useSelector } from "react-redux";
+import { UserRegister } from "../../Redux/features/authActions";
+import { FetchAllDepartments } from "../../Redux/features/dataActions";
 const { Option } = Select;
 const notify = (text) => toast(text);
 
@@ -38,29 +39,41 @@ const tailFormItemLayout = {
   },
 };
 
-const AddAdmin = () => {
+const AddStudent = () => {
   const [form] = Form.useForm();
   const captchaRef = useRef(null);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
+  // useEffect to fetch all departments
+  useEffect(() => {
+    dispatch(FetchAllDepartments());
+  }, []);
+
+  const departments = useSelector((state) => state.data.departments);
+
   const onFinish = (values) => {
     setIsLoading(true);
     const token = captchaRef.current.getValue();
     captchaRef.current.reset();
-    console.log("Received values of form: ", values, token);
+    // console.log("Received values of form: ", values, token);
     if (token) {
-      dispatch(UserRegister({ ...values, token, role: 'admin' })).then((res) => {
-        if (res.payload.success) {
+      dispatch(UserRegister({ ...values, token, role: "student" })).then(
+        (res) => {
+          if (res.payload.success) {
+            setIsLoading(false);
+            form.resetFields();
+            return notify(res.payload.message);
+          } else {
+            setIsLoading(false);
+            return notify(res.payload.message);
+          }
+        },
+        (error) => {
           setIsLoading(false);
-          form.resetFields()
-          return notify(res.payload.message);
+          return notify(error.message);
         }
-        else {
-          setIsLoading(false);
-          return notify(res.payload.message);
-        }
-      });
+      );
     } else {
       notify("Please Verify Captcha");
     }
@@ -82,7 +95,7 @@ const AddAdmin = () => {
     <div className='flex flex-col gap-4 my-4'>
       <ToastContainer />
       <div className='flex items-center'>
-        <h1 className='text-3xl font-bold'>Register Admin</h1>
+        <h1 className='text-3xl font-bold'>Register Student</h1>
       </div>
       <Form
         {...formItemLayout}
@@ -124,6 +137,53 @@ const AddAdmin = () => {
             },
           ]}>
           <Input />
+        </Form.Item>
+
+        <Form.Item
+          name='studentID'
+          label='Student ID'
+          rules={[
+            {
+              required: true,
+              message: "Please input your ID!",
+              whitespace: true,
+            },
+          ]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name='section'
+          label='Section'
+          rules={[
+            {
+              required: true,
+              message: "Please input your Section!",
+              whitespace: true,
+            },
+          ]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name='department'
+          label='Department'
+          rules={[
+            {
+              required: true,
+              message: "Please input your Department!",
+              whitespace: true,
+            },
+          ]}>
+          <Select placeholder='Select your Department'>
+            {departments.map((department) => (
+              <Option
+                key={department._id}
+                value={department._id}>
+                {department.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -175,6 +235,21 @@ const AddAdmin = () => {
             }}
           />
         </Form.Item>
+        <Form.Item
+          name='year'
+          label='Year'
+          rules={[
+            {
+              required: true,
+              message: "Please input your Year!",
+            },
+          ]}>
+          <InputNumber
+            style={{
+              width: "100%",
+            }}
+          />
+        </Form.Item>
 
         <Form.Item
           label='Captcha'
@@ -186,10 +261,14 @@ const AddAdmin = () => {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button htmlType='submit' className="bg-blue-500 text-white hover:bg-white hover:text-blue-500">{ isLoading ? "Registering..." : "Register"}</Button>
+          <Button
+            htmlType='submit'
+            className='bg-blue-500 text-white hover:bg-white hover:text-blue-500'>
+            {isLoading ? "Registering..." : "Register"}
+          </Button>
         </Form.Item>
       </Form>
     </div>
   );
 };
-export default AddAdmin;
+export default AddStudent;
