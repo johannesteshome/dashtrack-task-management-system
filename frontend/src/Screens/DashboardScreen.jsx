@@ -22,41 +22,41 @@ const DashboardScreen = () => {
   console.log(role, _id);
 
 
-  useEffect(() => {
-    if (role === "admin") {
-      // console.log("here", role, _id);F
-      dispatch(FetchAdmin(_id)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
-          // console.log(res.payload, "payload");
-          // setInitialValues({...initialValues, name: res.payload.name});
-        } else if (res.meta.requestStatus === "rejected") {
-          return notify(res.payload);
-        }
-      });
-      dispatch(FetchAllTeachers())
-      dispatch(FetchAllAdmins())
-      dispatch(FetchAllStudents())
-      dispatch(FetchAllCourses())
-    } else if (role === "teacher") {
-      dispatch(FetchTeacher(_id)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
-          // console.log(res.payload, "payload");
-          // setInitialValues({...initialValues, name: res.payload.name});
-        } else if (res.meta.requestStatus === "rejected") {
-          return notify(res.payload);
-        }
-      });
-    } else if (role === "student") {
-      dispatch(FetchStudent(_id)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
-          // console.log(res.payload, "payload");
-          // setInitialValues({...initialValues, name: res.payload.name});
-        } else if (res.meta.requestStatus === "rejected") {
-          return notify(res.payload);
-        }
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (role === "admin") {
+  //     // console.log("here", role, _id);F
+  //     dispatch(FetchAdmin(_id)).then((res) => {
+  //       if (res.meta.requestStatus === "fulfilled") {
+  //         // console.log(res.payload, "payload");
+  //         // setInitialValues({...initialValues, name: res.payload.name});
+  //       } else if (res.meta.requestStatus === "rejected") {
+  //         return notify(res.payload);
+  //       }
+  //     });
+  //     dispatch(FetchAllTeachers())
+  //     dispatch(FetchAllAdmins())
+  //     dispatch(FetchAllStudents())
+  //     dispatch(FetchAllCourses())
+  //   } else if (role === "teacher") {
+  //     dispatch(FetchTeacher(_id)).then((res) => {
+  //       if (res.meta.requestStatus === "fulfilled") {
+  //         // console.log(res.payload, "payload");
+  //         // setInitialValues({...initialValues, name: res.payload.name});
+  //       } else if (res.meta.requestStatus === "rejected") {
+  //         return notify(res.payload);
+  //       }
+  //     });
+  //   } else if (role === "student") {
+  //     dispatch(FetchStudent(_id)).then((res) => {
+  //       if (res.meta.requestStatus === "fulfilled") {
+  //         // console.log(res.payload, "payload");
+  //         // setInitialValues({...initialValues, name: res.payload.name});
+  //       } else if (res.meta.requestStatus === "rejected") {
+  //         return notify(res.payload);
+  //       }
+  //     });
+  //   }
+  // }, []);
 
 
   function getItem(label, key, icon, children, type, danger, disabled) {
@@ -78,22 +78,27 @@ const DashboardScreen = () => {
     ),
     getItem(
       "Your Projects",
-      "grp",
+      "grp1",
       <Icon icon='icon-park-outline:workbench' />,
       [
         getItem(
-          <Link to=''>Capstone project</Link>,
-          "grp",
+          <Link to='project'>Capstone project</Link>,
+          "grp2",
           <Icon icon='icon-park-outline:workbench' />,
           [
-            getItem(<Link to='project'>Project Details</Link>, "2"),
-            getItem(<Link to=''>Frontend Team</Link>, "3"),
-            getItem(<Link to=''>Backend Team</Link>, "4"),
-            getItem(<Link to=''>Design Team</Link>, "5"),
+            getItem(<Link to=''>Frontend Team</Link>, "2"),
+            getItem(<Link to=''>Backend Team</Link>, "3"),
+            getItem(<Link to=''>Design Team</Link>, "4"),
           ]
         ),
       ],
       "group"
+    ),
+    { type: "divider" },
+    getItem(
+      <Link to='create-project'>Create New Project</Link>,
+      "5",
+      <Icon icon='mdi:create-new-folder-outline' />
     ),
     getItem(
       <span onClick={() => dispatch(authLogout())}>Logout</span>,
