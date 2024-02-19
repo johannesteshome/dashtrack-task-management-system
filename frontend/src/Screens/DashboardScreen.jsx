@@ -87,7 +87,7 @@ const DashboardScreen = () => {
           <Icon icon='icon-park-outline:workbench' />,
           [
             getItem(<Link to='project'>Project Details</Link>, "2"),
-            getItem(<Link to=''>Frontend Team</Link>, "3"),
+            getItem(<Link to='teams'>Frontend Team</Link>, "3"),
             getItem(<Link to=''>Backend Team</Link>, "4"),
             getItem(<Link to=''>Design Team</Link>, "5"),
           ]

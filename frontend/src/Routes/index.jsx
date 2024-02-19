@@ -13,6 +13,7 @@ import ProtectedRoutes from "../Screens/ProtectedRoutes";
 import NotFoundPage from "../Pages/NotFoundPage";
 import SharedLayout from "../Screens/SharedLayout";
 import ProjectsPage from "../Pages/ProjectsPage";
+import TasksPage from "../Pages/TasksPage";
 
 const AllRoutes = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -57,6 +58,10 @@ const AllRoutes = () => {
           <Route
             path='project'
             element={<ProjectsPage />}
+          />
+          <Route
+            path='teams'
+            element={<TasksPage/>}
           />
           <Route
             path='*'

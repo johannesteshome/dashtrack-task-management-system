@@ -75,15 +75,12 @@ const OTPScreen = () => {
             value={formvalue.otp}
             onChange={Handlechange}
             required
-          />
-        </Form.Item>
+          /> </Form.Item>
         
         <Form.Item
           label=' '
           colon={false}>
-          <Button
-            type='default'
-            className='bg-blue-500 text-white hover:text-blue-500 hover:bg-white text-lg flex items-center justify-center px-12 py-5 rounded-3xl'
+          <Button type='default' className='bg-blue-500 text-white hover:text-blue-500 hover:bg-white text-lg flex items-center justify-center px-12 py-5 rounded-3xl'
             htmlType='submit'>
             {Loading ? "Loading..." : " Verify OTP "}
           </Button>
