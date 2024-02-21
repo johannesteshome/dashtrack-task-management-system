@@ -61,7 +61,7 @@ const AllRoutes = () => {
           />
           <Route
             path='teams'
-            element={<TasksPage/>}
+            element={<TasksPage teamName="Frontend Team"/>}
           />
           <Route
             path='*'
