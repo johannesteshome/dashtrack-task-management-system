@@ -3,10 +3,12 @@ import {DatePicker, Select, Button, Form, Input, Modal, Tabs } from 'antd';
 import { TaskData } from '../sampleData/tasksData'
 import { TeamData } from '../sampleData/teamData';
 import KanbanBoard from '../Components/KanbanBoard';
+import TableComp from '../Components/TableComp';
+import CalendarComp from '../Components/CalendarComp';
 
 
 const TextArea = Input.TextArea
-const  TasksPage= () => {
+const  TasksPage= ({teamName}) => {
   const [form] = Form.useForm();
   const [taskForm] = Form.useForm();
   
@@ -25,12 +27,12 @@ const  TasksPage= () => {
           {
             key: '2',
             label: 'Table',
-            children: 'Content of Tab Pane 2',
+            children: <TableComp data = {data}/>,
           },
           {
             key: '3',
             label: 'Calendar',
-            children: 'Content of Tab Pane 3',
+            children: <CalendarComp />,
           },
           {
             key: '4',
@@ -153,7 +155,7 @@ const  TasksPage= () => {
             </Form.Item>
             
             <Form.Item
-              name="priority"
+              name="Priority"
               label="Priority"
               rules={[
                 {
@@ -162,7 +164,10 @@ const  TasksPage= () => {
                 },
               ]}
             >
-              <Input />
+              <Select
+                placeholder="Please select"
+                options={[{value: "Low", label: "Low"}, {value: "Medium", label: "Medium"}, {value: "High", label: "High"}, {value: "Critical", label: "Critical"}]}
+              />
             </Form.Item>
             <Form.Item
               name="date"
@@ -177,7 +182,7 @@ const  TasksPage= () => {
               <DatePicker />
             </Form.Item>
             <Form.Item
-              name="assigned"
+              name="Assigned"
               label="Assigned"
               rules={[
                 {
@@ -187,7 +192,6 @@ const  TasksPage= () => {
               ]}
             >
                 <Select
-                  mode="multiple"
                   allowClear
                   placeholder="Please select"
                   options={team.map((member) => {
@@ -195,12 +199,25 @@ const  TasksPage= () => {
                   })}
                 />
             </Form.Item>
+            <Form.Item
+              name="Tags"
+              label="Tags"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input the Tags of the task!',
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+         
           </Form>
 
         </Modal>
 
         <div className="flex justify-between p-5">
-          <h1 className="text-3xl m-4 ">Tasks Page</h1>
+          <h1 className="text-3xl my-4 ">{teamName}</h1>
           <div className="flex gap-4">
           <Button
             type="primary"
@@ -221,7 +238,7 @@ const  TasksPage= () => {
 
 
           </div>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs defaultActiveKey="1" items={items} className='px-5'/>
          
     </div>
   )

@@ -6,9 +6,10 @@ export const TaskData = [
         Type: 'Task',
         Priority: 'Low',
         Tags: 'Analyze,Customer',
-        Estimation: 3.5,
+        date: 3.5,
         Assigned: 'Nancy Davloio',
-        Rankid: 1
+        Rankid: 1,
+        Tags: 'Analyze,Customer'
     },
     {
         id: 2,
@@ -17,9 +18,10 @@ export const TaskData = [
         Type: 'Bug',
         Priority: 'Critical',
         Tags: 'Improvement',
-        Estimation: 6,
+        date: 6,
         Assigned: 'Andrew Fuller',
-        Rankid: 2
+        Rankid: 2,
+        Tags: 'Improvement'
     },
     {
         id: 3,
@@ -28,20 +30,22 @@ export const TaskData = [
         Type: 'Story',
         Priority: 'High',
         Tags: 'Testing,Modules',
-        Estimation: 5.5,
+        date: 5.5,
         Assigned: 'Janet Leverling',
-        Rankid: 3
+        Rankid: 3,
+        Tags: 'Testing,Modules'
     },
     {
         id: 4,
         status: 'Done',
         summary: 'Prepare the project plan',
         Type: 'Story',
-        Priority: 'Release',
+        Priority: 'High',
         Tags: 'Plan',
-        Estimation: 3.5,
+        date: 3.5,
         Assigned: 'Janet Leverling',
-        Rankid: 4
+        Rankid: 4,
+        Tags: 'Plan'
     },
     {
         id: 5,
@@ -50,29 +54,32 @@ export const TaskData = [
         Type: 'Bug',
         Priority: 'Low',
         Tags: 'Customer',
-        Estimation: 3.5,
+        date: 3.5,
         Assigned: 'Steven walker',
-        Rankid: 1
+        Rankid: 1,
+        Tags: 'Customer'
     },
     {
         id: 6,
         status: 'In Progress',
         summary: 'Development of the customer support module.',
         Type: 'Story',
-        Priority: 'High',
+        Priority: 'Critical',
         Tags: 'Development,Support',
-        Estimation: 6,
+        date: 6,
         Assigned: 'Margaret hamilt',
-        Rankid: 2
+        Rankid: 2,
+        Tags: 'Development,Support'
     },
     {
         id: 7,
         status: 'Testing',
         summary: 'Customer feedback report analysis',
         Type: 'Story',
-        Priority: 'Release',
+        Priority: 'Normal',
         Tags: 'Customer,Feedback',
-        Estimation: 5.5,
+        date: 5.5,
         Assigned: 'Steven walker',
-        Rankid: 3
+        Rankid: 3,
+        Tags: 'Customer,Feedback'
     }]
