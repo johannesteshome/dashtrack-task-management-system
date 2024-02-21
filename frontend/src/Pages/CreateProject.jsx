@@ -1,15 +1,14 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input } from "antd";
 
 const CreateProject = () => {
-    const [form] = Form.useForm();
+  const [form] = Form.useForm();
 
   return (
-      <div>
-          <h1 className='text-3xl my-4' >Create your Project</h1>
+    <div>
+      <h1 className='text-3xl my-4'>Create your Project</h1>
       <Form
         form={form}
-        layout='vertical'
-        >
+        layout='vertical'>
         <Form.Item
           label='Project Name'
           required
@@ -30,10 +29,14 @@ const CreateProject = () => {
           />
         </Form.Item>
         <Form.Item>
-          <Button type='default' className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4]' >Submit</Button>
+          <Button
+            type='default'
+            className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4]'>
+            Create
+          </Button>
         </Form.Item>
       </Form>
     </div>
   );
-}
-export default CreateProject
+};
+export default CreateProject;
