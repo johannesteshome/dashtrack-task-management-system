@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
+const configs = require("./configs");
 
-const connection = mongoose.connect(process.env.dbURL);
+mongoose.set("debug", true);
+mongoose.set("strictQuery", true);
+const connection = mongoose.connect(configs.dbURL);
 
 module.exports = { connection };
