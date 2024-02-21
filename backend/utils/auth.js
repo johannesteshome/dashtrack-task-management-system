@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const { USER_PERMISSIONS } = require("../constants/constants");
 
 const encrypt = async (data) => {
 	const salt = await bcrypt.genSalt(10);
@@ -34,10 +35,36 @@ const hasRoles = (userRoles, roles) => {
 	return false;
 };
 
+const isTeamMember = (teamMembers, userId) => {
+	return teamMembers.some((member) => member.member == userId);
+};
+
+const isProjectMember = (projectUsers, userId) => {
+	return projectUsers.some(
+		(userData) => userData.isInvitationAccepted && userData.user == userId
+	);
+};
+const isProjectCreator = (creator, userId) => {
+	return creator == userId;
+};
+
+const isProjectAdmin = (projectUsers, userId) => {
+	return projectUsers.some(
+		(userData) =>
+			userData.isInvitationAccepted &&
+			userData.user == userId &&
+			userData.permissions.includes(USER_PERMISSIONS.WRITE)
+	);
+};
+
 module.exports = {
 	encrypt,
 	compare,
 	checkOwnership,
 	isAccountActive,
 	hasRoles,
+	isTeamMember,
+	isProjectCreator,
+	isProjectMember,
+	isProjectAdmin,
 };

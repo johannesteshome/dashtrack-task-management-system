@@ -24,7 +24,7 @@ const origin = `http://localhost:${configs.port}`;
 const register = catchAsync(async (req, res, next) => {
 	console.log(req.body);
 	const { name, email, password, mobile, gender, role } = req.body;
-	const image = "";
+	var image = "";
 	// const response = await axios.post(
 	// 	`https://www.google.com/recaptcha/api/siteverify?secret=6LcWdU8pAAAAAACjGfKHyYwhbXbXVITsjEdTnXNP&response=${token}`
 	// );
@@ -187,17 +187,20 @@ const login = async (req, res) => {
 	const userToken = { refreshToken, ip, userAgent, user: user._id };
 
 	await TokenModel.create(userToken);
-	attachCookiesToResponse({ res, user: tokenUser, refreshToken });
+	const tokens = attachCookiesToResponse({
+		res,
+		user: tokenUser,
+		refreshToken,
+	});
 
-	res.status(StatusCodes.OK).json({ user: tokenUser });
+	res.status(StatusCodes.OK).json({ user: tokenUser, tokens });
 };
 
 const verificationHelper = (given, required) => {
 	if (given !== required) {
-		console.log("comparison failed");
-		return res
-			.status(StatusCodes.UNAUTHORIZED)
-			.json({ message: "Verification Failed" });
+		const err = new Error("Verification Failed");
+		err.statusCode = 401;
+		throw err;
 	}
 };
 
@@ -213,6 +216,13 @@ const verifyEmail = async (req, res) => {
 			.json({ message: "Verification Failed" });
 	}
 
+	if (user.isVerified) {
+		return res
+			.status(StatusCodes.BAD_REQUEST)
+			.json({ message: "Email already verified" });
+	}
+
+	console.log(user.verificationToken, token);
 	verificationHelper(token, user.verificationToken);
 
 	const newUser = await userServices.update(user._id, {

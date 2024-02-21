@@ -6,7 +6,9 @@ const { ObjectId } = require("mongodb");
 const authenticateUser = async (req, res, next) => {
 	let { refreshToken, accessToken } = req.signedCookies;
 	const authHeader = req.headers.authorization;
-	accessToken = accessToken ?? authHeader.split(" ")[1];
+	console.log(req.headers);
+	console.log(req.signedCookies);
+	accessToken = accessToken ?? authHeader?.split(" ")[1];
 	console.log(accessToken, refreshToken);
 	try {
 		if (accessToken) {
@@ -14,8 +16,8 @@ const authenticateUser = async (req, res, next) => {
 			req.user = payload.user;
 			return next();
 		}
+
 		const payload = isTokenValid(refreshToken);
-		console.log(payload.refreshToken, payload.user._id, "here");
 
 		const userId = new ObjectId(payload.user._id);
 		const existingToken = await TokenModel.findOne({
