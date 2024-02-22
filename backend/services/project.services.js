@@ -69,10 +69,10 @@ const projectTeams = async (id) => {
 	return await ProjectModel.findById(id).populate("teams").select("teams");
 };
 
-const acceptInviation = async (id, userId) => {
+const acceptInviation = async (id, userData) => {
 	return await ProjectModel.findOneAndUpdate(
-		{ _id: id, "users.user": userId },
-		{ $set: { "users.$.isInvitationAccepted": true } },
+		{ _id: id },
+		{ $push: { users: userData } },
 		{
 			new: true,
 			runValidators: true,

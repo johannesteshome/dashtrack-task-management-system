@@ -18,6 +18,7 @@ const { encrypt } = require("../utils/auth");
 const { cloudinaryUploader } = require("../middlewares/fileUpload");
 const userServices = require("../services/user.services");
 const configs = require("../configs/configs");
+const { createJWT, isTokenValid } = require("../utils/jwt");
 
 const origin = `http://localhost:${configs.port}`;
 
@@ -43,7 +44,9 @@ const register = catchAsync(async (req, res, next) => {
 		});
 	}
 
-	const verificationToken = crypto.randomBytes(40).toString("hex");
+	// const verificationToken = crypto.randomBytes(40).toString("hex");
+
+	const verificationToken = createJWT({ payload: { email } });
 
 	if (req.file) {
 		const result = await cloudinaryUploader(req.file.path);
@@ -225,13 +228,21 @@ const verifyEmail = async (req, res) => {
 	console.log(user.verificationToken, token);
 	verificationHelper(token, user.verificationToken);
 
-	const newUser = await userServices.update(user._id, {
+	const decoded = isTokenValid(token);
+	console.log("decoded", decoded);
+	const update = {
 		isVerified: true,
 		verified: Date.now(),
 		verificationToken: "",
-	});
+	};
 
-	user.password = undefined;
+	if (decoded.changePass) {
+		update.password = await encrypt(req.body.password);
+	}
+
+	const newUser = await userServices.update(user._id, update);
+	console.log(newUser);
+	newUser.password = undefined;
 	res
 		.status(StatusCodes.OK)
 		.json({ success: true, message: "Email verified", newUser });

@@ -19,7 +19,6 @@ const userSchema = mongoose.Schema(
 		gender: {
 			type: String,
 			enum: GENDER,
-			required: true,
 		},
 		mobile: {
 			type: Number,
@@ -29,6 +28,7 @@ const userSchema = mongoose.Schema(
 			type: String,
 			required: true,
 			enum: USER_ROLES,
+			default: USER_ROLES.USER,
 		},
 		verificationToken: String,
 		isVerified: {

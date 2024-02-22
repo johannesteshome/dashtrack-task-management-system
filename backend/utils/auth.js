@@ -14,7 +14,7 @@ const compare = async (data, encryptedData) => {
 // Compare the loggedin user id with the user id on which the operation is being performed
 const checkOwnership = (loggedinUserId, userId) => {
 	console.log("checkOwnership", loggedinUserId, userId);
-	return loggedinUserId === userId;
+	return loggedinUserId == userId;
 };
 
 const isAccountActive = (user) => {
@@ -40,9 +40,7 @@ const isTeamMember = (teamMembers, userId) => {
 };
 
 const isProjectMember = (projectUsers, userId) => {
-	return projectUsers.some(
-		(userData) => userData.isInvitationAccepted && userData.user == userId
-	);
+	return projectUsers.some((userData) => userData.user == userId);
 };
 const isProjectCreator = (creator, userId) => {
 	return creator == userId;
@@ -51,7 +49,6 @@ const isProjectCreator = (creator, userId) => {
 const isProjectAdmin = (projectUsers, userId) => {
 	return projectUsers.some(
 		(userData) =>
-			userData.isInvitationAccepted &&
 			userData.user == userId &&
 			userData.permissions.includes(USER_PERMISSIONS.WRITE)
 	);

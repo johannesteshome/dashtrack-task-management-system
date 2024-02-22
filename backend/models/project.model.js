@@ -24,15 +24,12 @@ const projectSchema = new Schema(
 				user: {
 					type: Schema.Types.ObjectId,
 					ref: UserModel,
+					unique: true,
 				},
 				permissions: {
 					type: [String],
 					enum: USER_PERMISSIONS,
 					default: [USER_PERMISSIONS.READ],
-				},
-				isInvitationAccepted: {
-					type: Boolean,
-					default: false,
 				},
 			},
 		],

@@ -12,7 +12,7 @@ router.delete("delete/:id", authenticateUser, projectController.deleteProject);
 router.put("/:id/addTeam", authenticateUser, projectController.addTeam);
 router.put("/:id/inviteUsers", authenticateUser, projectController.inviteUsers);
 router.put(
-	"/:id/acceptInviation",
+	"/acceptInvitation",
 	authenticateUser,
 	projectController.acceptInviation
 );

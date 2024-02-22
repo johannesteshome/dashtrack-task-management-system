@@ -8,8 +8,11 @@ const {
 	isProjectCreator,
 	isProjectMember,
 	isProjectAdmin,
+	checkOwnership,
+	encrypt,
 } = require("../utils/auth");
-const { sendEmail } = require("../utils");
+const sendEmail = require("../utils/sendEmail");
+const { createJWT, isTokenValid } = require("../utils/jwt");
 
 const create = catchAsync(async (req, res, next) => {
 	req.body.createdBy = req.user._id;
@@ -197,63 +200,95 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 
 	// itereate over users and send invite
 
-	const userToBeInvited = [];
 	const emails = [];
+
+	// cases
+	// 1) not found
+	// 2) not verified
+	// 3) verified
 
 	for (let userData of req.body.users) {
 		const user = await userServices.findOne({ email: userData.email });
-		var email;
+		var payload = { userData };
+		var token;
 		if (!user) {
-			// send invitation email to signup
-			userToBeInvited.push(userData);
-			email = { to: userData.email, subject: "", html: "" };
-			emails.push(user.email);
-			continue;
+			// register the user
+			// validate user data
+			payload.changePass = true;
+			token = createJWT({ payload });
+			await userServices.create({
+				name: "default",
+				email: userData.email,
+				verificationToken: token,
+				password: "password",
+			});
+		} else {
+			// check if user is already a member
+			const isMember = isProjectMember(project.users, user._id);
+
+			if (isMember) {
+				console.log("user is already a member", userData.user);
+				continue;
+			}
 		}
 
-		// check if user is already a member
-		const isMember = isProjectMember(project.users, userData.user);
-
-		if (isMember) {
-			console.log("user is already a member", userData.user);
-			continue;
-		}
-
-		email = {
-			to: userData.email,
+		console.log(userData);
+		const email = {
+			email: userData.email,
 			subject: req.user.name + " invited you to " + project.name + " project",
-			html: `http://localhost:${configs.port}/project/${project._id}/acceptInviation`,
+			html: `http://localhost:${configs.port}/project/acceptInvitation?projectId=${project._id}&token=${token}&email=${userData.email}`,
 		};
-		userToBeInvited.push(userData);
-		emails.push(user.email);
+
+		emails.push(email);
 
 		// send push notification to user or email
 	}
 
-	// add user to project
-	const updatedProject = await projectServices.addUsers(id, userToBeInvited);
-
 	// send email to users
 
 	// send email to users
-	// for (let email of emails) {
-	// 	// send email
-	// 	sendEmail(email);
-	// }
+	for (let email of emails) {
+		// send email
+		sendEmail(email);
+	}
 
 	res.status(StatusCodes.OK).json({
 		status: "success",
-		updatedProject,
 	});
 });
 
 const acceptInviation = catchAsync(async (req, res, next) => {
-	const { id } = req.params;
+	const { email, token, projectId } = req.query;
+
+	const decoded = isTokenValid(token);
+
+	console.log("decoded", decoded);
+
+	if (email !== decoded.userData.email) {
+		return res.status(StatusCodes.BAD_REQUEST).json({
+			status: "fail",
+			message: "token tempered",
+		});
+	}
+
+	const user = await userServices.findOne({ email });
+
+	if (!user) {
+		return res.status(StatusCodes.NOT_FOUND).json({
+			status: "fail",
+			message: "User with the provided email not found",
+		});
+	}
+
+	if (!checkOwnership(req.user._id, user._id)) {
+		return res.status(StatusCodes.UNAUTHORIZED).json({
+			status: "fail",
+			message: "Not authorized to this invitation",
+		});
+	}
+
 	const project = await projectServices.findOne({
-		_id: id,
-		users: {
-			$elemMatch: { user: req.user._id, isInvitationAccepted: false },
-		},
+		_id: projectId,
 	});
 
 	if (!project) {
@@ -263,10 +298,17 @@ const acceptInviation = catchAsync(async (req, res, next) => {
 		});
 	}
 
+	const userData = {
+		user: user._id,
+		permissions: decoded.userData.permissions,
+	};
+
+	console.log(userData);
+
 	// add user to project
 	const updatedProject = await projectServices.acceptInviation(
-		id,
-		req.body.userId
+		projectId,
+		userData
 	);
 
 	res.status(StatusCodes.OK).json({
@@ -293,19 +335,24 @@ const removeUser = catchAsync(async (req, res, next) => {
 		});
 	}
 
+	// creator can only remove other users
 	const isCreator = isProjectCreator(project.createdBy, req.user._id);
-	const isMember = isProjectMember(project.users, req.user._id);
-	const isOwner = isProjectMember(project.users, req.user._id);
+
+	// admin can remove any user including itself
+	const isAdmin = isProjectAdmin(project.users, req.user._id);
+
+	// member can remove itself only
+	const isItSelf = checkOwnership(req.user._id, req.user.userId);
 	console.log(isCreator, isMember, isOwner);
 
-	if (isCreator) {
+	if (isCreator && isItSelf) {
 		return res.status(StatusCodes.FORBIDDEN).json({
 			status: "fail",
-			message: "you can't remove yourself from the project",
+			message: "As a creator, you can't remove yourself from the project",
 		});
 	}
 
-	if (!isMember && !isOwner) {
+	if (!isAdmin && !isItSelf && !isCreator) {
 		return res.status(StatusCodes.FORBIDDEN).json({
 			status: "fail",
 			message: "Not authorized to remove users from this project",
