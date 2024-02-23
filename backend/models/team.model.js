@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const { UserModel } = require("./user.model");
-const { ProjectModel } = require("./project.model");
+const { TaskModel } = require("./task.model");
+const { TEAM_MEMBER_ROLES } = require("../constants/constants");
 
 const teamSchema = new Schema(
 	{
@@ -23,6 +24,12 @@ const teamSchema = new Schema(
 					enum: TEAM_MEMBER_ROLES,
 					default: TEAM_MEMBER_ROLES.MEMBER,
 				},
+			},
+		],
+		tasks: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: TaskModel,
 			},
 		],
 		createdBy: {

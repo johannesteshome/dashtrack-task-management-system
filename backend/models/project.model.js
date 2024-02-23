@@ -1,6 +1,7 @@
-const { Schema, Mongoose } = require("mongoose");
+const { Schema, model } = require("mongoose");
 const { UserModel } = require("./user.model");
 const { TeamModel } = require("./team.model");
+const { USER_PERMISSIONS } = require("../constants/constants");
 
 const projectSchema = new Schema(
 	{
@@ -23,8 +24,9 @@ const projectSchema = new Schema(
 				user: {
 					type: Schema.Types.ObjectId,
 					ref: UserModel,
+					unique: true,
 				},
-				performance: {
+				permissions: {
 					type: [String],
 					enum: USER_PERMISSIONS,
 					default: [USER_PERMISSIONS.READ],
@@ -40,6 +42,6 @@ const projectSchema = new Schema(
 	{ timestamps: true }
 );
 
-const ProjectModel = Mongoose.model("Project", projectSchema);
+const ProjectModel = model("Project", projectSchema);
 
 module.exports = { ProjectModel };

@@ -18,6 +18,7 @@ const { encrypt } = require("../utils/auth");
 const { cloudinaryUploader } = require("../middlewares/fileUpload");
 const userServices = require("../services/user.services");
 const configs = require("../configs/configs");
+const { createJWT, isTokenValid } = require("../utils/jwt");
 
 const origin = `http://localhost:3000`;
 
@@ -205,7 +206,6 @@ const login = async (req, res) => {
     const userToken = { refreshToken, ip, userAgent, user: user._id };
 
     await TokenModel.create(userToken);
-    console.log(userToken, 'userToken Created');
     attachCookiesToResponse({ res, user: tokenUser, refreshToken });
 
     res.status(StatusCodes.OK).json({ user: tokenUser });

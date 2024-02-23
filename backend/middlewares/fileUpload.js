@@ -24,7 +24,7 @@ const cloudinaryUploader = async (imagePath) => {
 // options for multer
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, "./uploads/loungeImages");
+		cb(null, "./uploads");
 	},
 	filename: (req, file, cb) => {
 		const extname = file.originalname.split(".")[1];

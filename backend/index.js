@@ -6,8 +6,10 @@ const cookieParser = require("cookie-parser");
 
 //TODO Error Messages
 
+// custome routes
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
+const projetRouter = require("./routes/project.route");
 
 const app = express();
 
@@ -26,6 +28,7 @@ app.use(
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/project", projetRouter);
 
 app.listen(configs.port, async () => {
 	try {
