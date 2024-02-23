@@ -35,19 +35,20 @@ const OTPScreen = () => {
     const [Loading, setLoading] = useState(false);
 
     const HandleSubmit = (e) => {
-        setLoading(true);
-            dispatch(UserSendOTP(formvalue)).then((res) => {
-                if (res.meta.requestStatus === "fulfilled") {
-                    notify("Login Successful");
-                    setLoading(false);
-                    return navigate("/dashboard");
-                }
-                if (res.meta.requestStatus === "rejected") {
-                    // console.log(res.payload.message);
-                    setLoading(false);
-                    notify("Please Input Correct OTP value!");
-                }
-            })
+      setLoading(true);
+      console.log(formvalue);
+          dispatch(UserSendOTP(formvalue)).then((res) => {
+              if (res.meta.requestStatus === "fulfilled") {
+                  notify("Login Successful");
+                  setLoading(false);
+                  return navigate("/dashboard");
+              }
+              if (res.meta.requestStatus === "rejected") {
+                  // console.log(res.payload.message);
+                  setLoading(false);
+                  notify(res.payload.message);
+              }
+          })
         
     }
 

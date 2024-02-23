@@ -3,9 +3,7 @@ const configs = require("../configs/configs");
 
 const createJWT = ({ payload }) => {
 	console.log(configs.jwtSecret);
-	const token = jwt.sign(payload, configs.jwtSecret, {
-		expiresIn: configs.tokenExpiresIn,
-	});
+	const token = jwt.sign(payload, configs.jwtSecret);
 	return token;
 };
 
@@ -16,16 +14,17 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
 	const refreshTokenJWT = createJWT({ payload: { user, refreshToken } });
 
 	const oneDay = 1000 * 60 * 60 * 24;
+	console.log('is the error here?');
 
 	res.cookie("refreshToken", refreshTokenJWT, {
 		httpOnly: true,
 		expires: new Date(Date.now() + oneDay),
-		secure: configs.nodeEnv === "production",
+		secure: true,
 		signed: true,
 	});
 	res.cookie("accessToken", accessTokenJWT, {
 		httpOnly: true,
-		secure: configs.nodeEnv === "production",
+		secure: true,
 		signed: true,
 		maxAge: 1000 * 60 * 15,
 	});

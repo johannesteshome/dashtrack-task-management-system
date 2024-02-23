@@ -24,7 +24,7 @@ router.post(
 
 router.post("/login", sendOTP);
 router.post("/login-otp", logActivity("Logged In"), login);
-router.get("/verify-email", logActivity("Verified Email"), verifyEmail);
+router.post("/verify-email", logActivity("Verified Email"), verifyEmail);
 router.post("/forgot-password", logActivity("Forgot Password"), forgotPassword);
 router.post("/reset-password", logActivity("Reset Password"), resetPassword);
 router.post(
