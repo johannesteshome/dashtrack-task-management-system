@@ -22,59 +22,67 @@ const configs = require("../configs/configs");
 const origin = `http://localhost:3000`;
 
 const register = catchAsync(async (req, res, next) => {
-  console.log(req.body);
-  const { name, email, password, mobile, gender, role, token } = req.body;
-  const image = "";
+  try {
+    const { name, email, password, mobile, gender, role, token } = req.body;
+    const image = "";
 
-  const response = await axios.post(
-    `https://www.google.com/recaptcha/api/siteverify?secret=6LcWdU8pAAAAAACjGfKHyYwhbXbXVITsjEdTnXNP&response=${token}`
-  );
+    const response = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify?secret=6LcWdU8pAAAAAACjGfKHyYwhbXbXVITsjEdTnXNP&response=${token}`
+    );
 
-  if (!response.data.success) {
-    return res
-      .status(500)
-      .send({ message: "Error Verifying Captcha.", success: false });
-  }
+    if (!response.data.success) {
+      return res
+        .status(500)
+        .send({ message: "Error Verifying Captcha.", success: false });
+    }
 
-  const userExists = await userServices.findOne({ email });
-  if (userExists) {
-    return res.status(409).json({
-      success: false,
-      message: "User already exists",
+    const userExists = await userServices.findOne({ email });
+    if (userExists) {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
+    const verificationToken = crypto.randomBytes(40).toString("hex");
+
+    if (req.file) {
+      const result = await cloudinaryUploader(req.file.path);
+      console.log(result);
+      image = result.secure_url;
+    }
+    const user = await userServices.create({
+      email,
+      password,
+      name,
+      verificationToken,
+      mobile,
+      gender,
+      role,
+      image,
     });
+
+    const info = await sendVerificationEmail({
+      name,
+      email,
+      token: verificationToken,
+      origin,
+      role,
+    });
+
+    res.status(StatusCodes.CREATED).json({
+      success: true,
+      message:
+        "User created successfully. Please check your email for verification",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Something went wrong",
+    })
   }
-
-  const verificationToken = crypto.randomBytes(40).toString("hex");
-
-  if (req.file) {
-    const result = await cloudinaryUploader(req.file.path);
-    console.log(result);
-    image = result.secure_url;
-  }
-  const user = await userServices.create({
-    email,
-    password,
-    name,
-    verificationToken,
-    mobile,
-    gender,
-    role,
-    image,
-  });
-
-  const info = await sendVerificationEmail({
-    name,
-    email,
-    token: verificationToken,
-    origin,
-    role,
-  });
-
-  res.status(StatusCodes.CREATED).json({
-    success: true,
-    message:
-      "User created successfully. Please check your email for verification",
-  });
+  
 });
 
 const sendOTP = async (req, res) => {
@@ -127,7 +135,7 @@ const sendOTP = async (req, res) => {
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ success: false, message: error.message });
+      .json({ success: false, message: "Internal Server Error" });
   }
 };
 
@@ -206,7 +214,7 @@ const login = async (req, res) => {
     console.error(error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message,
+      message: "Internal Server Error",
     });
   }
 };
