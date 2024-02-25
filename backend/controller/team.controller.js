@@ -81,6 +81,7 @@ const addMembers = catchAsync(async (req, res, next) => {
 
 	for (let member of req.body.members) {
 		console.log(project.users, member);
+		// TODO: better if we check if the member exists itself
 		const isPMember = isProjectMember(project.users, member); // is project member
 		const isTMember = isTeamMember(team.members, member); // is team member
 		console.log("isPMember", isPMember, "isTMember", isTMember);

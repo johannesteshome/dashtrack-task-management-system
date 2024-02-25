@@ -16,13 +16,14 @@ const taskSchema = new Schema(
 			type: Date,
 			required: true,
 		},
-		remiderDate: {
+		reminderDate: {
 			type: Date,
 		},
 		priority: {
 			type: String,
 			required: true,
 			enum: TASK_PRIORITY,
+			default: TASK_PRIORITY.LOW,
 		},
 		assignedTo: {
 			type: Schema.Types.ObjectId,

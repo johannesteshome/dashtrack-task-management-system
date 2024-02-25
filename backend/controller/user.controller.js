@@ -13,6 +13,10 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 
 	const users = await userServices.findMany({}, offset, limit);
 
+	// total
+
+	const total = await userServices.countDocuments({});
+
 	res.status(200).json({
 		success: true,
 		response: new paginatedResponse(users, page, limit, users.length),
@@ -40,9 +44,10 @@ const fileterUsers = catchAsync(async (req, res, next) => {
 	}
 
 	const users = await userServices.findMany(filter, offset, limit);
+	const total = await userServices.countDocuments(filter);
 	res.status(200).json({
 		success: true,
-		result: new paginatedResponse(users, page, limit, users.length),
+		result: new paginatedResponse(users, page, limit, total),
 	});
 });
 

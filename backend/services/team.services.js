@@ -57,6 +57,14 @@ const getTeamMembers = async (teamId) => {
 		.select("members");
 };
 
+const addTaskToTeam = async (teamId, taskId) => {
+	return await TeamModel.findByIdAndUpdate(
+		teamId,
+		{ $addToSet: { tasks: taskId } },
+		{ new: true, runValidators: true }
+	);
+};
+
 module.exports = {
 	create,
 	findOne,
@@ -68,4 +76,5 @@ module.exports = {
 	deleteOne,
 	exists,
 	getTeamMembers,
+	addTaskToTeam,
 };

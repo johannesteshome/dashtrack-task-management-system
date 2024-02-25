@@ -11,6 +11,7 @@ const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const projetRouter = require("./routes/project.route");
 const teamRouter = require("./routes/team.route");
+const taskRouter = require("./routes/task.route");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/project", projetRouter);
 app.use("/team", teamRouter);
+app.use("/task", taskRouter);
 
 app.listen(configs.port, async () => {
 	try {
