@@ -8,7 +8,7 @@ router.get("/allProjects", projectController.getAll);
 router.get("/userProjects", authenticateUser, projectController.getMyProjects);
 router.get("/getOne/:id", authenticateUser, projectController.getProject);
 router.put("/update/:id", authenticateUser, projectController.updateProject);
-router.delete("delete/:id", authenticateUser, projectController.deleteProject);
+router.delete("/delete/:id", authenticateUser, projectController.deleteProject);
 router.put("/:id/addTeam", authenticateUser, projectController.addTeam);
 router.put("/:id/inviteUsers", authenticateUser, projectController.inviteUsers);
 router.put(
@@ -17,5 +17,10 @@ router.put(
 	projectController.acceptInviation
 );
 router.put("/:id/removeUser", authenticateUser, projectController.removeUser);
+
+router.route("/:id/addTeam").put(authenticateUser, projectController.addTeam);
+router
+	.route("/:id/removeTeam")
+	.put(authenticateUser, projectController.removeTeam);
 
 module.exports = router;

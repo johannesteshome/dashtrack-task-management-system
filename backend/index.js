@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const projetRouter = require("./routes/project.route");
+const teamRouter = require("./routes/team.route");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/project", projetRouter);
+app.use("/team", teamRouter);
 
 app.listen(configs.port, async () => {
 	try {

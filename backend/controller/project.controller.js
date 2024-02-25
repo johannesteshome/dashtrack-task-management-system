@@ -1,5 +1,6 @@
 const projectServices = require("../services/project.services");
 const userServices = require("../services/user.services");
+const teamServices = require("../services/team.services");
 const { catchAsync } = require("../utils/asyncHandler");
 const { StatusCodes } = require("http-status-codes");
 const configs = require("../configs/configs");
@@ -40,6 +41,8 @@ const getMyProjects = catchAsync(async (req, res, next) => {
 	const { limit = configs.pagination.limit, page = configs.pagination.page } =
 		req.query;
 	const offset = (page - 1) * limit;
+
+	console.log(req.user);
 
 	// get all projects where user is a member
 	const query = {
@@ -158,7 +161,7 @@ const deleteProject = catchAsync(async (req, res, next) => {
 
 const addTeam = catchAsync(async (req, res, next) => {
 	const { id } = req.params;
-	const project = await projectServices.exists({ id });
+	const project = await projectServices.findById(id);
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
@@ -167,9 +170,67 @@ const addTeam = catchAsync(async (req, res, next) => {
 		});
 	}
 
-	// create team and add to project
+	const isCreator = isProjectCreator(project.createdBy, req.user._id);
+	const isAdmin = isProjectAdmin(project.users, req.user._id);
+	console.log(req.user, project.createdBy, isCreator, isAdmin);
+	if (!isCreator && !isAdmin) {
+		return res.status(StatusCodes.FORBIDDEN).json({
+			status: "fail",
+			message: "Not authorized to add team to this project",
+		});
+	}
 
-	const updatedProject = await projectServices.addTeam(id, req.body.team);
+	// validate team data, create team and add to project
+	console.log({ createdBy: req.user._id, ...req.body });
+	const team = await teamServices.create({
+		createdBy: req.user._id,
+		...req.body,
+	});
+
+	const updatedProject = await projectServices.addTeam(id, team._id);
+
+	res.status(StatusCodes.OK).json({
+		status: "success",
+		updatedProject,
+		team,
+	});
+});
+
+const removeTeam = catchAsync(async (req, res, next) => {
+	const { id } = req.params;
+	const project = await projectServices.findById(id);
+
+	if (!project) {
+		return res.status(StatusCodes.NOT_FOUND).json({
+			status: "fail",
+			message: "Project not found",
+		});
+	}
+
+	console.log("project", project);
+	// check if team exists in project
+	const team = await teamServices.exists({ id: req.body.teamId });
+
+	console.log("team", team);
+
+	if (!team) {
+		return res.status(StatusCodes.NOT_FOUND).json({
+			status: "fail",
+			message: "Team not found",
+		});
+	}
+
+	const isCreator = isProjectCreator(project.createdBy, req.user._id);
+	const isAdmin = isProjectAdmin(project.users, req.user._id);
+	console.log(isCreator, isAdmin);
+	if (!isCreator && !isAdmin) {
+		return res.status(StatusCodes.FORBIDDEN).json({
+			status: "fail",
+			message: "Not authorized to remove team from this project",
+		});
+	}
+
+	const updatedProject = await projectServices.removeTeam(id, req.body.teamId);
 
 	res.status(StatusCodes.OK).json({
 		status: "success",
@@ -178,6 +239,7 @@ const addTeam = catchAsync(async (req, res, next) => {
 });
 
 const inviteUsers = catchAsync(async (req, res, next) => {
+	console.log(req.user);
 	const { id } = req.params;
 	const project = await projectServices.findById(id);
 
@@ -190,7 +252,7 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 
 	const isCreator = isProjectCreator(project.createdBy, req.user._id);
 	const isAdmin = isProjectAdmin(project.users, req.user._id);
-
+	console.log(isCreator, isAdmin);
 	if (!isCreator && !isAdmin) {
 		return res.status(StatusCodes.FORBIDDEN).json({
 			status: "fail",
@@ -223,10 +285,11 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 				password: "password",
 			});
 		} else {
+			token = createJWT({ payload });
 			// check if user is already a member
 			const isMember = isProjectMember(project.users, user._id);
 
-			if (isMember) {
+			if (isMember || req.user._id == user._id) {
 				console.log("user is already a member", userData.user);
 				continue;
 			}
@@ -259,6 +322,7 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 
 const acceptInviation = catchAsync(async (req, res, next) => {
 	const { email, token, projectId } = req.query;
+	console.log(req.user);
 
 	const decoded = isTokenValid(token);
 
@@ -376,6 +440,7 @@ module.exports = {
 	updateProject,
 	deleteProject,
 	addTeam,
+	removeTeam,
 	inviteUsers,
 	acceptInviation,
 	removeUser,

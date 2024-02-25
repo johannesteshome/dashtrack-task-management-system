@@ -1,4 +1,5 @@
 const { ProjectModel } = require("../models/project.model");
+const mongoose = require("mongoose");
 
 const create = async (data) => {
 	return await ProjectModel.create(data);
@@ -27,8 +28,21 @@ const update = async (id, data) => {
 	);
 };
 
-const addTeam = async (id, teams) => {
-	return;
+const addTeam = async (id, team) => {
+	return await ProjectModel.findByIdAndUpdate(
+		id,
+		{ $addToSet: { teams: team } },
+		{
+			new: true,
+			runValidators: true,
+		}
+	);
+};
+
+const removeTeam = async (id, teamId) => {
+	const project = await ProjectModel.findById(id);
+	project.removeTeam(teamId);
+	return project;
 };
 
 const addUsers = async (id, userList) => {
@@ -69,6 +83,11 @@ const projectTeams = async (id) => {
 	return await ProjectModel.findById(id).populate("teams").select("teams");
 };
 
+const findProjectOfTeam = async (id) => {
+	// TODO
+	return await ProjectModel.findOne({ teams: { $in: [id] } });
+};
+
 const acceptInviation = async (id, userData) => {
 	return await ProjectModel.findOneAndUpdate(
 		{ _id: id },
@@ -89,9 +108,11 @@ module.exports = {
 	deleteOne,
 	exists,
 	addTeam,
+	removeTeam,
 	addUsers,
+	removeUser,
 	projetUsers,
 	projectTeams,
 	acceptInviation,
-	removeUser,
+	findProjectOfTeam,
 };

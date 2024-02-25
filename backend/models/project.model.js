@@ -42,6 +42,24 @@ const projectSchema = new Schema(
 	{ timestamps: true }
 );
 
+projectSchema.post("remove", async function (project) {
+	await TeamModel.deleteMany({ _id: { $in: project.teams } });
+});
+
+projectSchema.post("findOneAndDelete", async function (project) {
+	await TeamModel.deleteMany({ _id: { $in: project.teams } });
+});
+
+projectSchema.post("deleteOne", async function (project) {
+	await TeamModel.deleteMany({ _id: { $in: project.teams } });
+});
+
+projectSchema.methods.removeTeam = async function (teamId) {
+	this.teams.pull(teamId);
+	await TeamModel.findByIdAndDelete({ _id: teamId });
+	await this.save();
+};
+
 const ProjectModel = model("Project", projectSchema);
 
 module.exports = { ProjectModel };

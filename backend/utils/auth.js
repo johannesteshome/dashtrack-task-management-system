@@ -36,17 +36,19 @@ const hasRoles = (userRoles, roles) => {
 };
 
 const isTeamMember = (teamMembers, userId) => {
-	return teamMembers.some((member) => member.member == userId);
+	return teamMembers.some((member) => member == userId);
 };
 
 const isProjectMember = (projectUsers, userId) => {
 	return projectUsers.some((userData) => userData.user == userId);
 };
 const isProjectCreator = (creator, userId) => {
+	console.log(creator, userId, creator == userId);
 	return creator == userId;
 };
 
 const isProjectAdmin = (projectUsers, userId) => {
+	console.log(projectUsers);
 	return projectUsers.some(
 		(userData) =>
 			userData.user == userId &&
