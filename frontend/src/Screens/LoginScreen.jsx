@@ -66,7 +66,7 @@ const LoginScreen = () => {
           if (res.meta.requestStatus === "rejected") {
             // console.log(res.payload.message);
             setIsLoading(false);
-            notify("Wrong credentials!");
+            notify(res.payload.message);
           }
           if (res.payload.message === "Error") {
             setIsLoading(false);

@@ -6,7 +6,7 @@ const catchAsync = (fn) => {
 			await fn(req, res, next);
 			console.log("Transaction Committed");
 		} catch (error) {
-			console.log("Transaction Aborted", error);
+			console.log("Transaction Aborted");
 			next(error);
 		} finally {
 			console.log("Session Ended");

@@ -1,3 +1,10 @@
+.loading-screen-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .loader {
   width: 45px;
   aspect-ratio: 1;

@@ -62,7 +62,7 @@ const exists = async (query) => {
 };
 
 const projetUsers = async (id) => {
-	return await ProjectModel.findById(id).populate("users.user").select("users");
+	return await ProjectModel.findById(id).populate("members.user").select("users");
 };
 
 const projectTeams = async (id) => {

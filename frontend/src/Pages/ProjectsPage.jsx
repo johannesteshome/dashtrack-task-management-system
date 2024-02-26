@@ -1,97 +1,161 @@
-import { Divider, Button, Table } from "antd";
-import { useState } from "react";
+import { Divider, Button, Table, Popconfirm } from "antd";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
 import AddTeamMemberModal from "./AddTeamMemberModal";
 import CreateTeamModal from "./CreateTeamModal";
-const teamColumns = [
-  {
-    title: "Team Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Team Members Count",
-    dataIndex: "count",
-    width: "180px",
-  },
-  {
-    title: "Action",
-    render: () => (
-      <a className='bg-red-500 text-white px-4 py-1 rounded '>Delete</a>
-    ),
-  },
-];
-
-const teamData = [
-  {
-    key: "1",
-    name: "Frontend Team",
-    count: 4,
-  },
-  {
-    key: "2",
-    name: "Backend Team",
-    count: 2,
-  },
-  {
-    key: "3",
-    name: "Design Team",
-    count: 3,
-  },
-];
-
-const membersColumns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-  },
-  {
-    title: "Action",
-    render: () => (
-      <a className='bg-red-500 text-white px-4 py-1 rounded '>Delete</a>
-    ),
-  },
-];
-
-const membersData = [
-  {
-    key: "1",
-    name: "Yabsera Haile",
-    email: "yabserahaile@gmail.com",
-  },
-  {
-    key: "2",
-    name: "Haymanot Demis",
-    email: "haymanotdemis@gmail.com",
-  },
-  {
-    key: "3",
-    name: "Mihret Tibebe",
-    email: "mihrettibebe@gmail.com",
-  },
-];
+import { DeleteProject, GetMyProjects } from "../Redux/features/dataActions";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ProjectsPage = () => {
-  const [open, setOpen] = useState(false);
+  const [teamModalOpen, setTeamModalOpen] = useState(false);
+  const [membersModalOpen, setMembersModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  const project = useSelector((state) => state.data.currentProject);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [popOpen, setPopOpen] = useState(false);
+  const notify = (message) => {
+    toast(message);
+  };
+  const navigate = useNavigate();
 
-  const onCreate = (values) => {
+  useEffect(() => {
+    if (!project) {
+      navigate("/dashboard");
+    }
+  }, [project]);
+
+  const teamColumns = [
+    {
+      title: "Team Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Team Members Count",
+      dataIndex: "count",
+      width: "180px",
+    },
+    {
+      title: "Action",
+      render: () => (
+        <a className='bg-red-500 text-white px-4 py-1 rounded '>Delete</a>
+      ),
+    },
+  ];
+
+  const teamData = [];
+
+  const membersColumns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Action",
+      render: () => (
+        <a className='bg-red-500 text-white px-4 py-1 rounded '>Delete</a>
+      ),
+    },
+  ];
+
+  let membersData = [];
+
+  if (!project) {
+    navigate("/dashboard");
+  } else {
+    for (let team of project.teams) {
+      console.log(team, "team");
+      teamData.push({
+        key: team._id,
+        name: team.name,
+        count: team.members.length,
+      });
+    }
+
+    for (let member of project.members) {
+      membersData.push({
+        key: member.user._id,
+        name: member.user.name,
+        email: member.user.email,
+      });
+    }
+  }
+
+  const showPopConfirm = () => {
+    setPopOpen(true);
+  };
+
+  const handleOk = () => {
+    setConfirmLoading(true);
+    dispatch(DeleteProject(project._id)).then((res) => {
+      console.log(res);
+      if (res.payload.success) {
+        // setIsLoading(false);
+        navigate("/dashboard");
+        console.log("here after deleting the project");
+        setPopOpen(false);
+        setConfirmLoading(false);
+        dispatch(GetMyProjects());
+        return notify(res.payload.message);
+      } else {
+        // setIsLoading(false);
+        setPopOpen(false);
+        setConfirmLoading(false);
+        return notify(res.payload.message);
+      }
+    });
+  };
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setPopOpen(false);
+  };
+
+  const onTeamModalCreate = (values) => {
     console.log("Received values of form: ", values);
-    setOpen(false);
+    setTeamModalOpen(false);
+  };
+
+  const onMembersModalCreate = (values) => {
+    console.log("Received values of form: ", values);
+    setMembersModalOpen(false);
   };
   return (
     <div>
+      <ToastContainer />
       <div className='flex justify-between items-center'>
-        <h1 className='text-3xl m-4 '>Capstone Project</h1>
-        <Button
-          type='default'
-          size={"large"}
-          className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4] flex items-center justify-between gap-2'>
-          <Icon icon='clarity:edit-line' />
-          Edit Project
-        </Button>
+        <h1 className='text-3xl m-4 '>{project?.name}</h1>
+        <div className='flex items-center gap-4'>
+          <Button
+            type='default'
+            size={"large"}
+            className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4] flex items-center justify-between gap-2'>
+            <Icon icon='clarity:edit-line' />
+            Edit Project
+          </Button>
+          <Popconfirm
+            title='Delete Project'
+            description='Are you Sure to Delete the Project?'
+            open={popOpen}
+            onConfirm={handleOk}
+            okButtonProps={{
+              loading: confirmLoading,
+            }}
+            onCancel={handleCancel}>
+            <Button
+              type='default'
+              size={"large"}
+              className='bg-[#e71313] text-white hover:bg-white hover:text-[#e71313] flex items-center justify-between gap-2'
+              onClick={showPopConfirm}>
+              <Icon icon='material-symbols:delete-outline' />
+              Delete Project
+            </Button>
+          </Popconfirm>
+        </div>
       </div>
       <div>
         <div className='flex justify-between items-center'>
@@ -100,18 +164,18 @@ const ProjectsPage = () => {
             type='default'
             size={"large"}
             onClick={() => {
-              setOpen(true);
+              setTeamModalOpen(true);
             }}
             className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4] flex items-center gap-2'>
             <Icon icon='fluent:people-team-16-regular' />
             Create Team
           </Button>
           <CreateTeamModal
-            open={open}
-            onCreate={onCreate}
+            open={teamModalOpen}
+            onCreate={onTeamModalCreate}
             onCancel={() => {
-              setOpen(false);
-              console.log(open);
+              setTeamModalOpen(false);
+              console.log(teamModalOpen, "the modal");
             }}
           />
         </div>
@@ -128,19 +192,19 @@ const ProjectsPage = () => {
             type='default'
             size={"large"}
             onClick={() => {
-              setOpen(true);
+              setMembersModalOpen(true);
             }}
             className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4] flex gap-2 items-center'>
             <Icon icon='solar:user-broken' />
             Add Member
-            <AddTeamMemberModal
-              open={open}
-              onCreate={onCreate}
-              onCancel={() => {
-                setOpen(false);
-              }}
-            />
           </Button>
+          <AddTeamMemberModal
+            open={membersModalOpen}
+            onCreate={onMembersModalCreate}
+            onCancel={() => {
+              setMembersModalOpen(false);
+            }}
+          />
         </div>
         <Table
           columns={membersColumns}

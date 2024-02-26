@@ -1,4 +1,5 @@
 const projectServices = require("../services/project.services");
+const {ProjectModel} = require("../models/project.model");
 const userServices = require("../services/user.services");
 const { catchAsync } = require("../utils/asyncHandler");
 const { StatusCodes } = require("http-status-codes");
@@ -13,13 +14,17 @@ const {
 } = require("../utils/auth");
 const sendEmail = require("../utils/sendEmail");
 const { createJWT, isTokenValid } = require("../utils/jwt");
+const {USER_PERMISSIONS} = require("../constants/constants");
 
 const create = catchAsync(async (req, res, next) => {
 	req.body.createdBy = req.user._id;
+	console.log(req.user._id, 'user created');
+	const data = { ...req.body, members: [{user: req.user._id, permissions: USER_PERMISSIONS.WRITE}] }
 
-	const project = await projectServices.create(req.body);
+	const project = await projectServices.create(data);
 	res.status(StatusCodes.CREATED).json({
-		status: "success",
+		success: true,
+		message: 'Project created successfully',
 		project,
 	});
 });
@@ -59,13 +64,13 @@ const getMyProjects = catchAsync(async (req, res, next) => {
 
 const getProject = catchAsync(async (req, res, next) => {
 	const { id } = req.params;
-	const project = await projectServices.findOne({
+	let project = await projectServices.findOne({
 		_id: id,
 	});
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
+			success: false,
 			message: "Project not found",
 		});
 	}
@@ -73,20 +78,24 @@ const getProject = catchAsync(async (req, res, next) => {
 	console.log(req.user);
 
 	// checking ownership
-	const isMember = isProjectMember(project.users, req.user._id); //TODO if the users.user is populated the check will fail
+	const isMember = isProjectMember(project.members, req.user._id); //TODO if the users.user is populated the check will fail
 	const isCreator = isProjectCreator(project.createdBy, req.user._id);
 
 	console.log(isMember, isCreator);
 
 	if (!isMember && !isCreator) {
 		return res.status(StatusCodes.FORBIDDEN).json({
-			status: "fail",
+			success: false,
 			meassage: "Not authorized to this project",
 		});
 	}
 
+	project = await ProjectModel.findById(id)
+    .populate("members.user", 'name email')
+    .populate("teams");
+
 	res.status(StatusCodes.OK).json({
-		status: "success",
+		success: true,
 		project,
 	});
 });
@@ -131,28 +140,30 @@ const updateProject = catchAsync(async (req, res, next) => {
 const deleteProject = catchAsync(async (req, res, next) => {
 	const { id } = req.params;
 	const project = await projectServices.findById(id);
+	console.log(project, 'project');
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
+			success: false,
 			message: "Project not found",
 		});
 	}
 
 	const isCreator = isProjectCreator(project.createdBy, req.user._id);
-	const isAdmin = isProjectMember(project.users, req.user._id);
+	const isAdmin = isProjectMember(project.members, req.user._id);
 
 	if (!isCreator && !isAdmin) {
 		return res.status(StatusCodes.FORBIDDEN).json({
-			status: "fail",
+			success: false,
 			message: "Not authorized to delete this project",
 		});
 	}
 
 	await projectServices.deleteOne(id);
 
-	res.status(StatusCodes.NO_CONTENT).json({
-		status: "success",
+	res.status(StatusCodes.OK).json({
+		success: true,
+		message: "Project deleted successfully",
 	});
 });
 

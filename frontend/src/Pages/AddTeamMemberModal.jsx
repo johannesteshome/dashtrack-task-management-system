@@ -12,15 +12,7 @@ const AddTeamMemberModal = ({ open, onCreate, onCancel }) => {
       cancelText='Cancel'
       onCancel={onCancel}
       onOk={() => {
-        memberForm
-          .validateFields()
-          .then((values) => {
-            memberForm.resetFields();
-            onCreate(values);
-          })
-          .catch((info) => {
-            console.log("Validate Failed:", info);
-          });
+        console.log("object");
       }}>
       <Form
         form={memberForm}

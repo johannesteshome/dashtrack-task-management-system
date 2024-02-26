@@ -56,7 +56,7 @@ const AllRoutes = () => {
             element={<ProfileDetails />}
           />
           <Route
-            path='project'
+            path='project/:id'
             element={<ProjectsPage />}
           />
           <Route

@@ -5,11 +5,7 @@ const { ObjectId } = require("mongodb");
 
 const authenticateUser = async (req, res, next) => {
 	let { refreshToken, accessToken } = req.signedCookies;
-	const authHeader = req.headers.authorization;
-	console.log(req.headers);
-	console.log(req.signedCookies);
-	accessToken = accessToken ?? authHeader?.split(" ")[1];
-	console.log(accessToken, refreshToken);
+
 	try {
 		if (accessToken) {
 			const payload = isTokenValid(accessToken);
