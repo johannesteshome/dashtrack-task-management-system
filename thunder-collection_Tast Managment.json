@@ -1,0 +1,647 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Tast Managment",
+    "dateExported": "2024-02-25T08:23:44.678Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "18117d63-0b97-420a-8f65-2e158064bfbf",
+            "name": "Auth",
+            "containerId": "",
+            "created": "2024-02-17T07:13:22.117Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "10dedd97-7c66-42ed-bf7f-d436aad2da62",
+            "name": "Task",
+            "containerId": "",
+            "created": "2024-02-17T07:13:32.658Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Project",
+            "containerId": "",
+            "created": "2024-02-17T07:13:43.089Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "bc8395bd-6f0d-461a-bdca-4bede3a7bbe2",
+            "name": "Team",
+            "containerId": "",
+            "created": "2024-02-17T07:13:50.635Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "3e220c09-6a34-4e49-b698-4658991e05ac",
+            "name": "Chat",
+            "containerId": "",
+            "created": "2024-02-17T07:14:02.260Z",
+            "sortNum": 50000
+        },
+        {
+            "_id": "6ae2e5ba-52f0-407f-aee9-d6dcbbdd9a19",
+            "name": "User",
+            "containerId": "",
+            "created": "2024-02-17T15:41:37.476Z",
+            "sortNum": 60000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "94441e18-db70-47b4-a345-610dc8e787e3",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "18117d63-0b97-420a-8f65-2e158064bfbf",
+            "name": "Register",
+            "url": "http://localhost:3030/auth/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-02-17T10:31:21.602Z",
+            "modified": "2024-02-17T17:13:46.353Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "name",
+                        "value": "Yohannes Teshome"
+                    },
+                    {
+                        "name": "email",
+                        "value": "haymanotdemis1@gmail.com"
+                    },
+                    {
+                        "name": "gender",
+                        "value": "M"
+                    },
+                    {
+                        "name": "mobile",
+                        "value": "0949960922"
+                    },
+                    {
+                        "name": "role",
+                        "value": "user"
+                    },
+                    {
+                        "name": "password",
+                        "value": "Password123!"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "c:\\Users\\dell\\OneDrive\\Pictures\\AI.jpg"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "b47b7d77-dbda-4e1b-864c-0d417c8e9fff",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "18117d63-0b97-420a-8f65-2e158064bfbf",
+            "name": "verify-email",
+            "url": "http://localhost:3030/auth/verify-email?email=haymedin21@gmail.com&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJlbWFpbCI6ImhheW1lZGluMjFAZ21haWwuY29tIn0sImNoYW5nZVBhc3MiOnRydWUsImlhdCI6MTcwODU3ODQ5OCwiZXhwIjoxNzA5MTgzMjk4fQ.wPXl2_VZkRVuHzb8B_ysMNJIWPr0E9auTCDdtSzKQvM",
+            "method": "PUT",
+            "sortNum": 20000,
+            "created": "2024-02-17T12:07:39.795Z",
+            "modified": "2024-02-22T05:32:35.891Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "email",
+                    "value": "haymedin21@gmail.com",
+                    "isPath": false
+                },
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJlbWFpbCI6ImhheW1lZGluMjFAZ21haWwuY29tIn0sImNoYW5nZVBhc3MiOnRydWUsImlhdCI6MTcwODU3ODQ5OCwiZXhwIjoxNzA5MTgzMjk4fQ.wPXl2_VZkRVuHzb8B_ysMNJIWPr0E9auTCDdtSzKQvM",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"password\":\"Password123!\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8c47c3ce-08ce-4793-9484-8287276376f3",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "18117d63-0b97-420a-8f65-2e158064bfbf",
+            "name": "Login",
+            "url": "http://localhost:3030/auth/login",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-02-17T14:11:52.240Z",
+            "modified": "2024-02-25T08:19:10.003Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"netsanet.demis.b@gmail.com\",\n  \"password\":\"Password123!\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "a1e90474-dd51-4a0b-bea9-151419505f17",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "18117d63-0b97-420a-8f65-2e158064bfbf",
+            "name": "loginOTP",
+            "url": "http://localhost:3030/auth/login-otp",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-02-17T14:19:19.510Z",
+            "modified": "2024-02-25T08:19:33.561Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"netsanet.demis.b@gmail.com\",\n  \"otp\":\"521099\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "7a1e2a01-dc54-4e14-a8a2-48f2977f289f",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "6ae2e5ba-52f0-407f-aee9-d6dcbbdd9a19",
+            "name": "GetAll",
+            "url": "http://localhost:3030/user/allUsers?",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2024-02-17T15:41:45.875Z",
+            "modified": "2024-02-17T16:13:02.955Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c69f1920-f93e-421b-adaf-f72dcb610dc5",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "6ae2e5ba-52f0-407f-aee9-d6dcbbdd9a19",
+            "name": "GetUser",
+            "url": "http://localhost:3030/user/getOne/65d0e9419056e22a87c42c45",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2024-02-17T16:25:33.295Z",
+            "modified": "2024-02-17T17:30:31.366Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1ZDBlOTQxOTA1NmUyMmE4N2M0MmM0NSIsIm5hbWUiOiJZb2hhbm5lcyBUZXNob21lIiwiZW1haWwiOiJoYXltYW5vdGRlbWlzMUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDgxOTA5OTYsImV4cCI6MTcwODc5NTc5Nn0.THvL6dCBl83pTv9ijwYssB8uID5JK9-9iTZH4yEnAqk"
+            },
+            "tests": []
+        },
+        {
+            "_id": "bf93b5a1-318a-4a6e-a453-d2dfae0f1e5a",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "6ae2e5ba-52f0-407f-aee9-d6dcbbdd9a19",
+            "name": "FilteredUsers",
+            "url": "http://localhost:3030/user/filteredUsers?",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-02-17T16:25:41.837Z",
+            "modified": "2024-02-17T16:26:24.243Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "63698132-5a12-4fca-8f4e-e541bdd339ca",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "6ae2e5ba-52f0-407f-aee9-d6dcbbdd9a19",
+            "name": "Update",
+            "url": "http://localhost:3030/user/update/65d0e5de4d9170271b2f84fd",
+            "method": "PUT",
+            "sortNum": 80000,
+            "created": "2024-02-17T16:53:05.862Z",
+            "modified": "2024-02-21T13:24:42.610Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"Netsanet Demis\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e657afd9-ef3d-4259-aa24-965f6aca81c3",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "6ae2e5ba-52f0-407f-aee9-d6dcbbdd9a19",
+            "name": "Delete",
+            "url": "http://localhost:3030/user/delete/65d0bfc8c8a6b2b35ecb0543",
+            "method": "DELETE",
+            "sortNum": 90000,
+            "created": "2024-02-17T16:53:11.353Z",
+            "modified": "2024-02-17T16:58:07.818Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "82e1454d-1477-4fb9-bfb8-8bba4b620ddc",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Create ",
+            "url": "http://localhost:3030/project/create",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2024-02-21T10:28:05.937Z",
+            "modified": "2024-02-24T02:55:31.225Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"Castone 2\",\n  \"description\":\"Capstone project\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e4e0c823-ad84-40ef-8d34-c93ec3e818c6",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "GetAll",
+            "url": "http://localhost:3030/project/allProjects",
+            "method": "GET",
+            "sortNum": 110000,
+            "created": "2024-02-21T10:28:11.069Z",
+            "modified": "2024-02-21T19:20:19.044Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "513dae17-2897-4e97-9e96-bc4593327580",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Get User Project",
+            "url": "http://localhost:3030/project/userProjects",
+            "method": "GET",
+            "sortNum": 120000,
+            "created": "2024-02-21T10:28:19.147Z",
+            "modified": "2024-02-23T11:42:54.693Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "88f32b98-da7a-464e-b208-ff98c6ade39a",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Get By Id",
+            "url": "http://localhost:3030/project/getOne/65d5d18fb302dea9a61cdf6c",
+            "method": "GET",
+            "sortNum": 130000,
+            "created": "2024-02-21T10:28:31.665Z",
+            "modified": "2024-02-21T19:51:32.116Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1ZDBlNWNhNGQ5MTcwMjcxYjJmODRmYSIsIm5hbWUiOiJIYXltYW5vdCIsImVtYWlsIjoibmV0c2FuZXQuZGVtaXMuYkBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDg1NDUwNjgsImV4cCI6MTcwOTE0OTg2OH0.bsgbjHWXvWXlK3sk9RCVxKFgVVXRsfmFdshJvkYekrs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "188cf2d7-d061-4c9f-bef3-95b008eeacaf",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Update",
+            "url": "http://localhost:3030/project/update/65d5d18fb302dea9a61cdf6c",
+            "method": "PUT",
+            "sortNum": 140000,
+            "created": "2024-02-21T10:28:40.643Z",
+            "modified": "2024-02-21T13:26:51.200Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"description\":\"Capstone Project description is updated\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1ZDBlOTQxOTA1NmUyMmE4N2M0MmM0NSIsIm5hbWUiOiJZb2hhbm5lcyBUZXNob21lIiwiZW1haWwiOiJoYXltYW5vdGRlbWlzMUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDg1MTE1MzIsImV4cCI6MTcwOTExNjMzMn0.1gktlIE6SwfcRIlDmZaPk4onJplhJJb8LJlq5ng-Dnk"
+            },
+            "tests": []
+        },
+        {
+            "_id": "c4102afb-f82d-493f-8286-5e676326acb3",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Invite Users",
+            "url": "http://localhost:3030/project/65d95dbbcbbcdde825aa006c/inviteUsers",
+            "method": "PUT",
+            "sortNum": 150000,
+            "created": "2024-02-21T17:59:17.638Z",
+            "modified": "2024-02-25T06:45:05.367Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"users\":[\n      {\n        \"email\": \"haymanot.demis.belay@gmail.com\"\n      }\n    ]\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1ZDBlNWNhNGQ5MTcwMjcxYjJmODRmYSIsIm5hbWUiOiJIYXltYW5vdCIsImVtYWlsIjoibmV0c2FuZXQuZGVtaXMuYkBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDg3MTU5NTYsImV4cCI6MTcwOTMyMDc1Nn0.1F0TB4iP7_q6-DyRAL106EWMWzTDO3rAjRxglAkbQrE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "2490ec45-6bd9-45a4-b91e-0081fa0c1b54",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Accept Invitation",
+            "url": "http://localhost:3030/project/acceptInvitation?projectId=65d95dbbcbbcdde825aa006c&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJlbWFpbCI6ImhheW1hbm90LmRlbWlzLmJlbGF5QGdtYWlsLmNvbSJ9LCJpYXQiOjE3MDg4NDM1MDUsImV4cCI6MTcwOTQ0ODMwNX0.3asHKebNkUCv_elo4HjjCvuxiyRuGcscZBV3RS-1A5I&email=haymanot.demis.belay@gmail.com",
+            "method": "PUT",
+            "sortNum": 160000,
+            "created": "2024-02-21T19:18:01.956Z",
+            "modified": "2024-02-25T06:47:37.589Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "projectId",
+                    "value": "65d95dbbcbbcdde825aa006c",
+                    "isPath": false
+                },
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJlbWFpbCI6ImhheW1hbm90LmRlbWlzLmJlbGF5QGdtYWlsLmNvbSJ9LCJpYXQiOjE3MDg4NDM1MDUsImV4cCI6MTcwOTQ0ODMwNX0.3asHKebNkUCv_elo4HjjCvuxiyRuGcscZBV3RS-1A5I",
+                    "isPath": false
+                },
+                {
+                    "name": "email",
+                    "value": "haymanot.demis.belay@gmail.com",
+                    "isPath": false
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1ZDBlOTQxOTA1NmUyMmE4N2M0MmM0NSIsIm5hbWUiOiJZb2hhbm5lcyBUZXNob21lIiwiZW1haWwiOiJoYXltYW5vdGRlbWlzMUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDg3MTU2NDMsImV4cCI6MTcwOTMyMDQ0M30.KtjLCl0z-RijszBY23nZU1KiijthQR04o7cjvdCdNfg"
+            },
+            "tests": []
+        },
+        {
+            "_id": "f6812c35-f85e-4cf0-837f-38866753f89d",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "RemoveUser or Leave Project ",
+            "url": "http://localhost:3030/project/65d5d18fb302dea9a61cdf6c/removeUser",
+            "method": "PUT",
+            "sortNum": 170000,
+            "created": "2024-02-21T20:38:43.105Z",
+            "modified": "2024-02-21T20:43:44.293Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"userId\":\"65d0e5ca4d9170271b2f84fa\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1ZDBlNWNhNGQ5MTcwMjcxYjJmODRmYSIsIm5hbWUiOiJIYXltYW5vdCIsImVtYWlsIjoibmV0c2FuZXQuZGVtaXMuYkBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDg1NDUwNjgsImV4cCI6MTcwOTE0OTg2OH0.bsgbjHWXvWXlK3sk9RCVxKFgVVXRsfmFdshJvkYekrs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "95981a47-a4e5-487d-a4f7-56770d17c2db",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "AddTeam",
+            "url": "http://localhost:3030/project/65d95dbbcbbcdde825aa006c/addTeam",
+            "method": "PUT",
+            "sortNum": 180000,
+            "created": "2024-02-22T18:59:59.057Z",
+            "modified": "2024-02-24T03:09:06.371Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"Backend Team\",\n  \"description\":\"Backend Team Description\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1ZDBlOTQxOTA1NmUyMmE4N2M0MmM0NSIsIm5hbWUiOiJZb2hhbm5lcyBUZXNob21lIiwiZW1haWwiOiJoYXltYW5vdGRlbWlzMUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDg2MjkwNTMsImV4cCI6MTcwOTIzMzg1M30.-a7kFkGj48Pixzg6JtStE_6ggTeUZNCElaun5qLrO_w"
+            },
+            "tests": []
+        },
+        {
+            "_id": "94519b9d-f852-446b-92a5-d20c22c74b52",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Remove Team",
+            "url": "http://localhost:3030/project/65d95dbbcbbcdde825aa006c/removeTeam",
+            "method": "PUT",
+            "sortNum": 190000,
+            "created": "2024-02-22T19:00:07.484Z",
+            "modified": "2024-02-24T21:15:21.246Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"teamId\":\"65da575047fc868aabb2bba2\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "d2697d3b-8b4f-4882-a96d-1e7279c300ec",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "9dacdab7-88a1-425d-bb92-9db7f0d3106f",
+            "name": "Delete Project",
+            "url": "http://localhost:3030/project/delete/65d95d70cbbcdde825aa005d",
+            "method": "DELETE",
+            "sortNum": 200000,
+            "created": "2024-02-24T02:37:07.926Z",
+            "modified": "2024-02-24T03:08:12.842Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "5129b239-563d-4c9f-9d1d-700d71fcc9fb",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "bc8395bd-6f0d-461a-bdca-4bede3a7bbe2",
+            "name": "Get By Id",
+            "url": "http://localhost:3030/team/getOne/65d95dd1cbbcdde825aa0070",
+            "method": "GET",
+            "sortNum": 210000,
+            "created": "2024-02-24T03:11:46.814Z",
+            "modified": "2024-02-24T18:40:12.893Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c560b88a-34f4-4461-a456-554f39cdfdfe",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "bc8395bd-6f0d-461a-bdca-4bede3a7bbe2",
+            "name": "Add Members",
+            "url": "http://localhost:3030/team/addMembers/65da5d58bb1a84c55fdc1878",
+            "method": "PUT",
+            "sortNum": 230000,
+            "created": "2024-02-24T03:12:41.586Z",
+            "modified": "2024-02-24T21:19:33.473Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"members\":[\"65d0e5ca4d9170271b2f84fa\"]\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "72322d0a-6b65-445d-bd65-a3f79911dff3",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "bc8395bd-6f0d-461a-bdca-4bede3a7bbe2",
+            "name": "Remove Member ",
+            "url": "http://localhost:3030/team/removeMembers/65da575047fc868aabb2bba2",
+            "method": "PUT",
+            "sortNum": 240000,
+            "created": "2024-02-24T03:12:55.477Z",
+            "modified": "2024-02-24T20:53:57.880Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"members\":[\"65d0e5ca4d9170271b2f84fa\"]\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "1aedb43c-0908-40a2-a041-2b558e0bee0d",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "bc8395bd-6f0d-461a-bdca-4bede3a7bbe2",
+            "name": "Update ",
+            "url": "",
+            "method": "GET",
+            "sortNum": 260000,
+            "created": "2024-02-24T03:13:55.795Z",
+            "modified": "2024-02-24T03:13:55.795Z",
+            "headers": []
+        },
+        {
+            "_id": "05567f2e-9d3b-456d-b065-d449e89aa531",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "bc8395bd-6f0d-461a-bdca-4bede3a7bbe2",
+            "name": "Get All",
+            "url": "http://localhost:3030/team/allTeams",
+            "method": "GET",
+            "sortNum": 270000,
+            "created": "2024-02-24T18:39:04.330Z",
+            "modified": "2024-02-24T18:39:51.158Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "a2d4041b-e869-4082-8c70-3e6e52e3d8c4",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "10dedd97-7c66-42ed-bf7f-d436aad2da62",
+            "name": "Create",
+            "url": "http://localhost:3030/task/create",
+            "method": "POST",
+            "sortNum": 280000,
+            "created": "2024-02-25T05:57:59.022Z",
+            "modified": "2024-02-25T06:33:30.096Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"task 1\",\n  \"description\":\"task 1 desc\",\n  \"dueDate\":\"2024-02-17T12:00:00Z\",\n  \"assignedTo\":\"65d0e5ca4d9170271b2f84fa\",\n  \"teamId\":\"65da5d58bb1a84c55fdc1878\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "ab7ed673-8d0a-44b2-8cca-c7c55adbb3e2",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "10dedd97-7c66-42ed-bf7f-d436aad2da62",
+            "name": "Update",
+            "url": "http://localhost:3030/task/update/65dae29c44dcfe90683358f0",
+            "method": "PUT",
+            "sortNum": 290000,
+            "created": "2024-02-25T06:48:18.147Z",
+            "modified": "2024-02-25T08:14:31.676Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"dueDate\":\"2024-02-30T12:00:00Z\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "db92d083-7f69-486b-8a58-2537bb99cc97",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "10dedd97-7c66-42ed-bf7f-d436aad2da62",
+            "name": "Set Reminder",
+            "url": "http://localhost:3030/task/setReminder/65dae29c44dcfe90683358f0",
+            "method": "PUT",
+            "sortNum": 300000,
+            "created": "2024-02-25T08:16:26.392Z",
+            "modified": "2024-02-25T08:17:04.840Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"reminderDate\":\"2024-02-29T12:00:00Z\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "10259964-8e9b-4660-aef8-eb8ebb09273a",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "10dedd97-7c66-42ed-bf7f-d436aad2da62",
+            "name": "Update Progress",
+            "url": "http://localhost:3030/task/updateProgress/65dae29c44dcfe90683358f0",
+            "method": "PUT",
+            "sortNum": 310000,
+            "created": "2024-02-25T08:20:05.268Z",
+            "modified": "2024-02-25T08:22:28.392Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"status\":\"in_progress\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "3a4f96cc-15a1-42fd-b745-1958f8421619",
+            "colId": "7f763f96-ad83-4e1b-9a06-a5505c5d307f",
+            "containerId": "10dedd97-7c66-42ed-bf7f-d436aad2da62",
+            "name": "Delete",
+            "url": "http://localhost:3030/task/delete/65dae29c44dcfe90683358f0",
+            "method": "DELETE",
+            "sortNum": 320000,
+            "created": "2024-02-25T08:22:55.040Z",
+            "modified": "2024-02-25T08:23:05.802Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
