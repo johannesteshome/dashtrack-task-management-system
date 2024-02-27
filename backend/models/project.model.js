@@ -13,6 +13,22 @@ const projectSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		chats: [
+			{
+				sender: {
+					type: String,
+					required: true,
+				},
+				message: {
+					type: String,
+					required: true,
+				},
+				createdAt: {
+					type: Date,
+					default: Date.now,
+				},
+			},
+		],
 		teams: [
 			{
 				type: Schema.Types.ObjectId,

@@ -1,4 +1,5 @@
 const { TaskModel } = require("../models/task.model");
+const { TeamModel } = require("../models/team.model");
 const taskServices = require("../services/task.services");
 const teamServices = require("../services/team.services");
 const { catchAsync } = require("../utils/asyncHandler");
@@ -58,17 +59,20 @@ const getTask = catchAsync(async (req, res) => {
 	}
 
 	// TODO: can any member see tasks within a team?
-	const isCreator = checkOwnership(
-		req.user._id.toString(),
-		task.createdBy.toString()
-	);
+	// const isCreator = checkOwnership(
+	// 	req.user._id.toString(),
+	// 	task.createdBy.toString()
+	// );
 
 	res.status(200).json({ task });
 });
 
 const getTeamTasks = catchAsync(async (req, res) => {
 	const { teamId } = req.params;
+
 	const team = await teamServices.findById(teamId);
+
+	return res.status(200).json({ tasks: team.tasks });
 
 	if (!team) {
 		return res.status(400).json({ message: "Team not found" });
@@ -181,6 +185,15 @@ const updateProgress = catchAsync(async (req, res) => {
 	res.status(200).json({ task: updatedTask });
 });
 
+const replaceAllTasks = catchAsync(async (req, res) => {
+	const update = await TeamModel.findByIdAndUpdate(
+		req.params.teamId,
+		{ $set: { tasks: req.body } },
+		{ new: true }
+	);
+
+	res.status(200).json({ tasks: update.tasks });
+});
 module.exports = {
 	createTask,
 	updateTask,
@@ -190,4 +203,5 @@ module.exports = {
 	getTeamTasks,
 	setReminder,
 	updateProgress,
+	replaceAllTasks,
 };

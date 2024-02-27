@@ -24,10 +24,21 @@ const teamSchema = new Schema(
 				// },
 			},
 		],
-		tasks: [
+		tasks: [],
+		chats: [
 			{
-				type: Schema.Types.ObjectId,
-				ref: TaskModel,
+				sender: {
+					type: String,
+					required: true,
+				},
+				message: {
+					type: String,
+					required: true,
+				},
+				createdAt: {
+					type: Date,
+					default: Date.now,
+				},
 			},
 		],
 		createdBy: {
