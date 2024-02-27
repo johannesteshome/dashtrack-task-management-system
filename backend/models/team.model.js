@@ -1,0 +1,46 @@
+const { Schema, model } = require("mongoose");
+const { UserModel } = require("./user.model");
+const { TaskModel } = require("./task.model");
+const { TEAM_MEMBER_ROLES } = require("../constants/constants");
+
+const teamSchema = new Schema(
+	{
+		name: {
+			type: String,
+			required: true,
+		},
+		description: {
+			type: String,
+			required: true,
+		},
+		members: [
+			{
+				member: {
+					type: Schema.Types.ObjectId,
+					ref: UserModel,
+				},
+				role: {
+					type: String,
+					enum: TEAM_MEMBER_ROLES,
+					default: TEAM_MEMBER_ROLES.MEMBER,
+				},
+			},
+		],
+		tasks: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: TaskModel,
+			},
+		],
+		createdBy: {
+			type: Schema.Types.ObjectId,
+			ref: UserModel,
+			required: true,
+		},
+	},
+	{ timestamps: true }
+);
+
+const TeamModel = model("Team", teamSchema);
+
+module.exports = { TeamModel };

@@ -1,63 +1,85 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { Avatar, Layout, Menu, theme } from "antd";
+import { Avatar, Layout, Menu, theme, Badge } from "antd";
 import { Outlet, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import dashtrack from '../img/dashtrack-banner.png'
-import {
-  authLogout
-} from "../Redux/features/authActions";
-import { FetchAdmin, FetchAllAdmins, FetchAllCourses, FetchAllStudents, FetchAllTeachers, FetchStudent, FetchTeacher } from "../Redux/features/dataActions";
+import Cookies from "js-cookie";
+import dashtrack from "../img/dashtrack-banner.png";
+import { authLogout } from "../Redux/features/authActions";
+import LoadingScreen from "./LoadingScreen";
+import ReactLoading from "react-loading";
+
 import { ToastContainer, toast } from "react-toastify";
+import {
+  GetMyProjects,
+  GetOneProject,
+  GetUnreadNotifications,
+} from "../Redux/features/dataActions";
 const { Header, Content, Footer, Sider } = Layout;
 
 const notify = (text) => toast(text);
 
-
 const DashboardScreen = () => {
-  
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
+  const cookieExists = Cookies.get("refreshToken") === undefined;
+  const isLoading = useSelector(
+    (state) => state.data.loading || state.auth.loading
+  );
+
+  if (!cookieExists) {
+    dispatch(authLogout());
+  }
+
   const { role, _id } = useSelector((state) => state.auth.user);
   console.log(role, _id);
-
+  const projects = useSelector((state) => state.data.myProjects);
+  let menuItems = [];
+  // const [menuItems, setMenuItems] = useState([])
 
   useEffect(() => {
-    if (role === "admin") {
-      // console.log("here", role, _id);F
-      dispatch(FetchAdmin(_id)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
-          // console.log(res.payload, "payload");
-          // setInitialValues({...initialValues, name: res.payload.name});
-        } else if (res.meta.requestStatus === "rejected") {
-          return notify(res.payload);
-        }
-      });
-      dispatch(FetchAllTeachers())
-      dispatch(FetchAllAdmins())
-      dispatch(FetchAllStudents())
-      dispatch(FetchAllCourses())
-    } else if (role === "teacher") {
-      dispatch(FetchTeacher(_id)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
-          // console.log(res.payload, "payload");
-          // setInitialValues({...initialValues, name: res.payload.name});
-        } else if (res.meta.requestStatus === "rejected") {
-          return notify(res.payload);
-        }
-      });
-    } else if (role === "student") {
-      dispatch(FetchStudent(_id)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
-          // console.log(res.payload, "payload");
-          // setInitialValues({...initialValues, name: res.payload.name});
-        } else if (res.meta.requestStatus === "rejected") {
-          return notify(res.payload);
-        }
-      });
-    }
+    dispatch(GetMyProjects());
+    dispatch(GetUnreadNotifications(_id));
   }, []);
 
+  const unreadNotifications = useSelector(
+    (state) => state.data.unreadNotifications
+  );
+
+  for (let project of projects) {
+    let teams = [];
+    let i = 0;
+    if (project.team === undefined) {
+      teams.push(
+        getItem(
+          <Link to='create-team'>No Team</Link>,
+          ++i,
+          <Icon icon='radix-icons:value-none' />,
+          null,
+          null,
+          null,
+          true
+        )
+      );
+    } else {
+      for (let team of project.teams) {
+        teams.push(getItem(<Link to=''>{team}</Link>, ++i));
+      }
+    }
+
+    menuItems.push(
+      getItem(
+        <Link
+          to={`project/${project._id}`}
+          onClick={() => dispatch(GetOneProject(project._id))}>
+          {project.name}
+        </Link>,
+        project._id,
+        <Icon icon='icon-park-outline:workbench' />,
+        teams
+      )
+    );
+  }
 
   function getItem(label, key, icon, children, type, danger, disabled) {
     return {
@@ -67,7 +89,7 @@ const DashboardScreen = () => {
       label,
       danger,
       disabled,
-      type
+      type,
     };
   }
   const adminItems = [
@@ -78,22 +100,16 @@ const DashboardScreen = () => {
     ),
     getItem(
       "Your Projects",
-      "grp",
+      "grp1",
       <Icon icon='icon-park-outline:workbench' />,
-      [
-        getItem(
-          <Link to=''>Capstone project</Link>,
-          "grp",
-          <Icon icon='icon-park-outline:workbench' />,
-          [
-            getItem(<Link to='project'>Project Details</Link>, "2"),
-            getItem(<Link to='teams'>Frontend Team</Link>, "3"),
-            getItem(<Link to=''>Backend Team</Link>, "4"),
-            getItem(<Link to=''>Design Team</Link>, "5"),
-          ]
-        ),
-      ],
+      menuItems,
       "group"
+    ),
+    { type: "divider" },
+    getItem(
+      <Link to='create-project'>Create New Project</Link>,
+      "5",
+      <Icon icon='mdi:create-new-folder-outline' />
     ),
     getItem(
       <span onClick={() => dispatch(authLogout())}>Logout</span>,
@@ -105,49 +121,6 @@ const DashboardScreen = () => {
     ),
   ];
 
-  const teacherItems = [
-    getItem(
-      <Link to=''>Dashboard</Link>,
-      "1",
-      <Icon icon='akar-icons:dashboard' />
-    ),
-    getItem(
-      <Link to='take-attendance'>Take Attendance</Link>,
-      "2",
-      <Icon icon='mdi:tick-all' />
-    ),
-    getItem(
-      <Link to='my-courses'>My Courses</Link>,
-      "3",
-      <Icon icon='tdesign:course' />
-    ),
-    getItem(
-      <span onClick={() => dispatch(authLogout())}>Logout</span>,
-      "5",
-      <Icon icon='humbleicons:logout' />,
-      null,
-      true
-    ),
-  ];
-  const studentItems = [
-    getItem(
-      <Link to=''>Dashboard</Link>,
-      "1",
-      <Icon icon='akar-icons:dashboard' />
-    ),
-    getItem(
-      <Link to='my-courses'>My Courses</Link>,
-      "2",
-      <Icon icon='tdesign:course' />
-    ),
-    getItem(
-      <span onClick={() => dispatch(authLogout())}>Logout</span>,
-      "3",
-      <Icon icon='humbleicons:logout' />,
-      null,
-      true
-    ),
-  ];
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -161,18 +134,18 @@ const DashboardScreen = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
         theme='light'>
-        <div className='demo-logo-vertical p-4' >
+        <div className='demo-logo-vertical p-4'>
           <img
-          src={dashtrack}
-          alt='dashtrack'
-          className=''
+            src={dashtrack}
+            alt='dashtrack'
+            className=''
           />
         </div>
         <Menu
           theme='light'
           defaultSelectedKeys={["1"]}
           mode='inline'
-          items= {adminItems}
+          items={adminItems}
         />
       </Sider>
       <Layout>
@@ -183,26 +156,48 @@ const DashboardScreen = () => {
             background: colorBgContainer,
           }}>
           <h1 className='text-2xl'>Hello there, Admin</h1>
-          <Link to="profile">
-            <Avatar
-              className='cursor-pointer flex items-center justify-center'
-              size='large'
-              icon={<Icon icon='ep:user' />}
-            />
-          </Link>
+          <div className='flex items-center justify-center gap-4'>
+            <Link to='notifications'>
+              <Badge
+                count={unreadNotifications}
+                overflowCount={10}
+                size='small'>
+                <Avatar
+                  className='cursor-pointer flex items-center justify-center'
+                  size='large'
+                  icon={<Icon icon='iconamoon:notification' />}
+                />
+              </Badge>
+            </Link>
+            <Link to='profile'>
+              <Avatar
+                className='cursor-pointer flex items-center justify-center'
+                size='large'
+                icon={<Icon icon='ep:user' />}
+              />
+            </Link>
+          </div>
         </Header>
         <Content
           style={{
             margin: "0 16px",
           }}>
-          <ToastContainer/>
-          <Outlet />
+          <ToastContainer />
+          {isLoading ? (
+            <div className='flex items-center justify-center h-full'>
+              <ReactLoading
+                type='balls'
+                color='#21BFD4'
+              />
+            </div>
+          ) : (
+            <Outlet />
+          )}
         </Content>
         <Footer
           style={{
             textAlign: "center",
-          }}>
-        </Footer>
+          }}></Footer>
       </Layout>
     </Layout>
   );

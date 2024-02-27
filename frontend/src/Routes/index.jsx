@@ -13,6 +13,8 @@ import ProtectedRoutes from "../Screens/ProtectedRoutes";
 import NotFoundPage from "../Pages/NotFoundPage";
 import SharedLayout from "../Screens/SharedLayout";
 import ProjectsPage from "../Pages/ProjectsPage";
+import CreateProject from "../Pages/CreateProject";
+import NotificationsPage from "../Pages/NotificationsPage";
 import TasksPage from "../Pages/TasksPage";
 
 const AllRoutes = () => {
@@ -56,12 +58,16 @@ const AllRoutes = () => {
             element={<ProfileDetails />}
           />
           <Route
-            path='project'
+            path='notifications'
+            element={<NotificationsPage />}
+          />
+          <Route
+            path='project/:id'
             element={<ProjectsPage />}
           />
           <Route
-            path='teams'
-            element={<TasksPage teamName="Frontend Team"/>}
+            path='create-project'
+            element={<CreateProject />}
           />
           <Route
             path='*'

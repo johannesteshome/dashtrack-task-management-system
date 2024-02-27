@@ -3,6 +3,113 @@ import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 
 const url = "http://localhost:5000";
 
+export const CreateNewProject = createAsyncThunk(
+  "data/createProject",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${url}/project/create`, data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const GetMyProjects = createAsyncThunk(
+  "data/getMyProjects",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/project/userProjects`, data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const GetOneProject = createAsyncThunk(
+  "data/getOneProject",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/project/getOne/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const DeleteProject = createAsyncThunk(
+  "data/deleteProject",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`${url}/project/delete/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const GetUnreadNotifications = createAsyncThunk(
+  "data/getUnreadNotifications",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/notification/unreadNotifications/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const GetAllNotifications = createAsyncThunk(
+  "data/getAllNotifications",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/notification/allNotifications/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
+export const ReadNotification = createAsyncThunk(
+  "data/readNotification",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/notification/readNotification/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
+export const DeleteNotification = createAsyncThunk(
+  "data/deleteNotification",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`${url}/notification/deleteNotification/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
+
+// Old Project Functions
+
 export const FetchAllDepartments = createAsyncThunk(
   "data/fetchAllDepartments",
   async (data, { rejectWithValue }) => {

@@ -1,32 +1,26 @@
+const configs = require("./configs/configs");
 const express = require("express");
 const { connection } = require("./configs/db");
-require("dotenv").config();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+const mongoose = require("mongoose");
+
 //TODO Error Messages
 
-
-const adminAuthRouter = require("./routes/authRoutes/AdminsAuth.Route");
-const teacherAuthRouter = require("./routes/authRoutes/TeacherAuthRoute");
-const studentAuthRouter = require("./routes/authRoutes/StudentAuthRoute");
-const userAuthRouter = require("./routes/authRoutes/UsersAuthRoute");
-
-const adminRouter = require("./routes/dataRoutes/Admins.Route");
-const studentRouter = require("./routes/dataRoutes/Students.Route");
-const teacherRouter = require("./routes/dataRoutes/Teachers.Route");
-const attendanceRouter = require("./routes/dataRoutes/Attendances.Route");
-const courseRouter = require("./routes/dataRoutes/Courses.Routes");
-const departmentRouter = require("./routes/dataRoutes/Departments.Route");
-const Logs = require("./routes/dataRoutes/Logs.Route");
-const DataBackup = require("./routes/dataRoutes/DataBackup.Route");
-
+// custome routes
+const authRouter = require("./routes/auth.route");
+const userRouter = require("./routes/user.route");
+const projetRouter = require("./routes/project.route");
+const notificationRouter = require("./routes/notification.route");
 
 const app = express();
+connection;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(cookieParser(process.env.JWT_SECRET));
+app.use(cookieParser(configs.cookieSecret));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -36,26 +30,39 @@ app.use(
 );
 // app.set("trust proxy", 1);
 
-app.use("/admin/auth", adminAuthRouter);
-app.use("/teacher/auth", teacherAuthRouter);
-app.use("/student/auth", studentAuthRouter);
-app.use("/user/auth", userAuthRouter);
-app.use("/admins", adminRouter)
-app.use("/students", studentRouter)
-app.use("/teachers", teacherRouter)
-app.use("/attendances", attendanceRouter);
-app.use("/courses", courseRouter);
-app.use("/departments", departmentRouter);
-app.use("/logs", Logs);
-app.use("/data-backup", DataBackup);
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
+require("./socket/socketio.js")(io);
+// const io = socketIO(server);
 
-app.listen(process.env.port, async () => {
-  try {
-    await connection;
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
+app.use("/project", projetRouter);
+app.use('/notification', notificationRouter)
+
+// app.listen(configs.port, async () => {
+//   try {
+//     await connection;
+//     console.log("Connected to DB");
+//   } catch (error) {
+//     console.log("Unable to connect to DB");
+//     console.log(error);
+//   }
+//   console.log(`Listening at port ${configs.port}`);
+// });
+
+mongoose.connection.once("open", () => {
+  server.listen(configs.port, () => {
+    console.log(`Listening at port ${configs.port}`);
     console.log("Connected to DB");
-  } catch (error) {
-    console.log("Unable to connect to DB");
-    console.log(error);
-  }
-  console.log(`Listening at port ${process.env.port}`);
+  });
+});
+
+mongoose.connection.on("error", (error) => {
+  console.log("Unable to connect to DB");
 });
