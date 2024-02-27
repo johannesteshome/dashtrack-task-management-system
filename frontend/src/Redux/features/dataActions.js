@@ -133,6 +133,19 @@ export const InviteUsers = createAsyncThunk(
   }
 )
 
+export const CreateTeam = createAsyncThunk(
+  "data/createTeam",
+  async ({_id, data}, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/project/${_id}/addTeam`, data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 
 // Old Project Functions
 

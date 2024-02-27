@@ -49,7 +49,7 @@ const DashboardScreen = () => {
   for (let project of projects) {
     let teams = [];
     let i = 0;
-    if (project.team === undefined) {
+    if (project.teams.length === 0) {
       teams.push(
         getItem(
           <Link to='create-team'>No Team</Link>,
@@ -63,7 +63,7 @@ const DashboardScreen = () => {
       );
     } else {
       for (let team of project.teams) {
-        teams.push(getItem(<Link to=''>{team}</Link>, ++i));
+        teams.push(getItem(<Link to=''>{team.name}</Link>, ++i));
       }
     }
 

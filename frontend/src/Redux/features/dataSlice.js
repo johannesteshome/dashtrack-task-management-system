@@ -9,7 +9,8 @@ import {
   ReadNotification,
   DeleteNotification,
   AcceptInvitation,
-  InviteUsers
+  InviteUsers,
+  CreateTeam
 } from "./dataActions";
 
 const initialState = {
@@ -135,6 +136,17 @@ const dataSlice = createSlice({
         // state.notifications = action.payload.notifications;
       })
       .addCase(AcceptInvitation.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(CreateTeam.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(CreateTeam.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(CreateTeam.rejected, (state) => {
         // state.loading = false;
       });
   },

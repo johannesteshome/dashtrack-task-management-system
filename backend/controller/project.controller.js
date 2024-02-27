@@ -180,17 +180,17 @@ const addTeam = catchAsync(async (req, res, next) => {
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
+			success: false,
 			message: "Project not found",
 		});
 	}
 
 	const isCreator = isProjectCreator(project.createdBy, req.user._id);
-	const isAdmin = isProjectAdmin(project.users, req.user._id);
+	const isAdmin = isProjectAdmin(project.members, req.user._id);
 	console.log(req.user, project.createdBy, isCreator, isAdmin);
 	if (!isCreator && !isAdmin) {
 		return res.status(StatusCodes.FORBIDDEN).json({
-			status: "fail",
+			success: false,
 			message: "Not authorized to add team to this project",
 		});
 	}
@@ -205,9 +205,10 @@ const addTeam = catchAsync(async (req, res, next) => {
 	const updatedProject = await projectServices.addTeam(id, team._id);
 
 	res.status(StatusCodes.OK).json({
-		status: "success",
+		success: true,
 		updatedProject,
 		team,
+		message: 'Team added successfully',
 	});
 });
 

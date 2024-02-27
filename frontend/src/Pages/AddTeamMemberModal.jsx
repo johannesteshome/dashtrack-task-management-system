@@ -7,6 +7,7 @@ const notify = (text) => toast(text);
 
 const AddTeamMemberModal = ({ open, onCreate, onCancel }) => {
   const [memberForm] = Form.useForm();
+  const project = useSelector((state) => state.data.currentProject);
 
   const inviteUser = () => {
     memberForm
@@ -14,7 +15,7 @@ const AddTeamMemberModal = ({ open, onCreate, onCancel }) => {
       .then((values) => {
         memberForm.resetFields();
         onCreate(values);
-        
+
       })
   };
 

@@ -14,7 +14,7 @@ const findById = async (id) => {
 };
 
 const findMany = async (query, offset, limit) => {
-	return await ProjectModel.find(query).skip(offset).limit(limit);
+	return await ProjectModel.find(query).skip(offset).limit(limit).populate("teams");
 };
 
 const update = async (id, data) => {
