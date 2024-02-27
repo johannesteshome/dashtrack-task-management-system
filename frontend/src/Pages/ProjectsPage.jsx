@@ -58,7 +58,7 @@ const ProjectsPage = () => {
     {
       title: "Action",
       render: () => (
-        <a className='bg-red-500 text-white px-4 py-1 rounded '>Delete</a>
+        <a className='bg-red-500 text-white px-4 py-1 rounded '>Remove</a>
       ),
     },
   ];
@@ -196,7 +196,7 @@ const ProjectsPage = () => {
             }}
             className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4] flex gap-2 items-center'>
             <Icon icon='solar:user-broken' />
-            Add Member
+            Invite Member
           </Button>
           <AddTeamMemberModal
             open={membersModalOpen}

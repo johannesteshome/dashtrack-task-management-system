@@ -4,39 +4,65 @@ const { connection } = require("./configs/db");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+const mongoose = require("mongoose");
+
 //TODO Error Messages
 
 // custome routes
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const projetRouter = require("./routes/project.route");
+const notificationRouter = require("./routes/notification.route");
 
 const app = express();
+connection;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser(configs.cookieSecret));
 app.use(
-	cors({
-		origin: "http://localhost:3000",
-		credentials: true,
-		optionSuccessStatus: 200,
-	})
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    optionSuccessStatus: 200,
+  })
 );
 // app.set("trust proxy", 1);
+
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
+require("./socket/socketio.js")(io);
+// const io = socketIO(server);
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/project", projetRouter);
+app.use('/notification', notificationRouter)
 
-app.listen(configs.port, async () => {
-	try {
-		await connection;
-		console.log("Connected to DB");
-	} catch (error) {
-		console.log("Unable to connect to DB");
-		console.log(error);
-	}
-	console.log(`Listening at port ${configs.port}`);
+// app.listen(configs.port, async () => {
+//   try {
+//     await connection;
+//     console.log("Connected to DB");
+//   } catch (error) {
+//     console.log("Unable to connect to DB");
+//     console.log(error);
+//   }
+//   console.log(`Listening at port ${configs.port}`);
+// });
+
+mongoose.connection.once("open", () => {
+  server.listen(configs.port, () => {
+    console.log(`Listening at port ${configs.port}`);
+    console.log("Connected to DB");
+  });
+});
+
+mongoose.connection.on("error", (error) => {
+  console.log("Unable to connect to DB");
 });

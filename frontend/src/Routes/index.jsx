@@ -14,6 +14,7 @@ import NotFoundPage from "../Pages/NotFoundPage";
 import SharedLayout from "../Screens/SharedLayout";
 import ProjectsPage from "../Pages/ProjectsPage";
 import CreateProject from "../Pages/CreateProject";
+import NotificationsPage from "../Pages/NotificationsPage";
 
 const AllRoutes = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -56,12 +57,16 @@ const AllRoutes = () => {
             element={<ProfileDetails />}
           />
           <Route
+            path='notifications'
+            element={<NotificationsPage />}
+          />
+          <Route
             path='project/:id'
             element={<ProjectsPage />}
           />
           <Route
             path='create-project'
-            element={<CreateProject/>}
+            element={<CreateProject />}
           />
           <Route
             path='*'

@@ -1,6 +1,7 @@
 const projectServices = require("../services/project.services");
 const {ProjectModel} = require("../models/project.model");
 const userServices = require("../services/user.services");
+const crypto = require("crypto");
 const { catchAsync } = require("../utils/asyncHandler");
 const { StatusCodes } = require("http-status-codes");
 const configs = require("../configs/configs");
@@ -15,6 +16,8 @@ const {
 const sendEmail = require("../utils/sendEmail");
 const { createJWT, isTokenValid } = require("../utils/jwt");
 const {USER_PERMISSIONS} = require("../constants/constants");
+
+const origin = `http://localhost:3000`;
 
 const create = catchAsync(async (req, res, next) => {
 	req.body.createdBy = req.user._id;
@@ -194,17 +197,17 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
+			success: false,
 			message: "Project not found",
 		});
 	}
 
 	const isCreator = isProjectCreator(project.createdBy, req.user._id);
-	const isAdmin = isProjectAdmin(project.users, req.user._id);
+	const isAdmin = isProjectAdmin(project.members, req.user._id);
 
 	if (!isCreator && !isAdmin) {
 		return res.status(StatusCodes.FORBIDDEN).json({
-			status: "fail",
+			success: false,
 			message: "Not authorized to invite users to this project",
 		});
 	}
@@ -220,6 +223,8 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 
 	for (let userData of req.body.users) {
 		const user = await userServices.findOne({ email: userData.email });
+		console.log(userData);
+		let invitationToken = crypto.randomBytes(70).toString("hex");
 		var payload = { userData };
 		var token;
 		if (!user) {
@@ -235,7 +240,7 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 			});
 		} else {
 			// check if user is already a member
-			const isMember = isProjectMember(project.users, user._id);
+			const isMember = isProjectMember(project.members, user._id);
 
 			if (isMember) {
 				console.log("user is already a member", userData.user);

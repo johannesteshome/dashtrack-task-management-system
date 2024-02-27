@@ -2,8 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   CreateNewProject,
   DeleteProject,
+  GetAllNotifications,
   GetMyProjects,
   GetOneProject,
+  GetUnreadNotifications,
+  ReadNotification,
+  DeleteNotification,
 } from "./dataActions";
 
 const initialState = {
@@ -12,6 +16,8 @@ const initialState = {
   loading: false,
   loggedInUser: null,
   logs: null,
+  unreadNotifications: 0,
+  notifications: null,
 };
 
 const dataSlice = createSlice({
@@ -62,6 +68,50 @@ const dataSlice = createSlice({
       })
       .addCase(DeleteProject.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(GetUnreadNotifications.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(GetUnreadNotifications.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        state.loading = false;
+        state.unreadNotifications = action.payload.unreadNotifications;
+      })
+      .addCase(GetUnreadNotifications.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(GetAllNotifications.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(GetAllNotifications.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        // state.loading = false;
+        state.notifications = action.payload.notifications;
+      })
+      .addCase(GetAllNotifications.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(ReadNotification.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(ReadNotification.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(ReadNotification.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(DeleteNotification.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(DeleteNotification.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(DeleteNotification.rejected, (state) => {
+        // state.loading = false;
       });
   },
 });

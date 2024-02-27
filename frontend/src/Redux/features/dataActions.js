@@ -55,6 +55,58 @@ export const DeleteProject = createAsyncThunk(
   }
 );
 
+export const GetUnreadNotifications = createAsyncThunk(
+  "data/getUnreadNotifications",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/notification/unreadNotifications/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const GetAllNotifications = createAsyncThunk(
+  "data/getAllNotifications",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/notification/allNotifications/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
+export const ReadNotification = createAsyncThunk(
+  "data/readNotification",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/notification/readNotification/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
+export const DeleteNotification = createAsyncThunk(
+  "data/deleteNotification",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`${url}/notification/deleteNotification/${_id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
 
 // Old Project Functions
 

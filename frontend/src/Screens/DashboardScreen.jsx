@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { Avatar, Layout, Menu, theme } from "antd";
+import { Avatar, Layout, Menu, theme, Badge } from "antd";
 import { Outlet, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
@@ -9,9 +9,12 @@ import { authLogout } from "../Redux/features/authActions";
 import LoadingScreen from "./LoadingScreen";
 import ReactLoading from "react-loading";
 
-
 import { ToastContainer, toast } from "react-toastify";
-import { GetMyProjects, GetOneProject } from "../Redux/features/dataActions";
+import {
+  GetMyProjects,
+  GetOneProject,
+  GetUnreadNotifications,
+} from "../Redux/features/dataActions";
 const { Header, Content, Footer, Sider } = Layout;
 
 const notify = (text) => toast(text);
@@ -20,7 +23,9 @@ const DashboardScreen = () => {
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
   const cookieExists = Cookies.get("refreshToken") === undefined;
-  const isLoading = useSelector((state) => state.data.loading || state.auth.loading);
+  const isLoading = useSelector(
+    (state) => state.data.loading || state.auth.loading
+  );
 
   if (!cookieExists) {
     dispatch(authLogout());
@@ -34,7 +39,12 @@ const DashboardScreen = () => {
 
   useEffect(() => {
     dispatch(GetMyProjects());
+    dispatch(GetUnreadNotifications(_id));
   }, []);
+
+  const unreadNotifications = useSelector(
+    (state) => state.data.unreadNotifications
+  );
 
   for (let project of projects) {
     let teams = [];
@@ -146,13 +156,27 @@ const DashboardScreen = () => {
             background: colorBgContainer,
           }}>
           <h1 className='text-2xl'>Hello there, Admin</h1>
-          <Link to='profile'>
-            <Avatar
-              className='cursor-pointer flex items-center justify-center'
-              size='large'
-              icon={<Icon icon='ep:user' />}
-            />
-          </Link>
+          <div className='flex items-center justify-center gap-4'>
+            <Link to='notifications'>
+              <Badge
+                count={unreadNotifications}
+                overflowCount={10}
+                size='small'>
+                <Avatar
+                  className='cursor-pointer flex items-center justify-center'
+                  size='large'
+                  icon={<Icon icon='iconamoon:notification' />}
+                />
+              </Badge>
+            </Link>
+            <Link to='profile'>
+              <Avatar
+                className='cursor-pointer flex items-center justify-center'
+                size='large'
+                icon={<Icon icon='ep:user' />}
+              />
+            </Link>
+          </div>
         </Header>
         <Content
           style={{
