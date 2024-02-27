@@ -18,4 +18,9 @@ router.put(
 );
 router.put("/:id/removeUser", authenticateUser, projectController.removeUser);
 
+router.route("/:id/addTeam").put(authenticateUser, projectController.addTeam);
+router
+	.route("/:id/removeTeam")
+	.put(authenticateUser, projectController.removeTeam);
+
 module.exports = router;
