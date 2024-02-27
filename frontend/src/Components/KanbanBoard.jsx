@@ -4,11 +4,11 @@ import "./KanbanBoard.css"
 export default function KanbanBoard({data,columns}) {
     
      const fields = [
-        { text: "Title", key: "id", type: "TextBox" },
-        { text: "Status", key: "status",type: "DropDown" },
-        { text: "Assignee",key:"Assigned", type: "DropDown" },
+        { text: "ID", key: "Id", type: "TextBox" },
+        { text: "Status", key: "Status",type: "DropDown" },
+        { text: "Assignee",key:"Assignee", type: "TextBox" },
         { key: "RankId", type: "TextBox" },
-        { text: "Summary",key:"summary", type: "TextArea" },
+        { text: "Summary",key:"Summary", type: "TextArea" },
     ];
     const cardRendered = (args) => {
         let val = args.data.Priority;
@@ -23,16 +23,16 @@ export default function KanbanBoard({data,columns}) {
                 <div className="e-card-header">
                     <div className="e-card-header-caption">
                         <div className="e-card-header-title e-tooltip-text">
-                            {props.id}
+                            {props.Title}
                         </div>
                     </div>
                 </div>
                 <div className="e-card-content e-tooltip-text">
-                    <div className="e-text">{props.summary}</div>
+                    <div className="e-text">{props.Summary}</div>
                 </div>
                 <div className="e-card-custom-footer">
                     {props.Tags.split(",").map((tag) => (<div className="e-card-tag-field e-tooltip-text" key={tag}>{tag}</div>))}
-                    <div className="e-card-avatar">{getString(props.Assigned)}</div>
+                    <div className="e-card-avatar">{getString(props.Assignee)}</div>
                 </div>
             </div>);
     };
@@ -45,7 +45,7 @@ export default function KanbanBoard({data,columns}) {
                     <KanbanComponent 
                     id="kanban" 
                     cssClass="kanban-overview" 
-                    keyField="status" 
+                    keyField="Status" 
                     dataSource={data}  
                     cardSettings={{
                       headerField: "Title",
