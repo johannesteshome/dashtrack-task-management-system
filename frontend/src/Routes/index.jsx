@@ -75,8 +75,8 @@ const AllRoutes = () => {
             element={<CreateProject />}
           />
           <Route
-            path='tasks'
-            element={<TasksPage teamName="Frontend Team"/>}
+            path='teams/*'
+            element={<TasksPage/>}
           />
           <Route
             path='*'
