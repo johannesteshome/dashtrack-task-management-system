@@ -5,6 +5,7 @@ import { TeamData } from '../sampleData/teamData';
 import KanbanBoard from '../Components/KanbanBoard';
 import TableComp from '../Components/TableComp';
 import CalendarComp from '../Components/CalendarComp';
+import ChatComp from '../Components/ChatComp';
 
 
 const TextArea = Input.TextArea
@@ -27,7 +28,7 @@ const  TasksPage= ({teamName}) => {
           {
             key: '2',
             label: 'Table',
-            children: <TableComp data = {data}/>,
+            children: <TableComp data = {data} setData={setData} column={columns} team={team}/>,
           },
           {
             key: '3',
@@ -37,7 +38,7 @@ const  TasksPage= ({teamName}) => {
           {
             key: '4',
             label: 'Chat',
-            children: 'Content of Tab Pane 4',
+            children: <ChatComp/>
           },
         ];
   return (
@@ -95,10 +96,11 @@ const  TasksPage= ({teamName}) => {
             taskForm
               .validateFields()
               .then((values) => {
-                form.resetFields();
                 console.log(values);
+                const task={...values, Title: values.Id}
                 setAddTask(false);
-                setData((prev) => [...prev, values]);
+                taskForm.resetFields();
+                setData((prev) => [...prev, task]);
               })
               .catch((info) => {
                 console.log('Validate Failed:', info);
@@ -112,7 +114,7 @@ const  TasksPage= ({teamName}) => {
             name="add task form"
           >
             <Form.Item
-              name="id"
+              name="Id"
               label="ID"
               rules={[
                 {
@@ -124,7 +126,7 @@ const  TasksPage= ({teamName}) => {
               <Input />
             </Form.Item>
             <Form.Item
-              name="status"
+              name="Status"
               label="Status"
               rules={[
                 {
@@ -142,7 +144,7 @@ const  TasksPage= ({teamName}) => {
 
             </Form.Item>
             <Form.Item
-              name="summary"
+              name="Summary"
               label="Summary"
               rules={[
                 {
@@ -182,7 +184,7 @@ const  TasksPage= ({teamName}) => {
               <DatePicker />
             </Form.Item>
             <Form.Item
-              name="Assigned"
+              name="Assignee"
               label="Assigned"
               rules={[
                 {

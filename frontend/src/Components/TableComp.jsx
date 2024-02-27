@@ -1,34 +1,29 @@
-import {Space, Table, Tag, Typography } from 'antd';
-export default function TableComp({data}) {
+import { useState } from 'react';
+import {Space, Table, Tag, Typography, Modal, DatePicker, Select, Button, Form, Input,Popconfirm} from 'antd';
+
+const TextArea = Input.TextArea
+export default function TableComp({data,setData, column, team}) {
+    const [editTask, setEditTask] = useState(false)
+    const [editForm] = Form.useForm();
+    const [editData, setEditData] = useState({})
+    //TODO: Fix the edit form
+    const handleDelete = (Id) => {
+        const newData = data.filter((item) => item.Id!== Id);
+        setData(newData);
+        };
     const columns = [
         {
             title:"ID",
-            dataIndex:"id",
-            key:"id",
+            dataIndex:"Id",
+            key:"Id",
             sorter:(a, b) => a.id - b.id
         },
         {
             title:"Status",
-            dataIndex:"status",
-            key:"status",
-            filters: [
-                {
-                    text: 'To Do',
-                    value: 'To Do',
-                },
-                {
-                    text: 'In Progress',
-                    value: 'In Progress',
-                },
-                {
-                    text: 'Testing',
-                    value: 'Testing',
-                },
-                {
-                    text: 'Done',
-                    value: 'Done',
-                },
-            ],
+            dataIndex:"Status",
+            key:"Status",
+            filters: column.map((status) => {
+                return {text: status, value: status}}),
             onFilter: (value, record) => record.status.indexOf(value) === 0,
             render: status => (
                 <Tag color={status === "To Do" ? "blue" : status === "In Progress" ? "orange" : status === "Testing" ? "green" : "red"} key={status}>
@@ -38,8 +33,8 @@ export default function TableComp({data}) {
         },
         {
             title:"Summary",
-            dataIndex:"summary",
-            key:"summary"
+            dataIndex:"Summary",
+            key:"Summary"
         },
         {
             title:"Priority",
@@ -117,25 +112,173 @@ export default function TableComp({data}) {
         },
         {
             title:"Assigned",
-            dataIndex:"Assigned",
+            dataIndex:"Assignee",
             sorter:(a,b)=>a.Assigned.localeCompare(b.Assigned),
-            key:"Assigned"
+            key:"Assignee"
         },
         {
-            title: 'Action',
-            render: () => (
+        title: 'Operations',
+        dataIndex: 'operations',
+        render: (_, record) =>
+            data.length >= 1 ? (
             <Space>
-                <Typography.Link>Edit</Typography.Link>
-                <Typography.Link>Delete</Typography.Link>
+                <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.Id)}>
+                    <Button danger>Delete</Button>
+                </Popconfirm>
+                <Button onClick={() => {
+                    setEditData(record);
+                    console.log(editData)
+                    setEditTask(true);
+                }}>
+                    Edit
+                </Button>
             </Space>
-            ),
+            ) : null,
+
         },]
 
         return (
+            <div>
+            <Modal
+            open={editTask}
+            title="Edit a Task"
+            okText="Edit"
+            cancelText="Cancel"
+            onCancel={() => {setEditTask(false)}}
+            onOk={() => {
+                editForm
+                .validateFields()
+                .then((values) => {
+                    
+                })
+                .catch((info) => {
+                    console.log('Validate Failed:', info);
+                });
+            }}
+            >
+            <Form
+                form={editForm}
+                layout="vertical"
+                size = "small"
+                name="add task form"
+            >
+                <Form.Item
+                    name="Id"
+                    label="ID"
+                    initialValue={editData.Id}
+                    rules={[
+                        {
+                        required: true,
+                        message: 'Please input the id of the task!',
+                        },
+                    ]}
+                    >
+                    <Input disabled/>
+                </Form.Item>
+                <Form.Item
+                name="Status"
+                label="Status"
+                initialValue={editData.Status}
+                rules={[
+                    {
+                    required: true,
+                    message: 'Please input the status of the task!',
+                    },
+                ]}
+                >
+                <Select
+                    style={{ width: 120 }}
+                    options={columns.map((column) => {
+                    return {value: column, label: column}
+                    })}
+                    />
+
+                </Form.Item>
+                <Form.Item
+                name="Summary"
+                label="Summary"
+                initialValue={editData.Summary}
+                rules={[
+                    {
+                    required: true,
+                    message: 'Please input the summary of the task!',
+                    },
+                ]}
+                >
+                <TextArea rows={2}/>
+                </Form.Item>
+                
+                <Form.Item
+                name="Priority"
+                label="Priority"
+                initialValue={editData.Priority}
+                rules={[
+                    {
+                    required: true,
+                    message: 'Please input the priority of the task!',
+                    },
+                ]}
+                >
+                <Select
+                    placeholder="Please select"
+                    options={[{value: "Low", label: "Low"}, {value: "Medium", label: "Medium"}, {value: "High", label: "High"}, {value: "Critical", label: "Critical"}]}
+                />
+                </Form.Item>
+                <Form.Item
+                name="date"
+                label="Due Date"
+                // initialValue={editData.date}
+                //TODO: Fix the date picker
+                rules={[
+                    {
+                    required: true,
+                    message: 'Please input the estimation of the task!',
+                    },
+                ]}
+                >
+                <DatePicker />
+                </Form.Item>
+                <Form.Item
+                name="Assignee"
+                label="Assigned"
+                initialValue={editData.Assignee}
+                rules={[
+                    {
+                    required: true,
+                    message: 'Please input the assigned of the task!',
+                    },
+                ]}
+                >
+                    <Select
+                    allowClear
+                    placeholder="Please select"
+                    options={team.map((member) => {
+                        return {value: member, label: member}
+                    })}
+                    />
+                </Form.Item>
+                <Form.Item
+                name="Tags"
+                label="Tags"
+                initialValue={editData.Tags}
+                rules={[
+                    {
+                    required: true,
+                    message: 'Please input the Tags of the task!',
+                    },
+                ]}
+                >
+                <Input />
+                </Form.Item>
+            
+            </Form>
+
+            </Modal>
             <Table 
             columns={columns} 
             dataSource={data} 
             pagination={{
             pageSize: 8,
             }}/>
+            </div>
         )}
