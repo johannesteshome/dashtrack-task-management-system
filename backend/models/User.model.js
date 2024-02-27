@@ -34,7 +34,8 @@ const userSchema = mongoose.Schema(
     active: {
 		type: Boolean,
 		default: true
-    },
+		},
+	invitationToken: String,
     verificationToken: String,
     isVerified: {
       type: Boolean,

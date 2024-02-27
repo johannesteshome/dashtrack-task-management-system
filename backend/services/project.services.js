@@ -27,8 +27,15 @@ const update = async (id, data) => {
 	);
 };
 
-const addTeam = async (id, teams) => {
-	return;
+const addTeam = async (id, team) => {
+  return await ProjectModel.findByIdAndUpdate(
+    id,
+    { $addToSet: { teams: team } },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 };
 
 const addUsers = async (id, userList) => {
@@ -72,7 +79,7 @@ const projectTeams = async (id) => {
 const acceptInviation = async (id, userData) => {
 	return await ProjectModel.findOneAndUpdate(
 		{ _id: id },
-		{ $push: { users: userData } },
+		{ $push: { members: userData } },
 		{
 			new: true,
 			runValidators: true,

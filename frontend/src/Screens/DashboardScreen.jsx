@@ -159,9 +159,8 @@ const DashboardScreen = () => {
           <div className='flex items-center justify-center gap-4'>
             <Link to='notifications'>
               <Badge
-                count={unreadNotifications}
-                overflowCount={10}
-                size='small'>
+                size='small'
+                dot={ unreadNotifications > 0 ? true : false}>
                 <Avatar
                   className='cursor-pointer flex items-center justify-center'
                   size='large'

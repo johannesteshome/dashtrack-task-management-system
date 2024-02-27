@@ -1,11 +1,12 @@
 const projectServices = require("../services/project.services");
-const {ProjectModel} = require("../models/project.model");
+const { ProjectModel } = require("../models/project.model");
+const {TeamModel} = require("../models/team.model");
 const userServices = require("../services/user.services");
-const crypto = require("crypto");
 const { catchAsync } = require("../utils/asyncHandler");
 const { StatusCodes } = require("http-status-codes");
 const configs = require("../configs/configs");
 const paginatedResponse = require("./paginated.response");
+const { sendInvitation } = require("../utils");
 const {
 	isProjectCreator,
 	isProjectMember,
@@ -171,28 +172,44 @@ const deleteProject = catchAsync(async (req, res, next) => {
 });
 
 const addTeam = catchAsync(async (req, res, next) => {
-	const { id } = req.params;
-	const project = await projectServices.exists({ id });
+  const { id } = req.params;
+  const project = await projectServices.findById(id);
 
-	if (!project) {
-		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
-			message: "Project not found",
-		});
-	}
+  if (!project) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      success: false,
+      message: "Project not found",
+    });
+  }
 
-	// create team and add to project
+  const isCreator = isProjectCreator(project.createdBy, req.user._id);
+  const isAdmin = isProjectAdmin(project.members, req.user._id);
+  console.log(req.user, project.createdBy, isCreator, isAdmin);
+  if (!isCreator && !isAdmin) {
+    return res.status(StatusCodes.FORBIDDEN).json({
+      success: false,
+      message: "Not authorized to add team to this project",
+    });
+  }
 
-	const updatedProject = await projectServices.addTeam(id, req.body.team);
+  // validate team data, create team and add to project
+  console.log({ createdBy: req.user._id, ...req.body });
+  const team = await teamServices.create({
+    createdBy: req.user._id,
+    ...req.body,
+  });
 
-	res.status(StatusCodes.OK).json({
-		status: "success",
-		updatedProject,
-	});
+  const updatedProject = await projectServices.addTeam(id, team._id);
+
+  res.status(StatusCodes.OK).json({
+    status: "success",
+    updatedProject,
+    team,
+  });
 });
 
 const inviteUsers = catchAsync(async (req, res, next) => {
-	const { id } = req.params;
+	const id = req.params.id;
 	const project = await projectServices.findById(id);
 
 	if (!project) {
@@ -212,77 +229,71 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 		});
 	}
 
-	// itereate over users and send invite
+	const user = await userServices.findOne({ email: req.body.email });
 
-	const emails = [];
+	if (!user) {
+		console.log("user not found");
+		return res.status(StatusCodes.NOT_FOUND).json({
+			success: false,
+			message: "User not found",
+		})
+	}
+	else {
+		// check if user is already a member
+		const isMember = isProjectMember(project.members, user._id);
 
-	// cases
-	// 1) not found
-	// 2) not verified
-	// 3) verified
-
-	for (let userData of req.body.users) {
-		const user = await userServices.findOne({ email: userData.email });
-		console.log(userData);
-		let invitationToken = crypto.randomBytes(70).toString("hex");
-		var payload = { userData };
-		var token;
-		if (!user) {
-			// register the user
-			// validate user data
-			payload.changePass = true;
-			token = createJWT({ payload });
-			await userServices.create({
-				name: "default",
-				email: userData.email,
-				verificationToken: token,
-				password: "password",
-			});
-		} else {
-			// check if user is already a member
-			const isMember = isProjectMember(project.members, user._id);
-
-			if (isMember) {
-				console.log("user is already a member", userData.user);
-				continue;
-			}
+		if (isMember) {
+			console.log("user is already a member");
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				success: false,
+				message: "User is already a member",
+			})
 		}
+		else {
+			const payload = {
+				user: user._id,
+				email: user.email,
+				project: project._id,
+				permissions: USER_PERMISSIONS.WRITE
+			};
+			const invitationToken = createJWT({payload});
+			const info = await sendInvitation({
+				email: req.body.email,
+				token: invitationToken,
+				origin,
+				project: project.name,
+				id: project._id
+			})
 
-		console.log(userData);
-		const email = {
-			email: userData.email,
-			subject: req.user.name + " invited you to " + project.name + " project",
-			html: `http://localhost:${configs.port}/project/acceptInvitation?projectId=${project._id}&token=${token}&email=${userData.email}`,
-		};
+			if (!info) {
+				console.log("invitation not sent");
+				return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+					success: false,
+					message: "Invitation not sent",
+				})
+			}
 
-		emails.push(email);
-
-		// send push notification to user or email
+			console.log("invitation sent");
+			return res.status(StatusCodes.OK).json({
+				success: true,
+				message: "Invitation sent",
+			})
+		}
 	}
 
-	// send email to users
-
-	// send email to users
-	for (let email of emails) {
-		// send email
-		sendEmail(email);
-	}
-
-	res.status(StatusCodes.OK).json({
-		status: "success",
-	});
 });
 
 const acceptInviation = catchAsync(async (req, res, next) => {
-	const { email, token, projectId } = req.query;
+	console.log(req.body);
+	const { email, token, projectId } = req.body;
 
 	const decoded = isTokenValid(token);
 
 	console.log("decoded", decoded);
 
-	if (email !== decoded.userData.email) {
+	if (email !== decoded.email) {
 		return res.status(StatusCodes.BAD_REQUEST).json({
-			status: "fail",
+			success: false,
 			message: "token tempered",
 		});
 	}
@@ -291,17 +302,17 @@ const acceptInviation = catchAsync(async (req, res, next) => {
 
 	if (!user) {
 		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
+			success: false,
 			message: "User with the provided email not found",
 		});
 	}
 
-	if (!checkOwnership(req.user._id, user._id)) {
-		return res.status(StatusCodes.UNAUTHORIZED).json({
-			status: "fail",
-			message: "Not authorized to this invitation",
-		});
-	}
+	// if (!checkOwnership(req.user._id, user._id)) {
+	// 	return res.status(StatusCodes.UNAUTHORIZED).json({
+	// 		status: "fail",
+	// 		message: "Not authorized to this invitation",
+	// 	});
+	// }
 
 	const project = await projectServices.findOne({
 		_id: projectId,
@@ -309,14 +320,14 @@ const acceptInviation = catchAsync(async (req, res, next) => {
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
+			success: false,
 			message: "Project not found",
 		});
 	}
 
 	const userData = {
 		user: user._id,
-		permissions: decoded.userData.permissions,
+		permissions: decoded.permissions,
 	};
 
 	console.log(userData);
@@ -328,7 +339,8 @@ const acceptInviation = catchAsync(async (req, res, next) => {
 	);
 
 	res.status(StatusCodes.OK).json({
-		status: "success",
+		success: true,
+		message: 'Invitation accepted successfully',
 		updatedProject,
 	});
 });

@@ -9,7 +9,7 @@ const {
   attachCookiesToResponse,
   createTokenUser,
   sendVerificationEmail,
-  sendResetPasswordEmail,
+  sendResetPasswordEmail
 } = require("../utils");
 const { catchAsync } = require("../utils/asyncHandler");
 

@@ -1,8 +1,24 @@
 import { Button, Form, Input, Modal, Radio } from "antd";
+import { ToastContainer, toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { InviteUsers } from "../Redux/features/dataActions";
+
+const notify = (text) => toast(text);
 
 const AddTeamMemberModal = ({ open, onCreate, onCancel }) => {
   const [memberForm] = Form.useForm();
 
+  const inviteUser = () => {
+    memberForm
+      .validateFields()
+      .then((values) => {
+        memberForm.resetFields();
+        onCreate(values);
+        
+      })
+  };
+
+  const dispatch = useDispatch();
   return (
     <Modal
       open={open}
@@ -11,9 +27,7 @@ const AddTeamMemberModal = ({ open, onCreate, onCancel }) => {
       okType='default'
       cancelText='Cancel'
       onCancel={onCancel}
-      onOk={() => {
-        console.log("object");
-      }}>
+      onOk={inviteUser}>
       <Form
         form={memberForm}
         layout='vertical'
