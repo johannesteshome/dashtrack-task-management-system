@@ -49,7 +49,7 @@ const DashboardScreen = () => {
   for (let project of projects) {
     let teams = [];
     let i = 0;
-    if (project.team === undefined) {
+    if (project.teams.length === 0) {
       teams.push(
         getItem(
           <Link to='create-team'>No Team</Link>,
@@ -63,7 +63,7 @@ const DashboardScreen = () => {
       );
     } else {
       for (let team of project.teams) {
-        teams.push(getItem(<Link to=''>{team}</Link>, ++i));
+        teams.push(getItem(<Link to=''>{team.name}</Link>, ++i));
       }
     }
 
@@ -159,9 +159,8 @@ const DashboardScreen = () => {
           <div className='flex items-center justify-center gap-4'>
             <Link to='notifications'>
               <Badge
-                count={unreadNotifications}
-                overflowCount={10}
-                size='small'>
+                size='small'
+                dot={ unreadNotifications > 0 ? true : false}>
                 <Avatar
                   className='cursor-pointer flex items-center justify-center'
                   size='large'

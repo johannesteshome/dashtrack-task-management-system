@@ -107,6 +107,45 @@ export const DeleteNotification = createAsyncThunk(
   }
 )
 
+export const AcceptInvitation = createAsyncThunk(
+  "data/acceptInvitation",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/project/acceptInvitation`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
+export const InviteUsers = createAsyncThunk(
+  "data/inviteUsers",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/project/${_id}/inviteUsers`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+)
+
+export const CreateTeam = createAsyncThunk(
+  "data/createTeam",
+  async ({_id, data}, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/project/${_id}/addTeam`, data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 
 // Old Project Functions
 

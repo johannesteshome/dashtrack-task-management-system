@@ -13,6 +13,8 @@ const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const projetRouter = require("./routes/project.route");
 const notificationRouter = require("./routes/notification.route");
+const teamRouter = require("./routes/team.route");
+const taskRouter = require("./routes/task.route");
 
 const app = express();
 connection;
@@ -43,6 +45,8 @@ require("./socket/socketio.js")(io);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/project", projetRouter);
+app.use("/team", teamRouter);
+app.use("/task", taskRouter);
 app.use('/notification', notificationRouter)
 
 // app.listen(configs.port, async () => {

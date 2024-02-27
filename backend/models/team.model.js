@@ -15,15 +15,13 @@ const teamSchema = new Schema(
 		},
 		members: [
 			{
-				member: {
-					type: Schema.Types.ObjectId,
-					ref: UserModel,
-				},
-				role: {
-					type: String,
-					enum: TEAM_MEMBER_ROLES,
-					default: TEAM_MEMBER_ROLES.MEMBER,
-				},
+				type: Schema.Types.ObjectId,
+				ref: UserModel,
+				// role: {
+				// 	type: String,
+				// 	enum: TEAM_MEMBER_ROLES,
+				// 	default: TEAM_MEMBER_ROLES.MEMBER,
+				// },
 			},
 		],
 		tasks: [
@@ -40,6 +38,10 @@ const teamSchema = new Schema(
 	},
 	{ timestamps: true }
 );
+
+teamSchema.post("findByIdAndDelete", async (doc) => {
+	await TaskModel.deleteMany({ _id: { $in: doc.tasks } });
+});
 
 const TeamModel = model("Team", teamSchema);
 

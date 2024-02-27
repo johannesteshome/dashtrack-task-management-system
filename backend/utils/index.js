@@ -3,6 +3,7 @@ const createTokenUser = require("./createTokenUser");
 const sendEmail = require("./sendEmail");
 const sendResetPasswordEmail = require("./sendResetPasswordEmail");
 const sendVerificationEmail = require("./sendVerificationEmail");
+const sendInvitation = require("./sendInvitation");
 
 
 module.exports = {
@@ -12,5 +13,6 @@ module.exports = {
     createTokenUser,
     sendEmail,
     sendResetPasswordEmail,
-    sendVerificationEmail
+    sendVerificationEmail,
+    sendInvitation
 }

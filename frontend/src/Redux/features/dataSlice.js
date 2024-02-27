@@ -8,6 +8,9 @@ import {
   GetUnreadNotifications,
   ReadNotification,
   DeleteNotification,
+  AcceptInvitation,
+  InviteUsers,
+  CreateTeam
 } from "./dataActions";
 
 const initialState = {
@@ -111,6 +114,39 @@ const dataSlice = createSlice({
         // state.notifications = action.payload.notifications;
       })
       .addCase(DeleteNotification.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(InviteUsers.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(InviteUsers.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(InviteUsers.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(AcceptInvitation.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(AcceptInvitation.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(AcceptInvitation.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(CreateTeam.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(CreateTeam.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(CreateTeam.rejected, (state) => {
         // state.loading = false;
       });
   },

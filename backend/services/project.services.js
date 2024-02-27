@@ -1,4 +1,5 @@
 const { ProjectModel } = require("../models/project.model");
+const mongoose = require("mongoose");
 
 const create = async (data) => {
 	return await ProjectModel.create(data);
@@ -13,7 +14,7 @@ const findById = async (id) => {
 };
 
 const findMany = async (query, offset, limit) => {
-	return await ProjectModel.find(query).skip(offset).limit(limit);
+	return await ProjectModel.find(query).skip(offset).limit(limit).populate("teams");
 };
 
 const update = async (id, data) => {
@@ -27,8 +28,21 @@ const update = async (id, data) => {
 	);
 };
 
-const addTeam = async (id, teams) => {
-	return;
+const addTeam = async (id, team) => {
+	return await ProjectModel.findByIdAndUpdate(
+		id,
+		{ $addToSet: { teams: team } },
+		{
+			new: true,
+			runValidators: true,
+		}
+	);
+};
+
+const removeTeam = async (id, teamId) => {
+	const project = await ProjectModel.findById(id);
+	project.removeTeam(teamId);
+	return project;
 };
 
 const addUsers = async (id, userList) => {
@@ -69,10 +83,15 @@ const projectTeams = async (id) => {
 	return await ProjectModel.findById(id).populate("teams").select("teams");
 };
 
+const findProjectOfTeam = async (id) => {
+	// TODO
+	return await ProjectModel.findOne({ teams: { $in: [id] } });
+};
+
 const acceptInviation = async (id, userData) => {
 	return await ProjectModel.findOneAndUpdate(
 		{ _id: id },
-		{ $push: { users: userData } },
+		{ $push: { members: userData } },
 		{
 			new: true,
 			runValidators: true,
@@ -89,9 +108,11 @@ module.exports = {
 	deleteOne,
 	exists,
 	addTeam,
+	removeTeam,
 	addUsers,
+	removeUser,
 	projetUsers,
 	projectTeams,
 	acceptInviation,
-	removeUser,
+	findProjectOfTeam,
 };

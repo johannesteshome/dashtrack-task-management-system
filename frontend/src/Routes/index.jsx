@@ -15,6 +15,7 @@ import SharedLayout from "../Screens/SharedLayout";
 import ProjectsPage from "../Pages/ProjectsPage";
 import CreateProject from "../Pages/CreateProject";
 import NotificationsPage from "../Pages/NotificationsPage";
+import InvitationPage from "../Pages/InvitationPage";
 import TasksPage from "../Pages/TasksPage";
 
 const AllRoutes = () => {
@@ -64,6 +65,10 @@ const AllRoutes = () => {
           <Route
             path='project/:id'
             element={<ProjectsPage />}
+          />
+          <Route
+            path='invite/*'
+            element={<InvitationPage />}
           />
           <Route
             path='create-project'
