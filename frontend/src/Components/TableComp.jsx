@@ -10,7 +10,8 @@ export default function TableComp({data,setData, column, team}) {
     const handleDelete = (Id) => {
         const newData = data.filter((item) => item.Id!== Id);
         setData(newData);
-        };
+    };
+    
     const columns = [
         {
             title:"ID",
@@ -106,9 +107,12 @@ export default function TableComp({data,setData, column, team}) {
         },
         {
             title:"Due Date",
-            dataIndex:"date",
+            dataIndex:"Date",
             sorter:true,
-            key:"date"
+            key:"Date",
+            render: date => (
+                <Typography.Text>{date.toLocaleDateString()}</Typography.Text>
+            )
         },
         {
             title:"Assigned",
@@ -149,6 +153,16 @@ export default function TableComp({data,setData, column, team}) {
                 editForm
                 .validateFields()
                 .then((values) => {
+                    console.log(values);
+                    const newData = data.map((item) => {
+                        if (item.Id === values.Id) {
+                            return {...values, Date: values.Date.$d};
+                        }
+                        return item;
+                    });
+                    setData(newData);
+                    setEditTask(false);
+                    editForm.resetFields();
                     
                 })
                 .catch((info) => {
@@ -225,9 +239,8 @@ export default function TableComp({data,setData, column, team}) {
                 />
                 </Form.Item>
                 <Form.Item
-                name="date"
+                name="Date"
                 label="Due Date"
-                // initialValue={editData.date}
                 //TODO: Fix the date picker
                 rules={[
                     {

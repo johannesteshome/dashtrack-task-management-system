@@ -63,21 +63,8 @@ const getListData = (value) => {
   }
   return listData || [];
 };
-const getMonthData = (value) => {
-  if (value.month() === 8) {
-    return 1394;
-  }
-};
+
 const App = () => {
-  const monthCellRender = (value) => {
-    const num = getMonthData(value);
-    return num ? (
-      <div className="notes-month">
-        <section>{num}</section>
-        <span>Backlog number</span>
-      </div>
-    ) : null;
-  };
   const dateCellRender = (value) => {
     const listData = getListData(value);
     return (
@@ -92,9 +79,12 @@ const App = () => {
   };
   const cellRender = (current, info) => {
     if (info.type === 'date') return dateCellRender(current);
-    if (info.type === 'month') return monthCellRender(current);
     return info.originNode;
   };
-  return <Calendar cellRender={cellRender} className='p-5 rounded-md'/>;
+  return <Calendar 
+      cellRender={cellRender}
+       className='p-5 rounded-md'
+       onPanelChange={(e)=>{console.log(e)}}
+       />;
 };
 export default App;

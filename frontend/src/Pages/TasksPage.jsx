@@ -13,7 +13,6 @@ const  TasksPage= ({teamName}) => {
   const [form] = Form.useForm();
   const [taskForm] = Form.useForm();
   
-
   const [data, setData] = useState(TaskData)
   const [columns, setColumns] = useState(["To Do", "In Progress", "Testing", "Done"])
   const [team, setTeam] = useState(TeamData)
@@ -23,7 +22,7 @@ const  TasksPage= ({teamName}) => {
           {
             key: '1',
             label: 'Board',
-            children: <KanbanBoard data = {data} columns = {columns}/>,
+            children: <KanbanBoard data = {data} columns = {columns} team={team}/>,
           },
           {
             key: '2',
@@ -168,7 +167,7 @@ const  TasksPage= ({teamName}) => {
             >
               <Select
                 placeholder="Please select"
-                options={[{value: "Low", label: "Low"}, {value: "Medium", label: "Medium"}, {value: "High", label: "High"}, {value: "Critical", label: "Critical"}]}
+                options={[{value: "Low", label: "Low"}, {value: "Normal", label: "Normal"}, {value: "High", label: "High"}, {value: "Critical", label: "Critical"}]}
               />
             </Form.Item>
             <Form.Item

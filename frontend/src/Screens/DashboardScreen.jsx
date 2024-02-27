@@ -33,7 +33,7 @@ const DashboardScreen = () => {
 
   const { role, _id } = useSelector((state) => state.auth.user);
   console.log(role, _id);
-  const projects = useSelector((state) => state.data.myProjects);
+  const projects = useSelector((state) => state.data.myProjects) || [];
   let menuItems = [];
   // const [menuItems, setMenuItems] = useState([])
 

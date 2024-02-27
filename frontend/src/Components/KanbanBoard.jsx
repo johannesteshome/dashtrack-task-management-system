@@ -1,13 +1,22 @@
 import { KanbanComponent, ColumnDirective, ColumnsDirective} from '@syncfusion/ej2-react-kanban'
 import { extend, addClass } from '@syncfusion/ej2-base';
 import "./KanbanBoard.css"
-export default function KanbanBoard({data,columns}) {
+import { useEffect, useState } from 'react';
+import { TaskData } from '../sampleData/tasksData'
+
+export default function KanbanBoard({data, columns}) {
+    const [change, setChange] = useState(false)
+    console.log(data)
+    useEffect(() =>{
+        console.log(data)
+        }, [change])
     
-     const fields = [
+    const fields = [
         { text: "ID", key: "Id", type: "TextBox" },
         { text: "Status", key: "Status",type: "DropDown" },
         { text: "Assignee",key:"Assignee", type: "TextBox" },
-        { key: "RankId", type: "TextBox" },
+        {text: "Priority", key:"Priority", type: "TextBox"},
+        {text: "Tags", key:"Tags", type: "TextBox"},
         { text: "Summary",key:"Summary", type: "TextArea" },
     ];
     const cardRendered = (args) => {
@@ -52,7 +61,8 @@ export default function KanbanBoard({data,columns}) {
                       template: cardTemplate.bind(this),
                       selectionType: "Multiple",
                       }} 
-                    dialogSettings={{ fields: fields }} 
+                    dialogSettings={{ fields: fields  }}
+                    actionComplete={()=>(setChange(!change))} 
                     className='py-5'
                     cardRendered={cardRendered.bind(this)}
                     >

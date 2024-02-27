@@ -4,82 +4,68 @@ export const TaskData = [
         Title: 'Task 1',
         Status: 'To Do',
         Summary: 'Analyze the new requirements gathered from the customer.',
-        Type: 'Task',
         Priority: 'Low',
         Tags: 'Analyze,Customer',
-        date: 3.5,
+        Date: new Date("02/03/2017"),
         Assignee: 'Nancy Davloio',
-        RankId: 1
     },
     {
         Id: 2,
         Title: 'Task 2',
         Status: 'In Progress',
         Summary: 'Improve application performance',
-        Type: 'Bug',
         Priority: 'Critical',
         Tags: 'Improvement',
-        date: 6,
-        Assignee: 'Andrew Fuller',
-        RankId: 2
+        Date: new Date("02/03/2017"),
+        Assignee: 'Andrew Fuller'
     },
     {
         Id: 3,
         Title: 'Task 3',
         Status: 'Testing',
         Summary: 'Develop the unit test cases for the developed modules.',
-        Type: 'Story',
         Priority: 'High',
         Tags: 'Testing, Modules',
-        date: 5.5,
-        Assignee: 'Janet Leverling',
-        RankId: 3
+        Date: new Date("02/03/2017"),
+        Assignee: 'Janet Leverling'
     },
     {
         Id: 4,
         Title: 'Task 4',
         Status: 'Done',
         Summary: 'Prepare the project plan',
-        Type: 'Story',
         Priority: 'High',
         Tags: 'Plan',
-        date: 3.5,
-        Assignee: 'Janet Leverling',
-        RankId: 4
+        Date: new Date("02/03/2017"),
+        Assignee: 'Janet Leverling'
     },
     {
         Id: 5,
         Title: 'Task 5',
         Status: 'To Do',
         Summary: 'Customer details are not available',
-        Type: 'Bug',
         Priority: 'Low',
         Tags: 'Customer',
-        date: 3.5,
-        Assignee: 'Steven walker',
-        RankId: 1
+        Date: new Date("02/03/2017"),
+        Assignee: 'Steven walker'
     },
     {
         Id: 6,
         Title: 'Task 6',
         Status: 'In Progress',
         Summary: 'Development of the customer support module.',
-        Type: 'Story',
         Priority: 'Critical',
         Tags: 'Development, Support',
-        date: 6,
-        Assignee: 'Margaret hamilt',
-        RankId: 2
+        Date: new Date("02/03/2017"),
+        Assignee: 'Margaret hamilt'
     },
     {
         Id: 7,
         Title: 'Task 7',
         Status: 'Testing',
         Summary: 'Customer feedback report analysis',
-        Type: 'Story',
         Priority: 'Normal',
         Tags: 'Customer, Feedback',
-        date: 5.5,
-        Assignee: 'Steven walker',
-        RankId: 3
+        Date: new Date("02/03/2017"),
+        Assignee: 'Steven walker'
     }]
