@@ -12,5 +12,9 @@ router.put(
 	authenticateUser,
 	teamController.removeMembers
 );
+router.put("/addChat/:teamId", authenticateUser, teamController.appendChat);
+router
+	.route("/getAllChat/:teamId")
+	.get(authenticateUser, teamController.getAllChat);
 
 module.exports = router;

@@ -8,6 +8,7 @@ const {
 	isProjectMember,
 	isTeamMember,
 } = require("../utils/auth");
+const { TeamModel } = require("../models/team.model");
 
 const getAllTeams = catchAsync(async (req, res, next) => {
 	const teams = await teamServices.findMany({});
@@ -135,6 +136,26 @@ const removeMembers = catchAsync(async (req, res, next) => {
 	res.status(200).json({ teamAfter });
 });
 
+const appendChat = catchAsync(async (req, res, next) => {
+	const { teamId } = req.params;
+
+	const team = await teamServices.findById(teamId);
+
+	team.chats.push(req.body);
+
+	await team.save();
+
+	res.status(200).json({ chats: team.chats });
+});
+
+const getAllChat = catchAsync(async (req, res, next) => {
+	const { teamId } = req.params;
+
+	const team = await teamServices.findById(teamId);
+
+	return res.status(200).json({ chats: team.chats });
+});
+
 module.exports = {
 	findOne,
 	findMany,
@@ -142,4 +163,6 @@ module.exports = {
 	update,
 	addMembers,
 	removeMembers,
+	getAllChat,
+	appendChat,
 };

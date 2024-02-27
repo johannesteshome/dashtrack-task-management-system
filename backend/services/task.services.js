@@ -24,6 +24,10 @@ const exists = async (query) => {
 	return await TaskModel.exists(query);
 };
 
+// const countDocuments = async () => {
+// 	return await TaskModel.
+// }
+
 module.exports = {
 	create,
 	findMany,
