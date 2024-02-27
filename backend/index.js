@@ -12,6 +12,7 @@ const userRouter = require("./routes/user.route");
 const projetRouter = require("./routes/project.route");
 const teamRouter = require("./routes/team.route");
 const taskRouter = require("./routes/task.route");
+const homeRouter = require("./routes/dashboard.route");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(
 );
 // app.set("trust proxy", 1);
 
+app.use("/home", homeRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/project", projetRouter);

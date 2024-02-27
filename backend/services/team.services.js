@@ -65,6 +65,12 @@ const addTaskToTeam = async (teamId, taskId) => {
 	);
 };
 
+const teamsOfUser = async (userId) => {
+	return await TeamModel.find({
+		$or: [{ createdBy: userId }, { members: { $in: [userId] } }],
+	}).populate("members");
+};
+
 module.exports = {
 	create,
 	findOne,
@@ -77,4 +83,5 @@ module.exports = {
 	exists,
 	getTeamMembers,
 	addTaskToTeam,
+	teamsOfUser,
 };
