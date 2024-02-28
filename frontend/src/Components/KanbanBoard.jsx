@@ -3,12 +3,24 @@ import { extend, addClass } from '@syncfusion/ej2-base';
 import "./KanbanBoard.css"
 import { useEffect, useState } from 'react';
 import { TaskData } from '../sampleData/tasksData'
+import axios from 'axios'
 
-export default function KanbanBoard({data, columns}) {
+const url="http://localhost:5000"
+export default function KanbanBoard({data, columns,id}) {
+    const updateData= async (data) => {
+        try {
+        console.log(data, "Update Data")
+        const response = await axios.put(`${url}/task/teamTasks/${id}`, data);
+        console.log(response.data)
+        }
+        catch (error) {
+        console.log(error);
+        }
+    }
     const [change, setChange] = useState(false)
-    console.log(data)
+    
     useEffect(() =>{
-        console.log(data)
+        updateData(data)
         }, [change])
     
     const fields = [

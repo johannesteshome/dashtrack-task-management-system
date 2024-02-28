@@ -17,16 +17,17 @@ const getAllTeams = catchAsync(async (req, res, next) => {
 
 const findOne = catchAsync(async (req, res, next) => {
 	const team = await teamServices.findOne({ _id: req.params.id });
+	console.log("team", team);
 
 	if (!team) {
 		return res.status(404).json({ message: "Team not found" });
 	}
 
-	const isMember = isTeamMember(team.members, req.user._id);
+	// const isMember = isTeamMember(team.members, req.user._id);
 
-	if (!isMember) {
-		return res.status(403).json({ message: "Not a member of this team" });
-	}
+	// if (!isMember) {
+	// 	return res.status(403).json({ message: "Not a member of this team" });
+	// }
 
 	res.status(200).json({ team });
 });

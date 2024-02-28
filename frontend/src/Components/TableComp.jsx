@@ -1,15 +1,28 @@
 import { useState } from 'react';
 import {Space, Table, Tag, Typography, Modal, DatePicker, Select, Button, Form, Input,Popconfirm} from 'antd';
+import axios from 'axios';
 
+const url = "http://localhost:5000"
 const TextArea = Input.TextArea
-export default function TableComp({data,setData, column, team}) {
+export default function TableComp({data,setData, column, team, id}) {
     const [editTask, setEditTask] = useState(false)
     const [editForm] = Form.useForm();
     const [editData, setEditData] = useState({})
-    //TODO: Fix the edit form
+
+    const updateData= async (data) => {
+        try {
+        console.log(data, "Update Data")
+        const response = await axios.put(`${url}/task/teamTasks/${id}`, data);
+        console.log(response.data)
+        }
+        catch (error) {
+        console.log(error);
+        }
+    }
     const handleDelete = (Id) => {
         const newData = data.filter((item) => item.Id!== Id);
         setData(newData);
+        updateData(newData);
     };
     
     const columns = [
@@ -111,7 +124,7 @@ export default function TableComp({data,setData, column, team}) {
             sorter:true,
             key:"Date",
             render: date => (
-                <Typography.Text>{date.toLocaleDateString()}</Typography.Text>
+                <Typography.Text>{new Date(date).toLocaleDateString()}</Typography.Text>
             )
         },
         {
@@ -161,6 +174,7 @@ export default function TableComp({data,setData, column, team}) {
                         return item;
                     });
                     setData(newData);
+                    updateData(newData)
                     setEditTask(false);
                     editForm.resetFields();
                     

@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {DatePicker, Select, Button, Form, Input, Modal, Tabs } from 'antd';
 import { TaskData } from '../sampleData/tasksData'
 import { TeamData } from '../sampleData/teamData';
@@ -6,28 +6,66 @@ import KanbanBoard from '../Components/KanbanBoard';
 import TableComp from '../Components/TableComp';
 import CalendarComp from '../Components/CalendarComp';
 import ChatComp from '../Components/ChatComp';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-
+const url = "http://localhost:5000"
 const TextArea = Input.TextArea
-const  TasksPage= ({teamName}) => {
+const  TasksPage= () => {
+  const navigate = useNavigate();
+  const [queryParameters] = useSearchParams();
+  const id = queryParameters.get('id')
+  const [teamName,setTeamName] = useState("")
+
+  
   const [form] = Form.useForm();
   const [taskForm] = Form.useForm();
   
-  const [data, setData] = useState(TaskData)
+  const [data, setData] = useState([])
   const [columns, setColumns] = useState(["To Do", "In Progress", "Testing", "Done"])
   const [team, setTeam] = useState(TeamData)
   const [open, setOpen] = useState(false)
+  useEffect(() => {
+    if(!id){
+      navigate('/dashboard')}
+    
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${url}/team/getOne/${id}`);
+        console.log(response.data.team)
+        setTeamName(response.data.team.name)
+        setData(response.data.team.tasks)
+
+      }
+      catch (error) {
+        console.log(error);
+      }
+    } 
+    fetchData()
+  }, [id])
+
+  const updateData= async (data) => {
+    try {
+      console.log(data, "Update Data")
+      const response = await axios.put(`${url}/task/teamTasks/${id}`, data);
+      console.log(response.data)
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   const [addTask, setAddTask] = useState(false)
   const items = [
           {
             key: '1',
             label: 'Board',
-            children: <KanbanBoard data = {data} columns = {columns} team={team}/>,
+            children: <KanbanBoard data = {data} columns = {columns} team={team} id={id} />,
           },
           {
             key: '2',
             label: 'Table',
-            children: <TableComp data = {data} setData={setData} column={columns} team={team}/>,
+            children: <TableComp data = {data} setData={setData} column={columns} team={team} id={id}/>,
           },
           {
             key: '3',
@@ -95,11 +133,17 @@ const  TasksPage= ({teamName}) => {
             taskForm
               .validateFields()
               .then((values) => {
-                console.log(values);
-                const task={...values, Title: values.Id}
+                const task={...values, Title: values.Id,Date: values.Date.$d}
                 setAddTask(false);
                 taskForm.resetFields();
-                setData((prev) => [...prev, task]);
+                if(data){
+                  updateData([...data,task])
+                  setData((prev) => [...prev, task]);
+                }
+                else{
+                  setData([task]);
+                  updateData([task])
+                }
               })
               .catch((info) => {
                 console.log('Validate Failed:', info);
@@ -171,7 +215,7 @@ const  TasksPage= ({teamName}) => {
               />
             </Form.Item>
             <Form.Item
-              name="date"
+              name="Date"
               label="Due Date"
               rules={[
                 {

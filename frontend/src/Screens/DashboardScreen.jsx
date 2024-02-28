@@ -63,7 +63,7 @@ const DashboardScreen = () => {
       );
     } else {
       for (let team of project.teams) {
-        teams.push(getItem(<Link to={`teams/${team._id}`}>{team.name}</Link>, ++i));
+        teams.push(getItem(<Link to={`teams/?id=${team._id}`}>{team.name}</Link>, ++i));
       }
     }
 
