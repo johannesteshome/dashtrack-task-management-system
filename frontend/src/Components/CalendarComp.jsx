@@ -11,7 +11,13 @@ export default function CalendarComp({data}){
           }
         )
     })
+    console.log(eventData)
     return(
-    <Scheduler events={eventData}/>
+    <Scheduler 
+      events={eventData}
+      draggable={false}
+      editable={false}
+      deletable={false}
+      />
     )
 }

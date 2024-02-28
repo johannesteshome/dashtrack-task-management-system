@@ -4,6 +4,8 @@ import axios from 'axios';
 
 const url = "http://localhost:5000"
 const TextArea = Input.TextArea
+const {RangePicker} = DatePicker
+
 export default function TableComp({data,setData, column, team, id}) {
     const [editTask, setEditTask] = useState(false)
     const [editForm] = Form.useForm();
@@ -144,7 +146,7 @@ export default function TableComp({data,setData, column, team, id}) {
                 </Popconfirm>
                 <Button onClick={() => {
                     editForm.resetFields()
-                    setEditData(record);
+                    setEditData({Id: record.Id, Status: record.Status, Summary: record.Summary, Priority: record.Priority, Assignee: record.Assignee, Tags: record.Tags});
                     setEditTask(true);
                 }}>
                     Edit
@@ -189,11 +191,11 @@ export default function TableComp({data,setData, column, team, id}) {
                 layout="vertical"
                 size = "small"
                 name="add task form"
+                initialValues={editData}
             >
                 <Form.Item
                     name="Id"
                     label="ID"
-                    initialValue={editData.Id}
                     rules={[
                         {
                         required: true,
@@ -206,7 +208,6 @@ export default function TableComp({data,setData, column, team, id}) {
                 <Form.Item
                 name="Status"
                 label="Status"
-                initialValue={editData.Status}
                 rules={[
                     {
                     required: true,
@@ -225,7 +226,6 @@ export default function TableComp({data,setData, column, team, id}) {
                 <Form.Item
                 name="Summary"
                 label="Summary"
-                initialValue={editData.Summary}
                 rules={[
                     {
                     required: true,
@@ -239,7 +239,6 @@ export default function TableComp({data,setData, column, team, id}) {
                 <Form.Item
                 name="Priority"
                 label="Priority"
-                initialValue={editData.Priority}
                 rules={[
                     {
                     required: true,
@@ -263,12 +262,11 @@ export default function TableComp({data,setData, column, team, id}) {
                     },
                 ]}
                 >
-                <DatePicker />
+                <RangePicker />
                 </Form.Item>
                 <Form.Item
                 name="Assignee"
                 label="Assigned"
-                initialValue={editData.Assignee}
                 rules={[
                     {
                     required: true,
@@ -287,7 +285,6 @@ export default function TableComp({data,setData, column, team, id}) {
                 <Form.Item
                 name="Tags"
                 label="Tags"
-                initialValue={editData.Tags}
                 rules={[
                     {
                     required: true,

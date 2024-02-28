@@ -6,13 +6,13 @@ import { TaskData } from '../sampleData/tasksData'
 import axios from 'axios'
 
 const url="http://localhost:5000"
-export default function KanbanBoard({data, columns,id}) {
-
-    const updateData= async () => {
+export default function KanbanBoard({data,columns, id}) {
+    
+    const updateData= async (records) => {
         try {
-            const response = await axios.put(`${url}/task/teamTasks/${id}`, data);
+            const response = await axios.put(`${url}/task/teamTasks/${id}`, records);
             console.log(data, "Update Data")
-        console.log(response.data)
+            console.log(response.data)
         }
         catch (error) {
         console.log(error);
@@ -71,7 +71,7 @@ export default function KanbanBoard({data, columns,id}) {
                       selectionType: "Multiple",
                       }} 
                     dialogSettings={{ fields: fields  }}
-                    actionComplete={()=>(updateData())} 
+                    actionComplete={(e)=>(updateData(e.changedRecords))} 
                     className='py-5'
                     cardRendered={cardRendered.bind(this)}
                     >
