@@ -9,6 +9,7 @@ import ChatComp from '../Components/ChatComp';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {useSelector} from 'react-redux'
+import io from "socket.io-client";
 
 const url = "http://localhost:5000"
 const TextArea = Input.TextArea
@@ -20,6 +21,7 @@ const  TasksPage= () => {
   const [queryParameters] = useSearchParams();
   const id = queryParameters.get('id')
   const [teamName,setTeamName] = useState("")
+  const socket = io("http://localhost:5000");
 
   
   const [form] = Form.useForm();
@@ -33,7 +35,8 @@ const  TasksPage= () => {
   useEffect(() => {
     if(!id){
       navigate('/dashboard')}
-    
+
+    socket.emit("followTeamChat", id);
     const fetchData = async () => {
       try {
         const response = await axios.get(`${url}/team/getOne/${id}`);
@@ -81,7 +84,7 @@ const  TasksPage= () => {
           {
             key: '4',
             label: 'Chat',
-            children: <ChatComp id={id}/>
+            children: <ChatComp id={id} socket={socket}/>
           },
         ];
   return (
