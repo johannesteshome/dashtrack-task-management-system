@@ -2,3 +2,4 @@ http://localhost:3030/team/addChat/65da5d58bb1a84c55fdc1878 => put method
 http://localhost:3030/team/getAllChat/65da5d58bb1a84c55fdc1878 => get method
 http://localhost:3030/task/teamTasks/65da5d58bb1a84c55fdc1878 => get method
 http://localhost:3030/task/teamTasks/65da5d58bb1a84c55fdc1878 => put method
+http://localhost:3030/home => dashboard data
