@@ -181,6 +181,7 @@ export const FetchCurrentUser = createAsyncThunk(
     }
   }
 );
+
 // Old Project Functions
 
 export const UpdateTeacher = createAsyncThunk(

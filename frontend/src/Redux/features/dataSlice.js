@@ -28,7 +28,15 @@ const initialState = {
 const dataSlice = createSlice({
   name: "data",
   initialState,
-  reducers: {},
+  reducers: {
+    deleteData: (state) => {
+      state.currentProject = null;
+      state.myProjects = null;
+      state.notifications = null;
+      state.unreadNotifications = 0;
+      state.loggedInUser = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(CreateNewProject.pending, (state) => {
@@ -179,6 +187,6 @@ const dataSlice = createSlice({
   },
 });
 
-export const {} = dataSlice.actions;
+export const {deleteData} = dataSlice.actions;
 
 export default dataSlice.reducer;

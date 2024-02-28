@@ -10,6 +10,7 @@ import dashtrack from "../img/dashtrack-banner.png";
 import { authLogout } from "../Redux/features/authActions";
 import LoadingScreen from "./LoadingScreen";
 import ReactLoading from "react-loading";
+import {deleteData} from "../Redux/features/dataSlice"
 
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -133,7 +134,10 @@ const DashboardScreen = () => {
       <Icon icon='mdi:create-new-folder-outline' />
     ),
     getItem(
-      <span onClick={() => dispatch(authLogout())}>Logout</span>,
+      <span onClick={() => {
+        dispatch(authLogout())
+        dispatch(deleteData())
+      }}>Logout</span>,
       "6",
       <Icon icon='humbleicons:logout' />,
       null,

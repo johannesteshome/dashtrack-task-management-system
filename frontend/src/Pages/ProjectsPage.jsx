@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
 import AddTeamMemberModal from "./AddTeamMemberModal";
 import CreateTeamModal from "./CreateTeamModal";
-import { DeleteProject, GetMyProjects } from "../Redux/features/dataActions";
+import {
+  DeleteProject,
+  GetMyProjects,
+  GetOneProject,
+} from "../Redux/features/dataActions";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +23,7 @@ const ProjectsPage = () => {
     toast(message);
   };
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (!project) {
