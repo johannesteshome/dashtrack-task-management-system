@@ -26,20 +26,7 @@ const teamSchema = new Schema(
 		],
 		tasks: [],
 		chats: [
-			{
-				sender: {
-					type: String,
-					required: true,
-				},
-				message: {
-					type: String,
-					required: true,
-				},
-				createdAt: {
-					type: Date,
-					default: Date.now,
-				},
-			},
+			
 		],
 		createdBy: {
 			type: Schema.Types.ObjectId,

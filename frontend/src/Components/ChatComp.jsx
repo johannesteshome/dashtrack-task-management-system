@@ -2,30 +2,35 @@ import { MessageList } from "react-chat-elements"
 import {Form, Button, Input, Avatar} from 'antd'
 import "react-chat-elements/dist/main.css"
 import { useState, useRef, useEffect } from "react"
-export default function ChatComp(){
+import { useSelector } from "react-redux";
+import axios from 'axios'
+
+const url="http://localhost:5000/team"
+export default function ChatComp({id}) {
+    const {_id, name} =useSelector((state)=>state.auth.user)
     const [message]=Form.useForm()
     const inputRef = useRef(null);
 
-    const [chatData,setChatData]=useState([
-        {
-            position: "left",
-            title: "Admin",
-            type: "text",
-            text: "Hello, how can I help you?",
-            date: new Date(),
-        },
-        {
-            position: "left",
-            title: "Admin",
-            type: "text",
-            text: "I am looking for the best chat solution for my website",
-            date: new Date(),
-        }
-    ])
+    const [chatData,setChatData]=useState([])
     useEffect(() => {
         // Focus on the input when the component mounts
+        const fecthData=async()=>{
+            const {data}=await axios.get(`${url}/getAllChat/${id}`)
+            setChatData(data.chats)
+        }
+        fecthData()
         inputRef.current.focus();
-    }, [chatData]);
+    }, [id]);
+
+    const sendChat=async(chat)=>{
+        try{
+            const response=await axios.put(`${url}/addChat/${id}`,chat)
+            console.log(response.data)
+            inputRef.current.focus();}
+        catch(error){
+            console.log(error)
+        }
+    }
     
     return(
     <>
@@ -33,11 +38,11 @@ export default function ChatComp(){
      className=" p-5 rounded-lg shadow-lg m-auto mt-4 max-h-96 overflow-y-scroll"
     >
     {
-        chatData.map((message, index) => (
-            <div className= {message.position==="left" ? "flex gap-1" : "flex gap-1 justify-end"}>
+        chatData.length > 0 && chatData.map((message, index) => (
+            <div className= {message.id!==_id ? "flex gap-1" : "flex gap-1 justify-end"}>
             {
-                message.position === "left" ? 
-                    <Avatar style={{ backgroundColor: '#f56a00' }}>{message.title[0]}</Avatar> : null
+                message.id !== _id? 
+                    <Avatar style={{ backgroundColor: '#f56a00' }}>{message.name[0]}</Avatar> : null
             }
             <MessageList
             key={index}
@@ -46,17 +51,17 @@ export default function ChatComp(){
             toBottomHeight={"100%"}
                 dataSource={[
                     {
-                        position: message.position,
-                        title: message.title,
-                        type: message.type,
+                        position: message.id === _id ? "right":"left",
+                        title: message.name,
+                        type: "text",
                         text: message.text,
                         date: message.date,
                     }
                 ]}
                 />
             {
-                message.position === "right" ? 
-                    <Avatar style={{ backgroundColor: '#87d068' }}>{message.title[0]}</Avatar> : null
+                message.id === _id ? 
+                    <Avatar style={{ backgroundColor: '#87d068' }}>{message.name[0]}</Avatar> : null
             }
             </div>
         ))
@@ -66,7 +71,14 @@ export default function ChatComp(){
     className="width-100% flex gap-3 justify-end"
     form={message}
     onFinish={(e)=>{
-        setChatData([...chatData,{position: "right", title:"user", type: "text", text: e.message, date: new Date()}]);
+        if(chatData){
+            setChatData([...chatData,{ id:_id, name :name, text: e.message, date: new Date()}]);
+        }
+        else{
+            setChatData([{ id:_id, name :name, text: e.message, date: new Date()}]);
+        }
+        sendChat({ id:_id, name :name, text: e.message, date: new Date()});
+
         message.resetFields();}}
     >
         <Form.Item

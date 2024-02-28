@@ -20,8 +20,10 @@ export default function KanbanBoard({data, columns,id}) {
     const [change, setChange] = useState(false)
     
     useEffect(() =>{
+        // console.log(data, "Change")
         updateData(data)
-        }, [change])
+        }, [change,data])
+
     
     const fields = [
         { text: "ID", key: "Id", type: "TextBox" },
@@ -74,7 +76,10 @@ export default function KanbanBoard({data, columns,id}) {
                       selectionType: "Multiple",
                       }} 
                     dialogSettings={{ fields: fields  }}
-                    actionComplete={()=>(setChange(!change))} 
+                    // actionComplete={()=>(setChange(!change))} 
+                    // onChange={()=>(setChange(!change))}
+                    dialogClose={()=>setChange(!change)}
+                    // dataSourceChanged={()=>setChange(!change)}
                     className='py-5'
                     cardRendered={cardRendered.bind(this)}
                     >

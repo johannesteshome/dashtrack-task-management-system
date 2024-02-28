@@ -139,10 +139,10 @@ const removeMembers = catchAsync(async (req, res, next) => {
 
 const appendChat = catchAsync(async (req, res, next) => {
 	const { teamId } = req.params;
-
-	const team = await teamServices.findById(teamId);
-
+	const team = await TeamModel.findById(teamId);
+	
 	team.chats.push(req.body);
+	// console.log(req.body,teamId,team.chats)
 
 	await team.save();
 
