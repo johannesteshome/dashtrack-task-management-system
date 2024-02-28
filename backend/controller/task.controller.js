@@ -186,13 +186,13 @@ const updateProgress = catchAsync(async (req, res) => {
 });
 
 const replaceAllTasks = catchAsync(async (req, res) => {
-	const update = await TeamModel.findByIdAndUpdate(
-		req.params.teamId,
-		{ $set: { tasks: req.body } },
-		{ new: true }
-	);
+	const {teamId}=req.params
+	const team = await TeamModel.findById(teamId);
 
-	res.status(200).json({ tasks: update.tasks });
+	team.tasks=req.body
+	// console.log(team,req.body)
+	await team.save()
+	res.status(200).json({ tasks: team.tasks });
 });
 module.exports = {
 	createTask,

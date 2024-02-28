@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aldabil/react-scheduler": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
     "@fullcalendar/core": "^6.0.3",
     "@fullcalendar/daygrid": "^6.0.3",
     "@fullcalendar/list": "^6.0.3",
     "@fullcalendar/timegrid": "^6.0.3",
+    "@mui/base": "^5.0.0-beta.37",
+    "@mui/material": "^5.15.11",
     "@reduxjs/toolkit": "^2.0.1",
     "@syncfusion/ej2-base": "24.2.7",
     "@syncfusion/ej2-buttons": "24.2.7",
@@ -31,6 +36,7 @@
     "generate-password": "^1.7.1",
     "js-cookie": "^3.0.5",
     "moment": "^2.30.1",
+    "mui": "^0.0.1",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
@@ -50,9 +56,11 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "sass": "^1.71.1",
-    "source-map-loader": "0.2.4",
     "socket.io-client": "^4.7.4",
-    "web-vitals": "^2.1.4"
+    "source-map-loader": "0.2.4",
+    "web-vitals": "^2.1.4",
+    "@mui/x-date-pickers": "^6.0.1",
+    "date-fns": "2.30.0"
   },
   "scripts": {
     "start": "react-scripts start",

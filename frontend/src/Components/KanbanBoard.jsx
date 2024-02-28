@@ -7,22 +7,17 @@ import axios from 'axios'
 
 const url="http://localhost:5000"
 export default function KanbanBoard({data, columns,id}) {
-    const updateData= async (data) => {
+
+    const updateData= async () => {
         try {
-        console.log(data, "Update Data")
-        const response = await axios.put(`${url}/task/teamTasks/${id}`, data);
+            const response = await axios.put(`${url}/task/teamTasks/${id}`, data);
+            console.log(data, "Update Data")
         console.log(response.data)
         }
         catch (error) {
         console.log(error);
         }
     }
-    const [change, setChange] = useState(false)
-    
-    useEffect(() =>{
-        // console.log(data, "Change")
-        updateData(data)
-        }, [change,data])
 
     
     const fields = [
@@ -76,10 +71,7 @@ export default function KanbanBoard({data, columns,id}) {
                       selectionType: "Multiple",
                       }} 
                     dialogSettings={{ fields: fields  }}
-                    // actionComplete={()=>(setChange(!change))} 
-                    // onChange={()=>(setChange(!change))}
-                    dialogClose={()=>setChange(!change)}
-                    // dataSourceChanged={()=>setChange(!change)}
+                    actionComplete={()=>(updateData())} 
                     className='py-5'
                     cardRendered={cardRendered.bind(this)}
                     >
