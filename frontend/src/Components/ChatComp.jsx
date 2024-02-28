@@ -6,25 +6,34 @@ import { useSelector } from "react-redux";
 import axios from 'axios'
 
 const url="http://localhost:5000/team"
-export default function ChatComp({id}) {
+export default function ChatComp({id, socket}) {
     const {_id, name} =useSelector((state)=>state.auth.user)
     const [message]=Form.useForm()
     const inputRef = useRef(null);
 
     const [chatData,setChatData]=useState([])
+    const fetchData=async()=>{
+        const {data}=await axios.get(`${url}/getAllChat/${id}`)
+        setChatData(data.chats)
+    }
     useEffect(() => {
         // Focus on the input when the component mounts
-        const fecthData=async()=>{
-            const {data}=await axios.get(`${url}/getAllChat/${id}`)
-            setChatData(data.chats)
-        }
-        fecthData()
+        fetchData()
         inputRef.current.focus();
     }, [id]);
+
+    useEffect(() => {
+        socket.on("receiveMessage",(chat)=>{
+            fetchData()
+            // console.log("Message notified")
+            inputRef.current.focus()
+        })
+    },[socket])
 
     const sendChat=async(chat)=>{
         try{
             const response=await axios.put(`${url}/addChat/${id}`,chat)
+            socket.emit("send_Message",chat)
             console.log(response.data)
             inputRef.current.focus();}
         catch(error){

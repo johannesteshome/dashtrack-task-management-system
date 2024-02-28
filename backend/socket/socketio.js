@@ -8,6 +8,12 @@ module.exports = function (io) {
 
         socket.on("followTeamChat",(id)=>{
           console.log("team ", id, "is subscribed to the chat")
+          socket.join(id)
+        })
+
+        socket.on("send_Message",(chat)=>{
+          // console.log("message", chat)
+          socket.emit("receiveMessage", chat)
         })
 
         socket.on("subscribeToNotifications", (email) => {

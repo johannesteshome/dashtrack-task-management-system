@@ -84,7 +84,7 @@ const  TasksPage= () => {
           {
             key: '4',
             label: 'Chat',
-            children: <ChatComp id={id}/>
+            children: <ChatComp id={id} socket={socket}/>
           },
         ];
   return (
