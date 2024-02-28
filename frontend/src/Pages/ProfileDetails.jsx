@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { UserChangePassword } from "../Redux/features/authActions";
-import { UpdateUser } from "../Redux/features/dataActions";
+import { FetchCurrentUser, UpdateUser } from "../Redux/features/dataActions";
 const { Option } = Select;
 const notify = (text) => toast(text);
 
@@ -23,7 +23,7 @@ const items = [
 
 const ProfileDetails = () => {
   const [current, setCurrent] = useState("personal");
-  const { role, _id } = useSelector((state) => state.auth.user);
+  const { name, email, _id } = useSelector((state) => state.data.loggedInUser);
   const dispatch = useDispatch();
   // console.log(role, "role");
 
@@ -35,8 +35,8 @@ const ProfileDetails = () => {
   // const departments = useSelector((state) => state.data.departments);
   // const user = useSelector((state) => state.data.loggedInUser);
   const [initialValues, setInitialValues] = useState({
-    name: "",
-    email:  "",
+    name: name,
+    email:  email,
     
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +57,7 @@ const ProfileDetails = () => {
         if (res.payload.success) {
           setIsLoading(false);
           setIsInputDisabled(true);
+          dispatch(FetchCurrentUser(_id))
           return notify(res.payload.message);
         } else {
           setIsLoading(false);
@@ -65,19 +66,19 @@ const ProfileDetails = () => {
       });
   };
 
-  // const onFinishPassword = (values) => {
-  //   setIsLoading(true);
-  //   dispatch(UserChangePassword({ ...values, _id })).then((res) => {
-  //     if (res.payload.success) {
-  //       setIsLoading(false);
-  //       form1.resetFields();
-  //       return notify(res.payload.message);
-  //     } else {
-  //       setIsLoading(false);
-  //       return notify(res.payload.message);
-  //     }
-  //   });
-  // };
+  const onFinishPassword = (values) => {
+    setIsLoading(true);
+    dispatch(UserChangePassword({ ...values, _id })).then((res) => {
+      if (res.payload.success) {
+        setIsLoading(false);
+        form1.resetFields();
+        return notify(res.payload.message);
+      } else {
+        setIsLoading(false);
+        return notify(res.payload.message);
+      }
+    });
+  };
 
   const prefixSelector = (
     <Form.Item
@@ -147,7 +148,7 @@ const ProfileDetails = () => {
               maxWidth: 600,
             }}
             initialValues={{ ...initialValues, prefix: "251" }}
-            onFinish={(e) => {console.log(e);}}>
+            onFinish={onFinishProfile}>
             <Form.Item
               label='Name'
               name='name'
@@ -200,9 +201,7 @@ const ProfileDetails = () => {
             style={{
               maxWidth: 900,
             }}
-            onFinish={(e) => {
-              console.log(e);
-            }}>
+            onFinish={onFinishPassword}>
             <Form.Item
               label='Current Password'
               name='oldPassword'

@@ -10,7 +10,9 @@ import {
   DeleteNotification,
   AcceptInvitation,
   InviteUsers,
-  CreateTeam
+  CreateTeam,
+  UpdateUser,
+  FetchCurrentUser
 } from "./dataActions";
 
 const initialState = {
@@ -147,6 +149,31 @@ const dataSlice = createSlice({
         // state.notifications = action.payload.notifications;
       })
       .addCase(CreateTeam.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(UpdateUser.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(UpdateUser.fulfilled, (state, action) => {
+        console.log(action, "slice");
+        state.loggedInUser = action.payload.user;
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(UpdateUser.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(FetchCurrentUser.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(FetchCurrentUser.fulfilled, (state, action) => {
+        console.log(action.payload, 'action payload');
+        console.log(action, "slice");
+        state.loggedInUser = action.payload.user;
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(FetchCurrentUser.rejected, (state) => {
         // state.loading = false;
       });
   },

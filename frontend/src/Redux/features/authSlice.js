@@ -92,13 +92,13 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(UserChangePassword.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(UserChangePassword.fulfilled, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
       })
       .addCase(UserChangePassword.rejected, (state) => {
-        state.loading = false;
+        // state.loading = false;
       })
   },
 });

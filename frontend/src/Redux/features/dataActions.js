@@ -158,11 +158,23 @@ export const CreateTeam = createAsyncThunk(
 );
 
 export const UpdateUser = createAsyncThunk(
-  "data/updateAdmin",
+  "data/updateUser",
   async (data, { rejectWithValue }) => {
     const { _id } = data;
     try {
-      const response = await axios.patch(`${url}/admins/${_id}`, data);
+      const response = await axios.put(`${url}/user/update/${_id}`, data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const FetchCurrentUser = createAsyncThunk(
+  "data/fetchCurrentUser",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${url}/user/getOne/${_id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

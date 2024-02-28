@@ -5,7 +5,6 @@ let usersio = [];
 module.exports = function (io) {
     io.on("connection", (socket) => {
       console.log('⚡ Socket: Connected');
-      const socketEmail = ''
         socket.on("subscribeToNotifications", (email) => {
           // Store the user ID in the socket's data
           console.log(email, 'email in socket');

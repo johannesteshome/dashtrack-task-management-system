@@ -13,6 +13,7 @@ import ReactLoading from "react-loading";
 
 import { ToastContainer, toast } from "react-toastify";
 import {
+  FetchCurrentUser,
   GetMyProjects,
   GetOneProject,
   GetUnreadNotifications,
@@ -35,7 +36,7 @@ const DashboardScreen = () => {
     dispatch(authLogout());
   }
 
-  const { role, _id, email, name } = useSelector((state) => state.auth.user);
+  const { role, _id, email, name } = useSelector((state) => state.data.loggedInUser);
   console.log(role, _id);
   const projects = useSelector((state) => state.data.myProjects) || [];
   let menuItems = [];
@@ -45,6 +46,7 @@ const DashboardScreen = () => {
     socket.emit("subscribeToNotifications", email);
     dispatch(GetMyProjects());
     dispatch(GetUnreadNotifications(_id));
+    dispatch(FetchCurrentUser(_id))
 
     return () => {
       socket.disconnect();
