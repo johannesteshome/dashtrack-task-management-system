@@ -41,6 +41,12 @@ const CreateProject = () => {
           label='Project Name'
           name={'name'}
           required
+          rules={[
+            {
+              required: true,
+              message: "Please input Project Name",
+            },
+          ]}
           tooltip='This is a required field'>
           <Input placeholder='Enter Project Name' />
         </Form.Item>
@@ -50,6 +56,7 @@ const CreateProject = () => {
           required
           rules={[
             {
+              required: true,
               message: "Please input Description of your project",
             },
           ]}>

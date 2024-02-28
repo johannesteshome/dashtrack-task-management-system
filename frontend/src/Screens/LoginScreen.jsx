@@ -19,10 +19,12 @@ const notify = (text) => toast(text);
 const LoginScreen = () => {
   const [current, setCurrent] = useState("login");
   const [form] = Form.useForm(); // Registration Form
+  const [loginForm] = Form.useForm();
   const [open, setOpen] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
   const captchaRef = useRef(null);
   const navigate = useNavigate();
+  const regEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -49,19 +51,19 @@ const LoginScreen = () => {
     setFormvalue({ ...formvalue, [e.target.name]: e.target.value });
   };
 
-  const HandleSubmit = (e) => {
+  const onFinishLogin = (values) => {
     // e.preventDefault();
     setIsLoading(true);
-    if (formvalue.email !== "" && formvalue.password !== "") {
+    if (values.email !== "" && values.password !== "") {
       let data = {
-        ...formvalue,
-        email: formvalue.email,
+        ...values,
+        email: values.email,
       };
       dispatch(UserLogin(data)).then((res) => {
         if (res.payload.success) {
           notify("Login Successful");
           setIsLoading(false);
-          return navigate("/verify-otp?email=" + formvalue.email);
+          return navigate("/verify-otp?email=" + values.email);
         } else {
           // console.log(res.payload.message);
           setIsLoading(false);
@@ -93,6 +95,16 @@ const LoginScreen = () => {
     } else {
       notify("Please Verify Captcha");
       setIsLoading(false);
+    }
+  };
+
+  const handleStrongPassword = (rule, value, callback) => {
+    if (value !== "" && !regEx.test(value)) {
+      callback(
+        "Password must be 8+ long & contain at least a special character, a number, uppercase and & lowercase character!"
+      );
+    } else {
+      callback();
     }
   };
 
@@ -164,7 +176,8 @@ const LoginScreen = () => {
                 <Form
                   className='flex flex-col items-center justify-center w-full'
                   layout='vertical'
-                  onFinish={HandleSubmit}>
+                  form={loginForm}
+                  onFinish={onFinishLogin}>
                   <Form.Item
                     className='w-1/2'
                     name='email'
@@ -180,11 +193,7 @@ const LoginScreen = () => {
                       },
                     ]}>
                     <Input
-                      type='email'
-                      name='email'
                       className='w-full'
-                      value={formvalue.email}
-                      onChange={Handlechange}
                       required
                     />
                   </Form.Item>
@@ -198,13 +207,7 @@ const LoginScreen = () => {
                         message: "Please input your password!",
                       },
                     ]}>
-                    <Input
-                      type='password'
-                      name='password'
-                      value={formvalue.password}
-                      onChange={Handlechange}
-                      required
-                    />
+                    <Input.Password required />
                   </FormItem>
                   <Form.Item
                     label=' '
@@ -263,8 +266,9 @@ const LoginScreen = () => {
                         required: true,
                         message: "Please input your password!",
                       },
+                      { validator: handleStrongPassword },
                     ]}>
-                    <Input />
+                    <Input.Password required />
                   </FormItem>
                   <Form.Item
                     label='Captcha'

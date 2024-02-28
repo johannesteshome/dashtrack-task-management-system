@@ -43,7 +43,7 @@ const VerifyEmailScreen = () => {
           className='w-[20%]'
           />
         <h1 className="font-bold text-2xl">Please Verify your Email</h1>
-        <p>Welcome to TickTime, please verify your email using this link and change the inital password given to you to secure your account.</p>
+        <p>Welcome to DashTrack, please verify your email using this link and change the inital password given to you to secure your account.</p>
         <Button className="bg-blue-500 text-white hover:bg-white hover:text-blue-500" onClick={verifyEmail}>Verify Email</Button>
       </div>
     );
