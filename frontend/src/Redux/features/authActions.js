@@ -11,11 +11,8 @@ export const UserRegister = createAsyncThunk(
       const response = await axios.post(`${url}/auth/register`, data);
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
+      console.log(error);
+      return rejectWithValue(error.response.data);
     }
   }
 );
