@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import {
   UserLogin,
   UserForgetPassword,
-  UserRegister
+  UserRegister,
 } from "../Redux/features/authActions";
 import FormItem from "antd/es/form/FormItem";
 
@@ -19,10 +19,12 @@ const notify = (text) => toast(text);
 const LoginScreen = () => {
   const [current, setCurrent] = useState("login");
   const [form] = Form.useForm(); // Registration Form
+  const [loginForm] = Form.useForm();
   const [open, setOpen] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
   const captchaRef = useRef(null);
   const navigate = useNavigate();
+  const regEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -49,32 +51,27 @@ const LoginScreen = () => {
     setFormvalue({ ...formvalue, [e.target.name]: e.target.value });
   };
 
-  const HandleSubmit = (e) => {
+  const onFinishLogin = (values) => {
     // e.preventDefault();
     setIsLoading(true);
-    if (formvalue.email !== "" && formvalue.password !== "") {
-        let data = {
-          ...formvalue,
-          email: formvalue.email,
-        };
-        dispatch(UserLogin(data)).then((res) => {
-          if (res.meta.requestStatus === "fulfilled") {
-            notify("Login Successful");
-            setIsLoading(false);
-            return navigate("/verify-otp?email=" + formvalue.email);
-          }
-          if (res.meta.requestStatus === "rejected") {
-            // console.log(res.payload.message);
-            setIsLoading(false);
-            notify(res.payload.message);
-          }
-          if (res.payload.message === "Error") {
-            setIsLoading(false);
-            notify("Something went Wrong, Please Try Again");
-          }
-        });
-      }
+    if (values.email !== "" && values.password !== "") {
+      let data = {
+        ...values,
+        email: values.email,
+      };
+      dispatch(UserLogin(data)).then((res) => {
+        if (res.payload.success) {
+          notify("Login Successful");
+          setIsLoading(false);
+          return navigate("/verify-otp?email=" + values.email);
+        } else {
+          // console.log(res.payload.message);
+          setIsLoading(false);
+          notify(res.payload.message);
+        }
+      });
     }
+  };
 
   const onFinishRegister = (values) => {
     setIsLoading(true);
@@ -83,24 +80,33 @@ const LoginScreen = () => {
     // console.log("Received values of form: ", values, token);
     if (token) {
       console.log(values);
-      dispatch(UserRegister({ ...values, token, role: "user" })).then(
-        (res) => {
-          console.log(res);
-          if (res.payload.success) {
-            setIsLoading(false);
-            form.resetFields();
-            return notify(res.payload.message);
-          } else {
-            setIsLoading(false);
-            return notify(res.payload.message);
-          }
+      dispatch(UserRegister({ ...values, token, role: "user" })).then((res) => {
+        console.log(res.payload, 'res.payload');
+        if (res.payload.success) {
+          setIsLoading(false);
+          form.resetFields();
+          notify(res.payload.message);
+        } else {
+          setIsLoading(false);
+          console.log("here in fail");
+          notify(res.payload.message);
         }
-      );
+      });
     } else {
       notify("Please Verify Captcha");
+      setIsLoading(false);
     }
   };
 
+  const handleStrongPassword = (rule, value, callback) => {
+    if (value !== "" && !regEx.test(value)) {
+      callback(
+        "Password must be 8+ long & contain at least a special character, a number, uppercase and & lowercase character!"
+      );
+    } else {
+      callback();
+    }
+  };
 
   const [ForgetPassword, setForgetPassword] = useState({
     email: "",
@@ -121,12 +127,13 @@ const LoginScreen = () => {
   const [forgetLoading, setforgetLoading] = useState(false);
 
   const HandleChangePassword = () => {
-    console.log( ForgetPassword.email);
+    console.log(ForgetPassword.email);
     if (ForgetPassword.email === "") {
       return notify("Please Fill all Details");
     }
     setforgetLoading(true);
-      dispatch(UserForgetPassword({email: ForgetPassword.email})).then((res) => {
+    dispatch(UserForgetPassword({ email: ForgetPassword.email })).then(
+      (res) => {
         console.log(ForgetPassword.email, "email");
         if (res.meta.requestStatus === "rejected") {
           setforgetLoading(false);
@@ -138,9 +145,9 @@ const LoginScreen = () => {
         onClose();
         setforgetLoading(false);
         return notify("Please check your email for reset password link!");
-      });
-  
       }
+    );
+  };
 
   return (
     <>
@@ -161,13 +168,16 @@ const LoginScreen = () => {
               alt='dashtrack Logo'
               className='w-1/2'
             />
-            <h1 className='text-3xl font-bold'>{current === 'login' ? 'Login' : 'Register'}</h1>
+            <h1 className='text-3xl font-bold'>
+              {current === "login" ? "Login" : "Register"}
+            </h1>
             <div className='w-full flex flex-col items-center justify-center'>
               {current === "login" && (
                 <Form
                   className='flex flex-col items-center justify-center w-full'
                   layout='vertical'
-                  onFinish={HandleSubmit}>
+                  form={loginForm}
+                  onFinish={onFinishLogin}>
                   <Form.Item
                     className='w-1/2'
                     name='email'
@@ -183,11 +193,7 @@ const LoginScreen = () => {
                       },
                     ]}>
                     <Input
-                      type='email'
-                      name='email'
                       className='w-full'
-                      value={formvalue.email}
-                      onChange={Handlechange}
                       required
                     />
                   </Form.Item>
@@ -201,13 +207,7 @@ const LoginScreen = () => {
                         message: "Please input your password!",
                       },
                     ]}>
-                    <Input
-                      type='password'
-                      name='password'
-                      value={formvalue.password}
-                      onChange={Handlechange}
-                      required
-                    />
+                    <Input.Password required />
                   </FormItem>
                   <Form.Item
                     label=' '
@@ -266,8 +266,9 @@ const LoginScreen = () => {
                         required: true,
                         message: "Please input your password!",
                       },
+                      { validator: handleStrongPassword },
                     ]}>
-                    <Input />
+                    <Input.Password required />
                   </FormItem>
                   <Form.Item
                     label='Captcha'
