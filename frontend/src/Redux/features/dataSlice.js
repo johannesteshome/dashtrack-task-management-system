@@ -75,15 +75,15 @@ const dataSlice = createSlice({
         state.loading = false;
       })
       .addCase(GetUnreadNotifications.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(GetUnreadNotifications.fulfilled, (state, action) => {
         console.log(action, "slice");
-        state.loading = false;
+        // state.loading = false;
         state.unreadNotifications = action.payload.unreadNotifications;
       })
       .addCase(GetUnreadNotifications.rejected, (state) => {
-        state.loading = false;
+        // state.loading = false;
       })
       .addCase(GetAllNotifications.pending, (state) => {
         // state.loading = true;

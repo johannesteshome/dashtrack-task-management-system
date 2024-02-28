@@ -28,23 +28,59 @@ module.exports = function (io) {
         socket.on("createNotification", (notification) => {
           // Check if the notification is intended for the current user
           // console.log(socket, 'socket in create notification');
-          console.log(notification.email, socket.email, 'the notification');
+          console.log(notification.email, socket.email, "the notification");
+
           
-            
-          console.log('creating notification');
-        // Save the notification to the database
-          const newNotification = new NotificationModel(notification);
-          console.log(newNotification, 'newNotifications');
-        newNotification
-          .save()
-          .then(() => {
-              // Emit the new notification to the client
-            console.log('emitting notification');
-            socket.emit("notification", newNotification);
-          })
-          .catch((error) => {
-            console.error("Error creating notification:", error);
-          });
+          // create notification in database
+          
+          // const createNotification = async (notification) => {
+          //   try {
+          //     console.log("creating notification");
+          //     const notificationDatabase = await NotificationModel.create(
+          //       notification
+          //     );
+          //     return notificationDatabase;
+          //   } catch (error) {
+          //     // Handle any potential errors here
+          //     console.error("Error while creating notification:", error);
+          //     throw error; // Re-throw the error to be handled by the caller
+          //   }
+          // };
+
+          // Example usage of the async function
+          let notifDB = null;
+          (async () => {
+            try {
+              console.log("creating notification");
+              notifDB = await NotificationModel.create(
+                notification)
+              console.log("Notification created:", notifDB);
+            } catch (error) {
+              // Handle the error from the async function
+              console.error("Error in example usage:", error);
+            }
+          })();
+
+          if (!notifDB) {
+            console.log("Notification not created:", notifDB);
+            return;
+          }
+
+          console.log("emitting notification");
+          socket.emit("notification", newNotification);
+
+          //   const newNotification = new NotificationModel(notification);
+          //   console.log(newNotification, 'newNotifications');
+          // newNotification
+          //   .save()
+          //   .then(() => {
+          //       // Emit the new notification to the client
+          //     console.log('emitting notification');
+          //     socket.emit("notification", newNotification);
+          //   })
+          //   .catch((error) => {
+          //     console.error("Error creating notification:", error);
+          //   });
         });
 
         // Handle client disconnections

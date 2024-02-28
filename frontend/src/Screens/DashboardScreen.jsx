@@ -17,6 +17,7 @@ import {
   GetMyProjects,
   GetOneProject,
   GetUnreadNotifications,
+  GetAllNotifications
 } from "../Redux/features/dataActions";
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -55,7 +56,10 @@ const DashboardScreen = () => {
 
   socket.on("notification", (notification) => {
     console.log("recieving the notification");
+    dispatch(GetUnreadNotifications(_id));
+    dispatch(GetAllNotifications(_id));
     notify('New notification: ' + notification.text)
+
   });
 
   const unreadNotifications = useSelector(
