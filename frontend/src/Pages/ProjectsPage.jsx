@@ -130,13 +130,13 @@ const ProjectsPage = () => {
       <div className='flex justify-between items-center'>
         <h1 className='text-3xl m-4 '>{project?.name}</h1>
         <div className='flex items-center gap-4'>
-          <Button
+          {/* <Button
             type='default'
             size={"large"}
             className='bg-[#21BFD4] text-white hover:bg-white hover:text-[#21BFD4] flex items-center justify-between gap-2'>
             <Icon icon='clarity:edit-line' />
             Edit Project
-          </Button>
+          </Button> */}
           <Popconfirm
             title='Delete Project'
             description='Are you Sure to Delete the Project?'
