@@ -15,6 +15,7 @@ const initialState = {
   loggedInSession: false,
   loading: false,
   user: null,
+  loggedInUser: null
 };
 
 console.log(initialState, "initialState");

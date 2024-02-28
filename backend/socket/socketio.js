@@ -4,15 +4,20 @@ let usersio = [];
 
 module.exports = function (io) {
     io.on("connection", (socket) => {
-        console.log('⚡ Socket: Connected');
-        socket.on("subscribeToNotifications", (userId) => {
+      console.log('⚡ Socket: Connected');
+      const socketEmail = ''
+        socket.on("subscribeToNotifications", (email) => {
           // Store the user ID in the socket's data
-          socket.userId = userId;
+          console.log(email, 'email in socket');
+          socket.email = email;
+          console.log(socket.email, 'email in scoket');
 
           // Retrieve unread notifications for the user from the database
-          NotificationModel.find({ userId: socket.userId })
+          
+          NotificationModel.find({ email: email })
             .then((notifications) => {
               // Emit the notifications to the client
+              console.log('emitted notification to client');
               socket.emit("notifications", notifications);
             })
             .catch((error) => {
@@ -22,22 +27,25 @@ module.exports = function (io) {
 
         // Handle notification creation
         socket.on("createNotification", (notification) => {
-            // Check if the notification is intended for the current user
-            if (notification.userId === socket.userId) {
-              console.log('creating notification');
-            // Save the notification to the database
-            const newNotification = new NotificationModel(notification);
-            newNotification
-              .save()
-              .then(() => {
-                  // Emit the new notification to the client
-                console.log('emitting notification');
-                socket.emit("notification", newNotification);
-              })
-              .catch((error) => {
-                console.error("Error creating notification:", error);
-              });
-          }
+          // Check if the notification is intended for the current user
+          // console.log(socket, 'socket in create notification');
+          console.log(notification.email, socket.email, 'the notification');
+          
+            
+          console.log('creating notification');
+        // Save the notification to the database
+          const newNotification = new NotificationModel(notification);
+          console.log(newNotification, 'newNotifications');
+        newNotification
+          .save()
+          .then(() => {
+              // Emit the new notification to the client
+            console.log('emitting notification');
+            socket.emit("notification", newNotification);
+          })
+          .catch((error) => {
+            console.error("Error creating notification:", error);
+          });
         });
 
         // Handle client disconnections

@@ -1,14 +1,16 @@
 const { NotificationModel } = require("../models/Notification.model");
 // const { UserModel } = require("../models/User.model");
 const { StatusCodes } = require("http-status-codes");
+const { UserModel } = require("../models/user.model");
 
 // @desc Get all notifications
 // @Route GET /notes
 // @Access Private
 const getAllNotifications = async (req, res) => {
   const id = req.params.id;
+  const {email} = await UserModel.findById(id);
   const filteredNotifications = await NotificationModel.find({
-    user: id,
+    email: email,
   }).lean();
   // console.log(filteredNotifications, 'filtered Notifications');
 
@@ -31,8 +33,9 @@ const getAllNotifications = async (req, res) => {
 
 const getUnreadNotifications = async (req, res) => {
   const id = req.params.id;
+  const {email} = await UserModel.findById(id);
   const unreadNotifications = await NotificationModel.find({
-    user: id,
+    email: email,
     read: false,
   });
   return res

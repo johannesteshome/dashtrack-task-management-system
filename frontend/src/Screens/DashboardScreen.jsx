@@ -4,6 +4,8 @@ import { Avatar, Layout, Menu, theme, Badge } from "antd";
 import { Outlet, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import io from "socket.io-client";
+
 import dashtrack from "../img/dashtrack-banner.png";
 import { authLogout } from "../Redux/features/authActions";
 import LoadingScreen from "./LoadingScreen";
@@ -26,21 +28,33 @@ const DashboardScreen = () => {
   const isLoading = useSelector(
     (state) => state.data.loading || state.auth.loading
   );
+  const socket = io("http://localhost:5000");
+
 
   if (!cookieExists) {
     dispatch(authLogout());
   }
 
-  const { role, _id } = useSelector((state) => state.auth.user);
+  const { role, _id, email, name } = useSelector((state) => state.auth.user);
   console.log(role, _id);
   const projects = useSelector((state) => state.data.myProjects) || [];
   let menuItems = [];
   // const [menuItems, setMenuItems] = useState([])
 
   useEffect(() => {
+    socket.emit("subscribeToNotifications", email);
     dispatch(GetMyProjects());
     dispatch(GetUnreadNotifications(_id));
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
+
+  socket.on("notification", (notification) => {
+    console.log("recieving the notification");
+    notify('New notification: ' + notification.text)
+  });
 
   const unreadNotifications = useSelector(
     (state) => state.data.unreadNotifications
@@ -155,7 +169,7 @@ const DashboardScreen = () => {
             padding: 16,
             background: colorBgContainer,
           }}>
-          <h1 className='text-2xl'>Hello there, Admin</h1>
+          <h1 className='text-2xl'>{'Hello there, ' + name}</h1>
           <div className='flex items-center justify-center gap-4'>
             <Link to='notifications'>
               <Badge

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { UserChangePassword } from "../Redux/features/authActions";
+import { UpdateUser } from "../Redux/features/dataActions";
 const { Option } = Select;
 const notify = (text) => toast(text);
 
@@ -36,13 +37,7 @@ const ProfileDetails = () => {
   const [initialValues, setInitialValues] = useState({
     name: "",
     email:  "",
-    mobile:  "",
-    gender:  "",
-    department: "",
-    age:  "",
-    year:  "",
-    section:  "",
-    studentID:  "",
+    
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -56,46 +51,19 @@ const ProfileDetails = () => {
     setCurrent(e.key);
   };
 
-  // const onFinishProfile = async (values) => {
-  //   setIsLoading(true);
-  //   if (role === "admin") {
-  //     console.log("here");
-  //     dispatch(UpdateAdmin({ ...values, _id })).then((res) => {
-  //       if (res.payload.success) {
-  //         setIsLoading(false);
-  //         setIsInputDisabled(true);
-  //         return notify(res.payload.message);
-  //       } else {
-  //         setIsLoading(false);
-  //         return notify(res.payload.message);
-  //       }
-  //     });
-  //   } else if (role === "teacher") {
-  //     // console.log(values, _id);
-  //     dispatch(UpdateTeacher({ ...values, _id })).then((res) => {
-  //       if (res.payload.success) {
-  //         setIsLoading(false);
-  //         setIsInputDisabled(true);
-  //         return notify(res.payload.message);
-  //       } else {
-  //         setIsLoading(false);
-  //         return notify(res.payload.message);
-  //       }
-  //     });
-  //   } else if (role === "student") {
-  //     console.log(values, _id);
-  //     dispatch(UpdateStudent({ ...values, _id })).then((res) => {
-  //       if (res.payload.success) {
-  //         setIsLoading(false);
-  //         setIsInputDisabled(true);
-  //         return notify(res.payload.message);
-  //       } else {
-  //         setIsLoading(false);
-  //         return notify(res.payload.message);
-  //       }
-  //     });
-  //   }
-  // };
+  const onFinishProfile = async (values) => {
+    setIsLoading(true);
+      dispatch(UpdateUser({ ...values, _id })).then((res) => {
+        if (res.payload.success) {
+          setIsLoading(false);
+          setIsInputDisabled(true);
+          return notify(res.payload.message);
+        } else {
+          setIsLoading(false);
+          return notify(res.payload.message);
+        }
+      });
+  };
 
   // const onFinishPassword = (values) => {
   //   setIsLoading(true);
@@ -192,51 +160,6 @@ const ProfileDetails = () => {
               name='email'
               rules={[{ required: true, message: "Please input your email!" }]}>
               <Input disabled={isInputDisabled} />
-            </Form.Item>
-
-            <Form.Item
-              label='Phone Number'
-              name='mobile'
-              rules={[
-                { required: true, message: "Please input your phone number!" },
-              ]}
-              minLength={9}
-              maxLength={9}>
-              <Input
-                disabled={isInputDisabled}
-                addonBefore={prefixSelector}
-                style={{
-                  width: "100%",
-                }}
-                maxLength={9}
-                minLength={9}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label='Gender'
-              name='gender'
-              rules={[
-                { required: true, message: "Please select your gender!" },
-              ]}>
-              <Select
-                disabled={isInputDisabled}
-                placeholder='Select your gender'>
-                <Option value='male'>Male</Option>
-                <Option value='female'>Female</Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              label='Age'
-              name='age'
-              rules={[{ required: true, message: "Please input your age!" }]}>
-              <InputNumber
-                disabled={isInputDisabled}
-                style={{
-                  width: "100%",
-                }}
-              />
             </Form.Item>
 
             <Form.Item

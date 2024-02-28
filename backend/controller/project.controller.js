@@ -51,12 +51,12 @@ const getMyProjects = catchAsync(async (req, res, next) => {
 		req.query;
 	const offset = (page - 1) * limit;
 
-	console.log(req.user);
+	console.log(req.user, 'req.user');
 
 	// get all projects where user is a member
 	const query = {
 		$or: [
-			{ users: { $elemMatch: { user: req.user._id } } },
+			{ members: { $elemMatch: { user: req.user._id } } },
 			{ createdBy: req.user._id },
 		],
 		...req.query,
@@ -250,8 +250,9 @@ const removeTeam = catchAsync(async (req, res, next) => {
 });
 
 const inviteUsers = catchAsync(async (req, res, next) => {
-	const id = req.params.id;
+	const {id} = req.params;
 	const project = await projectServices.findById(id);
+	console.log(id, req.body, 'id and body');
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
@@ -325,7 +326,7 @@ const inviteUsers = catchAsync(async (req, res, next) => {
 });
 
 const acceptInviation = catchAsync(async (req, res, next) => {
-	console.log(req.body);
+	console.log(req.body, 'request');
 	const { email, token, projectId } = req.body;
 
 	const decoded = isTokenValid(token);

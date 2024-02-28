@@ -66,7 +66,7 @@ const OTPScreen = () => {
           label="Enter your OTP (One Time Password) sent to your email:"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Please input your OTP code!",
             },
           ]}>

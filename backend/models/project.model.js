@@ -35,7 +35,7 @@ const projectSchema = new Schema(
 				ref: TeamModel,
 			},
 		],
-		users: [
+		members: [
 			{
 				user: {
 					type: Schema.Types.ObjectId,

@@ -30,7 +30,6 @@ const NotificationsPage = () => {
   const markOneRead = (id) => {
       console.log(id);
       dispatch(ReadNotification(id))
-
     };
     
     const deleteNotification = (id) => {

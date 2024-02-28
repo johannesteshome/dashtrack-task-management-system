@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { UserVerifyEmail } from "../Redux/features/authActions";
 import { useNavigate } from "react-router-dom";
+import { AcceptInvitation, GetMyProjects } from "../Redux/features/dataActions";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -19,16 +20,18 @@ const InvitationPage = () => {
 
   const acceptInvitation = () => {
     dispatch(
-      UserVerifyEmail({
+      AcceptInvitation({
         email: query.get("email"),
-        verificationToken: query.get("token"),
+        token: query.get("token"),
+        projectId: query.get("id"),
       })
     ).then((res) => {
-      if (res.meta.requestStatus === "fulfilled") {
-        notify("Email Verified");
+      if (res.payload.success) {
+        notify("You have accepted the invitaion request");
+        dispatch(GetMyProjects());
         return navigate("/dashboard");
       }
-      if (res.meta.requestStatus === "rejected") {
+      else {
         notify(res.payload.message);
       }
     });
