@@ -8,6 +8,7 @@ import CalendarComp from '../Components/CalendarComp';
 import ChatComp from '../Components/ChatComp';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {useSelector} from 'react-redux'
 
 const url = "http://localhost:5000"
 const TextArea = Input.TextArea
@@ -25,8 +26,9 @@ const  TasksPage= () => {
   const [taskForm] = Form.useForm();
   
   const [data, setData] = useState([])
-  const [columns, setColumns] = useState(["To Do", "In Progress", "Testing", "Done"])
-  const [team, setTeam] = useState(TeamData)
+  const [columns, setColumns] = useState([...new Set(data.map((task) => task.Status))])
+  const {members} = useSelector((state) => state.data.currentProject)
+  // console.log(members,"Members")
   const [open, setOpen] = useState(false)
   useEffect(() => {
     if(!id){
@@ -38,7 +40,8 @@ const  TasksPage= () => {
         console.log(response.data.team)
         setTeamName(response.data.team.name)
         setData(response.data.team.tasks)
-
+        setColumns([...new Set(response.data.team.tasks.map((task) => task.Status))])
+        console.log(columns, "Columns")
       }
       catch (error) {
         console.log(error);
@@ -63,12 +66,12 @@ const  TasksPage= () => {
           {
             key: '1',
             label: 'Board',
-            children: <KanbanBoard data = {data} columns = {columns} team={team} id={id} />,
+            children: <KanbanBoard data = {data} columns = {columns} team={members} id={id} />,
           },
           {
             key: '2',
             label: 'Table',
-            children: <TableComp data = {data} setData={setData} column={columns} team={team} id={id}/>,
+            children: <TableComp data = {data} setData={setData} column={columns} team={members} id={id}/>,
           },
           {
             key: '3',
@@ -96,7 +99,6 @@ const  TasksPage= () => {
               .validateFields()
               .then((values) => {
                 form.resetFields();
-                console.log(values);
                 setOpen(false);
                 setColumns((prev) => [...prev, values.title]);
               })
@@ -243,8 +245,8 @@ const  TasksPage= () => {
                 <Select
                   allowClear
                   placeholder="Please select"
-                  options={team.map((member) => {
-                    return {value: member, label: member}
+                  options={members.map((member) => {
+                    return {value: member.user.name, label: member.user.name}
                   })}
                 />
             </Form.Item>
