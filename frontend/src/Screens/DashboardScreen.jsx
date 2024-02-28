@@ -37,8 +37,8 @@ const DashboardScreen = () => {
     dispatch(authLogout());
   }
 
-  const { role, _id, email, name } = useSelector((state) => state.data.loggedInUser);
-  console.log(role, _id);
+  const {  _id, email, name } = useSelector((state) => state.data.loggedInUser);
+  // console.log(role, _id);
   const projects = useSelector((state) => state.data.myProjects) || [];
   let menuItems = [];
   // const [menuItems, setMenuItems] = useState([])
