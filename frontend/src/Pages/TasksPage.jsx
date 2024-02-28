@@ -11,6 +11,9 @@ import axios from 'axios';
 
 const url = "http://localhost:5000"
 const TextArea = Input.TextArea
+const { RangePicker } = DatePicker;
+
+
 const  TasksPage= () => {
   const navigate = useNavigate();
   const [queryParameters] = useSearchParams();
@@ -70,7 +73,7 @@ const  TasksPage= () => {
           {
             key: '3',
             label: 'Calendar',
-            children: <CalendarComp />,
+            children: <CalendarComp data={data}/>,
           },
           {
             key: '4',
@@ -133,7 +136,8 @@ const  TasksPage= () => {
             taskForm
               .validateFields()
               .then((values) => {
-                const task={...values, Title: values.Id,Date: values.Date.$d}
+                console.log(values)
+                const task={...values, Title: values.Id,Date: [values.Date[0].$d,values.Date[1].$d]}
                 setAddTask(false);
                 taskForm.resetFields();
                 if(data){
@@ -216,7 +220,7 @@ const  TasksPage= () => {
             </Form.Item>
             <Form.Item
               name="Date"
-              label="Due Date"
+              label="Date Range"
               rules={[
                 {
                   required: true,
@@ -224,7 +228,7 @@ const  TasksPage= () => {
                 },
               ]}
             >
-              <DatePicker />
+              <RangePicker />
             </Form.Item>
             <Form.Item
               name="Assignee"

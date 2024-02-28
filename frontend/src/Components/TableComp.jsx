@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {Space, Table, Tag, Typography, Modal, DatePicker, Select, Button, Form, Input,Popconfirm} from 'antd';
 import axios from 'axios';
 
@@ -119,12 +119,12 @@ export default function TableComp({data,setData, column, team, id}) {
             )
         },
         {
-            title:"Due Date",
+            title:"Date Range",
             dataIndex:"Date",
             sorter:true,
             key:"Date",
             render: date => (
-                <Typography.Text>{new Date(date).toLocaleDateString()}</Typography.Text>
+                <Typography.Text>{new Date(date[0]).toLocaleDateString()} - {new Date(date[1]).toLocaleDateString()}</Typography.Text>
             )
         },
         {
@@ -143,8 +143,8 @@ export default function TableComp({data,setData, column, team, id}) {
                     <Button danger>Delete</Button>
                 </Popconfirm>
                 <Button onClick={() => {
+                    editForm.resetFields()
                     setEditData(record);
-                    console.log(editData)
                     setEditTask(true);
                 }}>
                     Edit
@@ -169,7 +169,7 @@ export default function TableComp({data,setData, column, team, id}) {
                     console.log(values);
                     const newData = data.map((item) => {
                         if (item.Id === values.Id) {
-                            return {...values, Date: values.Date.$d};
+                            return {...values, Title:values.Id, Date: values.Date.$d};
                         }
                         return item;
                     });
