@@ -40,7 +40,7 @@ export default function TableComp({data,setData, column, team, id}) {
             key:"Status",
             filters: column.map((status) => {
                 return {text: status, value: status}}),
-            onFilter: (value, record) => record.status.indexOf(value) === 0,
+            onFilter: (value, record) => record.Status.indexOf(value) === 0,
             render: status => (
                 <Tag color={status === "To Do" ? "blue" : status === "In Progress" ? "orange" : status === "Testing" ? "green" : "red"} key={status}>
                     {status}
