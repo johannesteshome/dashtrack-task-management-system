@@ -182,6 +182,18 @@ export const FetchCurrentUser = createAsyncThunk(
   }
 );
 
+export const RemoveMember = createAsyncThunk(
+  "data/removeMember",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${url}/project/${_id}/removeUser`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Old Project Functions
 
 export const UpdateTeacher = createAsyncThunk(

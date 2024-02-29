@@ -16,6 +16,10 @@ const CreateTeamModal = ({ open, onCreate, onCancel }) => {
 
   const createTeam = () => {
     teamForm.validateFields().then((values) => {
+      // console.log('what is happenign her');
+      // if (!values.name || !values.description) {
+      //   return notify("Please input all fields");
+      // }
       dispatch(CreateTeam({ data: values, _id: project._id })).then((res) => {
         console.log(res);
         if (res.payload.success) {

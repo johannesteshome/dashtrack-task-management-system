@@ -146,7 +146,7 @@ const login = async (req, res) => {
     if (!email || !otp) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Please provide email and otp" });
+        .json({ success: false, message: "Please provide email and otp" });
     }
 
     const user = await UserModel.findOne({ email });
@@ -154,7 +154,7 @@ const login = async (req, res) => {
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "No Such User" });
+        .json({ success: false, message: "No Such User" });
     }
 
     const otpExists = await OTPModel.findOne({ email });
@@ -162,13 +162,13 @@ const login = async (req, res) => {
     if (!otpExists) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "No such OTP sent for this account" });
+        .json({ success:false, message: "No such OTP sent for this account" });
     }
 
     if (!bcrypt.compare(otp, otpExists.otp)) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Please Verify with valid OTP" });
+        .json({ success:false, message: "Please Verify with valid OTP" });
     }
 
     const tokenUser = createTokenUser(user);
@@ -184,7 +184,7 @@ const login = async (req, res) => {
       if (!isValid) {
         return res
           .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Invalid token" });
+          .json({ success:false, message: "Invalid token" });
       }
 
       refreshToken = existingToken.refreshToken;
@@ -194,7 +194,7 @@ const login = async (req, res) => {
         refreshToken,
       });
       console.log(tokens, 'tokens');
-      res.status(StatusCodes.OK).json({ user: tokenUser, tokens });
+      res.status(StatusCodes.OK).json({ success: true, user: tokenUser, tokens });
       return;
     }
 
@@ -208,7 +208,7 @@ const login = async (req, res) => {
     await TokenModel.create(userToken);
     attachCookiesToResponse({ res, user: tokenUser, refreshToken });
 
-    res.status(StatusCodes.OK).json({ user: tokenUser });
+    res.status(StatusCodes.OK).json({ success: true, user: tokenUser });
   } catch (error) {
     // Handle the error here
     console.error(error);

@@ -107,14 +107,14 @@ const removeMembers = catchAsync(async (req, res, next) => {
 	const team = await teamServices.findById(req.params.id);
 
 	if (!team) {
-		return res.status(404).json({ message: "Team not found" });
+		return res.status(404).json({ success: false, message: "Team not found" });
 	}
 
 	// TODO we can remove this if the project id can be sent from the front end
 	const project = await projectServices.findProjectOfTeam(req.params.id);
 
 	if (!project) {
-		return res.status(404).json({ message: "Project not found" });
+		return res.status(404).json({ success: false, message: "Project not found" });
 	}
 
 	const isCreator = isProjectCreator(project.createdBy, req.user._id);
@@ -125,7 +125,7 @@ const removeMembers = catchAsync(async (req, res, next) => {
 	if ((!isCreator && !isAdmin) || (isMember && !isItSelf)) {
 		// to this operation, user must be admin or creator of the project or the team member itself
 		return res.status(StatusCodes.FORBIDDEN).json({
-			status: "fail",
+			success: false,
 			message: "Not authorized to add team to this project",
 		});
 	}
@@ -134,7 +134,7 @@ const removeMembers = catchAsync(async (req, res, next) => {
 		req.params.id,
 		req.body.userId
 	);
-	res.status(200).json({ teamAfter });
+	res.status(200).json({ success: true, teamAfter });
 });
 
 const appendChat = catchAsync(async (req, res, next) => {

@@ -24,7 +24,8 @@ const NotificationsPage = () => {
     // };
   }, []);
 
-  const notificationsData = useSelector((state) => state.data.notifications);
+  let notificationsData = useSelector((state) => state.data.notifications);
+  // notificationsData = notificationsData.reverse()
   console.log(notificationsData, "notificationsData");
 
   socket.on("notification", (notification) => {
@@ -100,14 +101,14 @@ const NotificationsPage = () => {
                   className='w-4 h-4'
                 />{" "}
               </Button>
-              {/* <Button className='bg-red-500 text-white hover:bg-white flex items-center justify-center w-fit h-fit ' 
+              <Button className='bg-red-500 text-white hover:bg-white flex items-center justify-center w-fit h-fit ' 
               onClick={() => { deleteNotification(item._id) }} >
                 {" "}
                 <Icon
                   icon='material-symbols:delete-outline'
                   className='w-4 h-4'
                 />{" "}
-              </Button> */}
+              </Button>
             </div>
           </List.Item>
         )}

@@ -400,7 +400,7 @@ const removeUser = catchAsync(async (req, res, next) => {
 
 	if (!project) {
 		return res.status(StatusCodes.NOT_FOUND).json({
-			status: "fail",
+			success: false,
 			message: "Project not found",
 		});
 	}
@@ -417,14 +417,14 @@ const removeUser = catchAsync(async (req, res, next) => {
 
 	if (isCreator && isItSelf) {
 		return res.status(StatusCodes.FORBIDDEN).json({
-			status: "fail",
+			success: false,
 			message: "As a creator, you can't remove yourself from the project",
 		});
 	}
 
 	if (!isAdmin && !isItSelf && !isCreator) {
 		return res.status(StatusCodes.FORBIDDEN).json({
-			status: "fail",
+			success: false,
 			message: "Not authorized to remove users from this project",
 		});
 	}
@@ -433,7 +433,7 @@ const removeUser = catchAsync(async (req, res, next) => {
 	const updatedProject = await projectServices.removeUser(id, req.body.userId);
 
 	res.status(StatusCodes.OK).json({
-		status: "success",
+		success: true,
 		updatedProject,
 	});
 });

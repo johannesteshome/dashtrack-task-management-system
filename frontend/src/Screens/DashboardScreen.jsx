@@ -33,36 +33,63 @@ const DashboardScreen = () => {
   );
   const socket = io("http://localhost:5000");
 
+  const { _id, email, name } = useSelector((state) => state.auth.user);
+  const currentUser = useSelector((state) => state.data.loggedInUser);
 
   if (!cookieExists) {
     dispatch(authLogout());
   }
 
-  const {_id} = useSelector((state) => state.auth.user)
-
-  const { email, name } = useSelector((state) => state.data.loggedInUser);
-  const projects = useSelector((state) => state.data.myProjects) || [];
+  
   let menuItems = [];
   // const [menuItems, setMenuItems] = useState([])
+  // let projects = null
 
   useEffect(() => {
     socket.emit("subscribeToNotifications", email);
-    dispatch(GetMyProjects());
+    console.log('use effect of dashboard screen');
+    
+    dispatch(GetMyProjects())
     dispatch(GetUnreadNotifications(_id));
-    dispatch(FetchCurrentUser(_id))
+    dispatch(GetAllNotifications(_id));
+
+    dispatch(FetchCurrentUser(_id));
 
     return () => {
       socket.disconnect();
     };
   }, []);
 
-  socket.on("notification", (notification) => {
-    console.log("recieving the notification");
-    dispatch(GetUnreadNotifications(_id));
-    dispatch(GetAllNotifications(_id));
-    notify('New notification: ' + notification.text)
+  useEffect(() => {
+    console.log("useEffect of notification");
 
-  });
+    const handleNotification = (notification) => {
+      console.log(notification, 'the notification');
+      if (notification.email === email) {
+        console.log("receiving the notification");
+        dispatch(GetUnreadNotifications(_id));
+        dispatch(GetAllNotifications(_id));
+        notify("New notification: " + notification.text);
+      }
+    };
+
+    const handleMessage = (message) => {
+      console.log(message, 'the message');
+      notify("New chat Received");
+    }
+
+    socket.on("notification", handleNotification);
+    socket.on('receive_message', handleMessage)
+
+    return () => {
+      // Clean up the socket event listener when the component unmounts
+      socket.off("notification", handleNotification);
+    };
+  }, [socket, email, dispatch, _id, notify]);
+
+
+  // const { email, name } = useSelector((state) => state.data.loggedInUser);
+  const projects = useSelector((state) => state.data.myProjects) || [];
 
   const unreadNotifications = useSelector(
     (state) => state.data.unreadNotifications
@@ -180,7 +207,7 @@ const DashboardScreen = () => {
             padding: 16,
             background: colorBgContainer,
           }}>
-          <h1 className='text-2xl'>{'Hello there, ' + name}</h1>
+          <h1 className='text-2xl'>{'Hello there, ' + currentUser?.name || ''}</h1>
           <div className='flex items-center justify-center gap-4'>
             <Link to='notifications'>
               <Badge

@@ -12,7 +12,8 @@ import {
   InviteUsers,
   CreateTeam,
   UpdateUser,
-  FetchCurrentUser
+  FetchCurrentUser,
+  RemoveMember
 } from "./dataActions";
 
 const initialState = {
@@ -99,7 +100,7 @@ const dataSlice = createSlice({
       .addCase(GetAllNotifications.fulfilled, (state, action) => {
         console.log(action, "slice");
         // state.loading = false;
-        state.notifications = action.payload.notifications;
+        state.notifications = action.payload.notifications.reverse();
       })
       .addCase(GetAllNotifications.rejected, (state) => {
         // state.loading = false;
@@ -175,13 +176,26 @@ const dataSlice = createSlice({
         // state.loading = true;
       })
       .addCase(FetchCurrentUser.fulfilled, (state, action) => {
-        console.log(action.payload, 'action payload');
+        console.log(action.payload, "action payload");
         console.log(action, "slice");
         state.loggedInUser = action.payload.user;
         // state.loading = false;
         // state.notifications = action.payload.notifications;
       })
       .addCase(FetchCurrentUser.rejected, (state) => {
+        // state.loading = false;
+      })
+      .addCase(RemoveMember.pending, (state) => {
+        // state.loading = true;
+      })
+      .addCase(RemoveMember.fulfilled, (state, action) => {
+        // console.log(action.payload, "action payload");
+        // console.log(action, "slice");
+        // state.loggedInUser = action.payload.user;
+        // state.loading = false;
+        // state.notifications = action.payload.notifications;
+      })
+      .addCase(RemoveMember.rejected, (state) => {
         // state.loading = false;
       });
   },
