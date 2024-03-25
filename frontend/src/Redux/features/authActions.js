@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 
-const url = "http://localhost:5000";
+const url = process.env.PRODUCTION_URL;
 
 export const UserLogin = createAsyncThunk(
     'user/login', async (data, { rejectWithValue }) => {
