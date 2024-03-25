@@ -11,7 +11,6 @@ const AddTeamMemberModal = ({ open, onCreate, onCancel }) => {
   const project = useSelector((state) => state.data.currentProject);
   const { _id, email } = useSelector((state) => state.auth.user);
   const socket = io(process.env.PRODUCTION_SERVER_URL);
-  process.env.PRODUCTION_SERVER_URL;
   const inviteUser = () => {
     memberForm.validateFields().then((values) => {
       if (values.email === "") {

@@ -21,7 +21,6 @@ const TasksPage = () => {
   const id = queryParameters.get("id");
   const [teamName, setTeamName] = useState("");
   const socket = io(process.env.PRODUCTION_SERVER_URL);
-  process.env.PRODUCprocess.env.PRODUCTION_SERVER_URL;
   const [form] = Form.useForm();
   const [taskForm] = Form.useForm();
 
