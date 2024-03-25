@@ -3,7 +3,6 @@ const express = require("express");
 const { connection } = require("./configs/db");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const configs = requrie('./configs/configs.js')
 
 const mongoose = require("mongoose");
 

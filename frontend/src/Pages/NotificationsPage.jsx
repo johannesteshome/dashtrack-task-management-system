@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
-import { GetAllNotifications, ReadNotification, DeleteNotification, GetUnreadNotifications } from "../Redux/features/dataActions";
+import {
+  GetAllNotifications,
+  ReadNotification,
+  DeleteNotification,
+  GetUnreadNotifications,
+} from "../Redux/features/dataActions";
 import { List, Avatar, Button } from "antd";
 import { Icon } from "@iconify/react";
 import moment from "moment/moment";
@@ -10,7 +15,7 @@ const NotificationsPage = () => {
   const userID = useSelector((state) => state.auth.user._id);
   // const [notifications, setNotifications] = useState([]);
   const dispatch = useDispatch();
-  const socket = io("http://localhost:5000");
+  const socket = io(process.env.PRODUCTION_SERVER_URL);
 
   useEffect(() => {
     // Emit the user's ID to the server to subscribe to notifications
@@ -33,19 +38,18 @@ const NotificationsPage = () => {
   });
 
   const markOneRead = (id) => {
-      console.log(id);
-    dispatch(ReadNotification(id))
-    dispatch(GetUnreadNotifications(userID))
-      dispatch(GetAllNotifications(userID))
-    };
-    
-  const deleteNotification = (id) => {
-      console.log(id);
-    dispatch(DeleteNotification(id))
-    dispatch(GetUnreadNotifications(userID))
-      dispatch(GetAllNotifications(userID))
-  }
+    console.log(id);
+    dispatch(ReadNotification(id));
+    dispatch(GetUnreadNotifications(userID));
+    dispatch(GetAllNotifications(userID));
+  };
 
+  const deleteNotification = (id) => {
+    console.log(id);
+    dispatch(DeleteNotification(id));
+    dispatch(GetUnreadNotifications(userID));
+    dispatch(GetAllNotifications(userID));
+  };
 
   return (
     <div>
@@ -71,10 +75,9 @@ const NotificationsPage = () => {
           pageSize: 10,
         }}
         renderItem={(item, index) => (
-          <List.Item
-          key={index}>
+          <List.Item key={index}>
             <List.Item.Meta
-                    className={`w-full h-full ${item.read ? "" : "font-bold italic"}`}
+              className={`w-full h-full ${item.read ? "" : "font-bold italic"}`}
               avatar={
                 <Avatar
                   className='text-black w-full h-full'
@@ -94,15 +97,20 @@ const NotificationsPage = () => {
             <div className='flex items-center justify-between gap-4'>
               <Button
                 className='bg-[#21BFD4] text-white hover:bg-white flex items-center justify-center w-fit h-fit '
-                onClick={() => { markOneRead(item._id) }}>
+                onClick={() => {
+                  markOneRead(item._id);
+                }}>
                 {" "}
                 <Icon
                   icon='mdi:tick-all'
                   className='w-4 h-4'
                 />{" "}
               </Button>
-              <Button className='bg-red-500 text-white hover:bg-white flex items-center justify-center w-fit h-fit ' 
-              onClick={() => { deleteNotification(item._id) }} >
+              <Button
+                className='bg-red-500 text-white hover:bg-white flex items-center justify-center w-fit h-fit '
+                onClick={() => {
+                  deleteNotification(item._id);
+                }}>
                 {" "}
                 <Icon
                   icon='material-symbols:delete-outline'

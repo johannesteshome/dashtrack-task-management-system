@@ -31,7 +31,7 @@ const DashboardScreen = () => {
   const isLoading = useSelector(
     (state) => state.data.loading || state.auth.loading
   );
-  const socket = io("http://localhost:5000");
+  const socket = io(process.env.PRODUCTION_SERVER_URL);
 
   const { _id, email, name } = useSelector((state) => state.auth.user);
   const currentUser = useSelector((state) => state.data.loggedInUser);
