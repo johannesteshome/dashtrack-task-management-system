@@ -25,6 +25,8 @@ const LoginScreen = () => {
   const captchaRef = useRef(null);
   const navigate = useNavigate();
   const regEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/;
+  const recaptchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY
+  // console.log(process.env, 'recaptchaSIteKey');
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -274,7 +276,7 @@ const LoginScreen = () => {
                     label='Captcha'
                     extra='We must make sure that your are a human.'>
                     <ReCAPTCHA
-                      sitekey={process.env.RECAPTCHA_SITE_KEY}
+                      sitekey={recaptchaSiteKey}
                       ref={captchaRef}
                     />
                   </Form.Item>
