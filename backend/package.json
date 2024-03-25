@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "watch": "webpack --watch",
-    "build": "webpack"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -29,5 +27,8 @@
     "nodemailer": "^6.9.0",
     "nodemon": "^2.0.22",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
   }
 }
