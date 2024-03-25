@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 
-const url = process.env.PRODUCTION_URL;
+const url = process.env.PRODUCTION_SERVER_URL;
 
 export const CreateNewProject = createAsyncThunk(
   "data/createProject",

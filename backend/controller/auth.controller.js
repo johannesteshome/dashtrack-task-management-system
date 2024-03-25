@@ -20,7 +20,7 @@ const userServices = require("../services/user.services");
 const configs = require("../configs/configs");
 const { createJWT, isTokenValid } = require("../utils/jwt");
 
-const origin = `http://localhost:3000`;
+const origin = configs.productionClientURL;
 
 const register = catchAsync(async (req, res, next) => {
   try {

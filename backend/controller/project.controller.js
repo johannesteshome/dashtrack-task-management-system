@@ -19,7 +19,7 @@ const sendEmail = require("../utils/sendEmail");
 const { createJWT, isTokenValid } = require("../utils/jwt");
 const {USER_PERMISSIONS} = require("../constants/constants");
 
-const origin = `http://localhost:3000`;
+const origin = configs.productionClientURL;
 
 const create = catchAsync(async (req, res, next) => {
 	req.body.createdBy = req.user._id;

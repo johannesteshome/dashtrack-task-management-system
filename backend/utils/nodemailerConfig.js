@@ -1,8 +1,10 @@
+const configs = require("../configs/configs");
+
 const nodemailerConfig = {
   service: "gmail",
   auth: {
-    user: "johnrobitm@gmail.com",
-    pass: "yyqg lcom uwjz psqa",
+    user: configs.emailUser,
+    pass: configs.emailPass,
   },
   // host: "smtp.ethereal.email",
   port: 587,

@@ -274,7 +274,7 @@ const LoginScreen = () => {
                     label='Captcha'
                     extra='We must make sure that your are a human.'>
                     <ReCAPTCHA
-                      sitekey='6LcWdU8pAAAAAP2zleYMT6sLGPyzhIoOrFY3l21Y'
+                      sitekey={process.env.RECAPTCHA_SITE_KEY}
                       ref={captchaRef}
                     />
                   </Form.Item>

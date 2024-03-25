@@ -3,6 +3,7 @@ const express = require("express");
 const { connection } = require("./configs/db");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const configs = requrie('./configs/configs.js')
 
 const mongoose = require("mongoose");
 
@@ -26,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(configs.cookieSecret));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: configs.productionClientURL,
     credentials: true,
     optionSuccessStatus: 200,
   })
@@ -36,7 +37,7 @@ app.use(
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: configs.productionClientURL,
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
