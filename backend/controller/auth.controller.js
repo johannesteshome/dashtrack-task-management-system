@@ -15,7 +15,7 @@ const { catchAsync } = require("../utils/asyncHandler");
 
 let generator = require("generate-password");
 const { encrypt } = require("../utils/auth");
-const { cloudinaryUploader } = require("../middlewares/fileUpload");
+// const { cloudinaryUploader } = require("../middlewares/fileUpload");
 const userServices = require("../services/user.services");
 const configs = require("../configs/configs");
 const { createJWT, isTokenValid } = require("../utils/jwt");
@@ -47,11 +47,11 @@ const register = catchAsync(async (req, res, next) => {
 
     const verificationToken = crypto.randomBytes(40).toString("hex");
 
-    if (req.file) {
-      const result = await cloudinaryUploader(req.file.path);
-      console.log(result);
-      image = result.secure_url;
-    }
+    // if (req.file) {
+    //   const result = await cloudinaryUploader(req.file.path);
+    //   console.log(result);
+    //   image = result.secure_url;
+    // }
     const user = await userServices.create({
       email,
       password,
@@ -59,8 +59,8 @@ const register = catchAsync(async (req, res, next) => {
       verificationToken,
       mobile,
       gender,
-      role,
-      image,
+      role
+      // image,
     });
 
     const info = await sendVerificationEmail({

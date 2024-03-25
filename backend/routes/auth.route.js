@@ -13,12 +13,12 @@ const {
 } = require("../controller/auth.controller");
 const { authenticateUser } = require("../middlewares/authentication");
 const { logActivity } = require("../middlewares/log");
-const { upload } = require("../middlewares/fileUpload");
+// const { upload } = require("../middlewares/fileUpload");
 
 router.post(
 	"/register",
 	logActivity("Registered New User"),
-	upload.single("image"),
+	// upload.single("image"),
 	register
 );
 
