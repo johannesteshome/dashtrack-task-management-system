@@ -1,4 +1,4 @@
-const { UserModel } = require("../models/user.model");
+const { UserModel } = require("../models/User.model");
 const { TokenModel } = require("../models/Token.model");
 const { OTPModel } = require("../models/OTP.model");
 const { StatusCodes } = require("http-status-codes");

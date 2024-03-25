@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const { UserModel } = require("./user.model");
+const { UserModel } = require("./User.model");
 const { TeamModel } = require("./team.model");
 const { USER_PERMISSIONS } = require("../constants/constants");
 

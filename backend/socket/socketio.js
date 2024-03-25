@@ -1,4 +1,4 @@
-const { UserModel } = require("../models/user.model");
+const { UserModel } = require("../models/User.model");
 const {NotificationModel} = require("../models/Notification.model");
 let usersio = [];
 
