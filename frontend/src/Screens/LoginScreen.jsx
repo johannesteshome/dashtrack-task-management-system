@@ -62,6 +62,7 @@ const LoginScreen = () => {
         email: values.email,
       };
       dispatch(UserLogin(data)).then((res) => {
+        console.log(res, 'response');
         if (res.payload.success) {
           notify("Login Successful");
           setIsLoading(false);

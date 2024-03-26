@@ -9,7 +9,7 @@ const {
   attachCookiesToResponse,
   createTokenUser,
   sendVerificationEmail,
-  sendResetPasswordEmail
+  sendResetPasswordEmail,
 } = require("../utils");
 const { catchAsync } = require("../utils/asyncHandler");
 
@@ -25,10 +25,10 @@ const origin = configs.productionClientURL;
 const register = catchAsync(async (req, res, next) => {
   try {
     const { name, email, password, mobile, gender, role, token } = req.body;
-    const image = "";
+    const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
 
     const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify?secret=6LcWdU8pAAAAAACjGfKHyYwhbXbXVITsjEdTnXNP&response=${token}`
+      `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${token}`
     );
 
     if (!response.data.success) {
@@ -47,11 +47,6 @@ const register = catchAsync(async (req, res, next) => {
 
     const verificationToken = crypto.randomBytes(40).toString("hex");
 
-    // if (req.file) {
-    //   const result = await cloudinaryUploader(req.file.path);
-    //   console.log(result);
-    //   image = result.secure_url;
-    // }
     const user = await userServices.create({
       email,
       password,
@@ -59,8 +54,7 @@ const register = catchAsync(async (req, res, next) => {
       verificationToken,
       mobile,
       gender,
-      role
-      // image,
+      role,
     });
 
     const info = await sendVerificationEmail({
@@ -81,9 +75,8 @@ const register = catchAsync(async (req, res, next) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Something went wrong",
-    })
+    });
   }
-  
 });
 
 const sendOTP = async (req, res) => {
@@ -93,16 +86,15 @@ const sendOTP = async (req, res) => {
     if (!email || !password) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Please provide email and password" });
+        .json({ message: "Please provide email and password", success: false });
     }
 
     const user = await UserModel.findOne({ email });
-    console.log(user, "user id");
 
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "No Such User" });
+        .json({ message: "No Such User", success: false });
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
@@ -110,13 +102,13 @@ const sendOTP = async (req, res) => {
     if (!isPasswordCorrect) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Password is Incorrect" });
+        .json({ message: "Password is Incorrect", success: false });
     }
 
     if (!user.isVerified) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Please verify your email first" });
+        .json({ message: "Please verify your email first", success: false });
     }
 
     console.log("here we are");
@@ -127,7 +119,6 @@ const sendOTP = async (req, res) => {
     }
 
     const newOTP = new OTPModel({ email });
-    console.log(newOTP);
 
     await newOTP.save();
     return res
@@ -162,13 +153,13 @@ const login = async (req, res) => {
     if (!otpExists) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ success:false, message: "No such OTP sent for this account" });
+        .json({ success: false, message: "No such OTP sent for this account" });
     }
 
     if (!bcrypt.compare(otp, otpExists.otp)) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ success:false, message: "Please Verify with valid OTP" });
+        .json({ success: false, message: "Please Verify with valid OTP" });
     }
 
     const tokenUser = createTokenUser(user);
@@ -176,7 +167,6 @@ const login = async (req, res) => {
     let refreshToken = "";
 
     const existingToken = await TokenModel.findOne({ user: user._id });
-    console.log(existingToken, 'existingToken');
 
     if (existingToken) {
       const { isValid } = existingToken;
@@ -184,7 +174,7 @@ const login = async (req, res) => {
       if (!isValid) {
         return res
           .status(StatusCodes.BAD_REQUEST)
-          .json({ success:false, message: "Invalid token" });
+          .json({ success: false, message: "Invalid token" });
       }
 
       refreshToken = existingToken.refreshToken;
@@ -193,12 +183,12 @@ const login = async (req, res) => {
         user: tokenUser,
         refreshToken,
       });
-      console.log(tokens, 'tokens');
-      res.status(StatusCodes.OK).json({ success: true, user: tokenUser, tokens });
+      res
+        .status(StatusCodes.OK)
+        .json({ success: true, user: tokenUser, tokens, message: 'Logged In Successfully' });
       return;
     }
 
-    console.log('creating refresh token');
 
     refreshToken = crypto.randomBytes(40).toString("hex");
     const userAgent = req.headers["user-agent"];
@@ -208,7 +198,7 @@ const login = async (req, res) => {
     await TokenModel.create(userToken);
     attachCookiesToResponse({ res, user: tokenUser, refreshToken });
 
-    res.status(StatusCodes.OK).json({ success: true, user: tokenUser });
+    res.status(StatusCodes.OK).json({ success: true, user: tokenUser, message: 'Logged In Successfully' });
   } catch (error) {
     // Handle the error here
     console.error(error);
@@ -224,7 +214,7 @@ const verificationHelper = (given, required) => {
     console.log("comparison failed");
     return res
       .status(StatusCodes.UNAUTHORIZED)
-      .json({ message: "Verification Failed" });
+      .json({ message: "Verification Failed", success: false });
   }
 };
 
@@ -239,7 +229,7 @@ const verifyEmail = async (req, res) => {
       console.log("no user found");
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Verification Failed" });
+        .json({ message: "Verification Failed",  success: false});
     }
 
     verificationHelper(verificationToken, user.verificationToken);
@@ -272,7 +262,7 @@ const logout = async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now()),
   });
-  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
+  res.status(StatusCodes.OK).json({ message: "user logged out!", success: true });
 };
 
 const changePassword = async (req, res) => {
@@ -318,7 +308,7 @@ const forgotPassword = async (req, res) => {
   if (!email) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Please provide valid email" });
+      .json({ message: "Please provide valid email", success: false });
   }
 
   const user = await UserModel.findOne({ email });
@@ -344,7 +334,7 @@ const forgotPassword = async (req, res) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ msg: "Please check your email for reset password link" });
+    .json({ message: "Please check your email for reset password link", success: true });
 };
 
 const resetPassword = async (req, res) => {
@@ -352,7 +342,7 @@ const resetPassword = async (req, res) => {
   if (!token || !email || !password) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Please provide all fields" });
+      .json({ message: "Please provide all fields", success: false });
   }
 
   const user = await UserModel.findOne({ email });
@@ -373,7 +363,12 @@ const resetPassword = async (req, res) => {
     }
   }
 
-  res.send({ message: "Reset Password successful" });
+  res
+    .status(StatusCodes.OK)
+    .json({
+      message: "Reset Password Successful",
+      success: true,
+    });
 };
 
 module.exports = {
