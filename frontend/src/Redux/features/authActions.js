@@ -23,12 +23,7 @@ export const UserLogin = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       console.log("what about here");
-      const response = await axios.post(`${url}/auth/login`, data, {
-        crossdomain: true,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
+      const response = await axios.post(`${url}/auth/login`, data);
       console.log(response, "response from redux");
       return response.data;
     } catch (error) {
