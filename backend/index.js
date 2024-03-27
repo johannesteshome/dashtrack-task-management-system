@@ -23,12 +23,15 @@ connection;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// console.log(configs.productionClientURL, "url");
+
 app.use(cookieParser(configs.cookieSecret));
 app.use(
   cors({
-    origin: configs.productionClientURL,
+    origin: "*",
     credentials: true,
-    optionSuccessStatus: 200,
+    methods: 'GET, POST',
+    optionsSuccessStatus: 200,
   })
 );
 // app.set("trust proxy", 1);
@@ -36,7 +39,7 @@ app.use(
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: configs.productionClientURL,
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
@@ -49,7 +52,7 @@ app.use("/user", userRouter);
 app.use("/project", projetRouter);
 app.use("/team", teamRouter);
 app.use("/task", taskRouter);
-app.use('/notification', notificationRouter)
+app.use("/notification", notificationRouter);
 
 // app.listen(configs.port, async () => {
 //   try {
