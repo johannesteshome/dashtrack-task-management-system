@@ -26,14 +26,14 @@ app.use(express.urlencoded({ extended: true }));
 // console.log(configs.productionClientURL, "url");
 
 app.use(cookieParser(configs.cookieSecret));
-// app.use(
-//   cors({
-//     origin: "*",
-//     // credentials: true,
-//     methods: "GET, POST",
-//     optionsSuccessStatus: 200,
-//   })
-// );
+app.use(
+  cors({
+    origin: "*",
+    // credentials: true,
+    methods: "GET, POST",
+    optionsSuccessStatus: 200,
+  })
+);
 // app.set("trust proxy", 1);
 
 const server = require("http").createServer(app);
