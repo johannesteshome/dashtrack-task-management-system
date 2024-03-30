@@ -10,18 +10,13 @@
   
 <!-- Badges -->
 <p>
-  <a href="https://github.com/johannesteshome/dashtrack-task-management-system/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors//johannesteshome/dashtrack-task-management-system" alt="contributors" />
-  </a>
-  <a href="">
-    <img src="https://img.shields.io/github/last-commit/Louis3797/awesome-readme-template" alt="last update" />
-  </a>
   <a href="https://github.com/Louis3797/awesome-readme-template/network/members">
     <img src="https://img.shields.io/github/forks/johannesteshome/dashtrack-task-management-system
     " alt="forks" />
   </a>
   <a href="https://github.com/Louis3797/awesome-readme-template/stargazers">
-    <img src="https://img.shields.io/github/stars/Louis3797/awesome-readme-template" alt="stars" />
+    <img src="https://img.shields.io/github/stars/johannesteshome/dashtrack-task-management-system
+    " alt="stars" />
   </a>
   <a href="https://github.com/johannesteshome/dashtrack-task-management-system/issues/">
     <img src="https://img.shields.io/github/issues/johannesteshome/dashtrack-task-management-system
