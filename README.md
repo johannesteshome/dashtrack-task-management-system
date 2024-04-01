@@ -10,11 +10,11 @@
   
 <!-- Badges -->
 <p>
-  <a href="https://github.com/Louis3797/awesome-readme-template/network/members">
+  <a href="https://github.com/johannesteshome/dashtrack-task-management-system/network/members">
     <img src="https://img.shields.io/github/forks/johannesteshome/dashtrack-task-management-system
     " alt="forks" />
   </a>
-  <a href="https://github.com/Louis3797/awesome-readme-template/stargazers">
+  <a href="https://github.com/johannesteshome/dashtrack-task-management-system/stargazers">
     <img src="https://img.shields.io/github/stars/johannesteshome/dashtrack-task-management-system
     " alt="stars" />
   </a>
