@@ -72,6 +72,7 @@ export const UserResetPassword = createAsyncThunk(
 export const UserVerifyEmail = createAsyncThunk(
   "user/verify-email",
   async (data, { rejectWithValue }) => {
+    console.log(data);
     try {
       console.log("what about here", data);
       const response = await axios.post(`${url}/auth/verify-email`, data);

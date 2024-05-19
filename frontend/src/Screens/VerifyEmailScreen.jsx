@@ -20,6 +20,7 @@ const VerifyEmailScreen = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
   const query = useQuery();
+  console.log(query.get("token"), query.get('email'));
   
   const verifyEmail = () => {
       dispatch(UserVerifyEmail({ email: query.get("email"), verificationToken: query.get("token") })).then((res) => {

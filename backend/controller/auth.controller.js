@@ -20,22 +20,22 @@ const userServices = require("../services/user.services");
 const configs = require("../configs/configs");
 const { createJWT, isTokenValid } = require("../utils/jwt");
 
-const origin = configs.productionClientURL;
+const origin = "http://localhost:3001";
 
 const register = catchAsync(async (req, res, next) => {
   try {
-    const { name, email, password, mobile, gender, role, token } = req.body;
+    const { name, email, password, mobile, gender, role } = req.body;
     const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
 
-    const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${token}`
-    );
+    // const response = await axios.post(
+    //   `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${token}`
+    // );
 
-    if (!response.data.success) {
-      return res
-        .status(500)
-        .send({ message: "Error Verifying Captcha.", success: false });
-    }
+    // if (!response.data.success) {
+    //   return res
+    //     .status(500)
+    //     .send({ message: "Error Verifying Captcha.", success: false });
+    // }
 
     const userExists = await userServices.findOne({ email });
     if (userExists) {
@@ -185,10 +185,14 @@ const login = async (req, res) => {
       });
       res
         .status(StatusCodes.OK)
-        .json({ success: true, user: tokenUser, tokens, message: 'Logged In Successfully' });
+        .json({
+          success: true,
+          user: tokenUser,
+          tokens,
+          message: "Logged In Successfully",
+        });
       return;
     }
-
 
     refreshToken = crypto.randomBytes(40).toString("hex");
     const userAgent = req.headers["user-agent"];
@@ -198,7 +202,13 @@ const login = async (req, res) => {
     await TokenModel.create(userToken);
     attachCookiesToResponse({ res, user: tokenUser, refreshToken });
 
-    res.status(StatusCodes.OK).json({ success: true, user: tokenUser, message: 'Logged In Successfully' });
+    res
+      .status(StatusCodes.OK)
+      .json({
+        success: true,
+        user: tokenUser,
+        message: "Logged In Successfully",
+      });
   } catch (error) {
     // Handle the error here
     console.error(error);
@@ -209,14 +219,10 @@ const login = async (req, res) => {
   }
 };
 
-const verificationHelper = (given, required) => {
-  if (given !== required) {
-    console.log("comparison failed");
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .json({ message: "Verification Failed", success: false });
-  }
-};
+// const verificationHelper =  (given, required) => {
+  
+//   }
+// };
 
 // TODO: use try catch error like this one to handle errors and show it in the frontend to the user
 const verifyEmail = async (req, res) => {
@@ -229,10 +235,15 @@ const verifyEmail = async (req, res) => {
       console.log("no user found");
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Verification Failed",  success: false});
+        .json({ message: "Verification Failed", success: false });
     }
 
-    verificationHelper(verificationToken, user.verificationToken);
+    if (verificationToken !== user.verificationToken) {
+      console.log("comparison failed");
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: "Verification Failed", success: false });
+    }
 
     const newUser = await userServices.update(user._id, {
       isVerified: true,
@@ -262,7 +273,9 @@ const logout = async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now()),
   });
-  res.status(StatusCodes.OK).json({ message: "user logged out!", success: true });
+  res
+    .status(StatusCodes.OK)
+    .json({ message: "user logged out!", success: true });
 };
 
 const changePassword = async (req, res) => {
@@ -334,7 +347,10 @@ const forgotPassword = async (req, res) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ message: "Please check your email for reset password link", success: true });
+    .json({
+      message: "Please check your email for reset password link",
+      success: true,
+    });
 };
 
 const resetPassword = async (req, res) => {
@@ -363,12 +379,10 @@ const resetPassword = async (req, res) => {
     }
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      message: "Reset Password Successful",
-      success: true,
-    });
+  res.status(StatusCodes.OK).json({
+    message: "Reset Password Successful",
+    success: true,
+  });
 };
 
 module.exports = {

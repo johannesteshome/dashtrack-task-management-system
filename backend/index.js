@@ -28,21 +28,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(configs.cookieSecret));
 app.use(
   cors({
-    origin: "*",
-    credentials: true, 
-    methods: "GET, POST",
-    optionsSuccessStatus: 200,
+    origin: "http://localhost:3001",
+    credentials: true,
   })
 );
 // app.set("trust proxy", 1);
 
 const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  },
-});
+const io = require("socket.io")(server);
 require("./socket/socketio.js")(io);
 // const io = socketIO(server);
 
