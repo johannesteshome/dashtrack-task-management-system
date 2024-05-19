@@ -11,9 +11,10 @@ module.exports = function (io) {
           socket.join(id)
         })
 
-        socket.on("send_Message",(chat)=>{
+        socket.on("send_Message",(id)=>{
           // console.log("message", chat)
-          io.emit("receiveMessage", chat)
+
+          socket.to(id).emit("receiveMessage", chat)
         })
 
         socket.on("subscribeToNotifications", (email) => {

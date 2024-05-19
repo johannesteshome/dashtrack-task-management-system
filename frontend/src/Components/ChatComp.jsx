@@ -33,7 +33,7 @@ export default function ChatComp({id, socket}) {
     const sendChat=async(chat)=>{
         try{
             const response=await axios.put(`${url}/addChat/${id}`,chat)
-            socket.emit("send_Message",chat)
+            socket.emit("send_Message",id)
             console.log(response.data)
             // inputRef.current.focus();
         }
