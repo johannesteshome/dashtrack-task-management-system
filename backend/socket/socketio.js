@@ -1,4 +1,4 @@
-const { UserModel } = require("../models/user.model");
+const { UserModel } = require("../models/User.model");
 const {NotificationModel} = require("../models/Notification.model");
 let usersio = [];
 
@@ -13,6 +13,7 @@ module.exports = function (io) {
 
         socket.on("send_Message",(id)=>{
           // console.log("message", chat)
+
           socket.to(id).emit("receiveMessage", chat)
         })
 
@@ -28,7 +29,7 @@ module.exports = function (io) {
             .then((notifications) => {
               // Emit the notifications to the client
               console.log('emitted notification to client');
-              socket.emit("notifications", notifications);
+              io.emit("notifications", notifications);
             })
             .catch((error) => {
               console.error("Error retrieving notifications:", error);
@@ -65,6 +66,10 @@ module.exports = function (io) {
               console.log("creating notification");
               notifDB = await NotificationModel.create(
                 notification)
+              if (!notifDB) {
+                console.log("Notification not created:", notifDB);
+                return;
+              }
               console.log("Notification created:", notifDB);
             } catch (error) {
               // Handle the error from the async function
@@ -72,13 +77,11 @@ module.exports = function (io) {
             }
           })();
 
-          if (!notifDB) {
-            console.log("Notification not created:", notifDB);
-            return;
-          }
+          
 
-          console.log("emitting notification");
-          socket.emit("notification", newNotification);
+          console.log("emitting notification from database", notification);
+          io.emit("notification", notification);
+          console.log("emitteed notification from database");
 
           //   const newNotification = new NotificationModel(notification);
           //   console.log(newNotification, 'newNotifications');

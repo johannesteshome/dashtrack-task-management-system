@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const { TASK_STATUS, TASK_PRIORITY } = require("../constants/constants");
-const { UserModel } = require("./user.model");
+const { UserModel } = require("./User.model");
 
 const taskSchema = new Schema(
 	{

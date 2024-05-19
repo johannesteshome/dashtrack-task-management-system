@@ -1,34 +1,38 @@
 import { Button, Form, Input, Modal, Radio } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { CreateTeam, GetMyProjects } from "../Redux/features/dataActions";
+import {
+  CreateTeam,
+  GetMyProjects,
+  GetOneProject,
+} from "../Redux/features/dataActions";
 import { ToastContainer, toast } from "react-toastify";
-
 
 const notify = (text) => toast(text);
 
-
 const CreateTeamModal = ({ open, onCreate, onCancel }) => {
   const [teamForm] = Form.useForm();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const project = useSelector((state) => state.data.currentProject);
 
   const createTeam = () => {
-    teamForm
-      .validateFields()
-      .then((values) => {
-        dispatch(CreateTeam({ data: values, _id: project._id })).then((res) => {
-          console.log(res);
-          if (res.payload.success) {
-            teamForm.resetFields();
-    dispatch(GetMyProjects());
-
-            return notify(res.payload.message);
-          } else {
-            return notify(res.payload.message);
-          }
-        });
-      })
-  }
+    teamForm.validateFields().then((values) => {
+      // console.log('what is happenign her');
+      // if (!values.name || !values.description) {
+      //   return notify("Please input all fields");
+      // }
+      dispatch(CreateTeam({ data: values, _id: project._id })).then((res) => {
+        console.log(res);
+        if (res.payload.success) {
+          teamForm.resetFields();
+          dispatch(GetMyProjects());
+          dispatch(GetOneProject(project._id));
+          return notify(res.payload.message);
+        } else {
+          return notify(res.payload.message);
+        }
+      });
+    });
+  };
 
   return (
     <Modal

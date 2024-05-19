@@ -1,6 +1,6 @@
 const { authenticateUser } = require("../middlewares/authentication");
 const { ProjectModel } = require("../models/project.model");
-const { UserModel } = require("../models/user.model");
+const { UserModel } = require("../models/User.model");
 const teamServices = require("../services/team.services");
 
 const router = require("express").Router();

@@ -25,6 +25,8 @@ const LoginScreen = () => {
   const captchaRef = useRef(null);
   const navigate = useNavigate();
   const regEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,}$/;
+  const recaptchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY
+  // console.log(process.env, 'recaptchaSIteKey');
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -60,6 +62,7 @@ const LoginScreen = () => {
         email: values.email,
       };
       dispatch(UserLogin(data)).then((res) => {
+        console.log(res, 'response');
         if (res.payload.success) {
           notify("Login Successful");
           setIsLoading(false);
@@ -75,29 +78,28 @@ const LoginScreen = () => {
 
   const onFinishRegister = (values) => {
     setIsLoading(true);
-    const token = captchaRef.current.getValue();
-    captchaRef.current.reset();
+    // const token = captchaRef.current.getValue();
+    // captchaRef.current.reset();
     // console.log("Received values of form: ", values, token);
-    if (token) {
+    
       console.log(values);
-      dispatch(UserRegister({ ...values, token, role: "user" })).then((res) => {
-        console.log(res.payload, 'res.payload');
-        if (res.payload.success) {
+      dispatch(UserRegister({ ...values, role: "user" })).then((res) => {
+        console.log(res, 'res.payload');
+        if (res.meta.requestStatus === "fulfilled") {
           setIsLoading(false);
           form.resetFields();
-          notify(res.payload.message);
+          notify('Register Successful. Email is sent to your registered email');
         } else {
           setIsLoading(false);
           console.log("here in fail");
           notify(res.payload.message);
         }
-      });
-    } else {
-      notify("Please Verify Captcha");
-      setIsLoading(false);
-    }
-  };
-
+      }).catch((error) => {
+        console.log(error);
+        notify(error.message);
+      })
+    } 
+  
   const handleStrongPassword = (rule, value, callback) => {
     if (value !== "" && !regEx.test(value)) {
       callback(
@@ -270,14 +272,6 @@ const LoginScreen = () => {
                     ]}>
                     <Input.Password required />
                   </FormItem>
-                  <Form.Item
-                    label='Captcha'
-                    extra='We must make sure that your are a human.'>
-                    <ReCAPTCHA
-                      sitekey='6LcWdU8pAAAAAP2zleYMT6sLGPyzhIoOrFY3l21Y'
-                      ref={captchaRef}
-                    />
-                  </Form.Item>
                   <Form.Item
                     label=' '
                     colon={false}>

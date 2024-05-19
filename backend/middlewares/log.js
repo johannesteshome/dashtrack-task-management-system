@@ -1,5 +1,5 @@
 const { LogModel } = require("../models/Log.model");
-const { UserModel } = require("../models/user.model");
+const { UserModel } = require("../models/User.model");
 const { isTokenValid } = require("../utils");
 const { catchAsync } = require("../utils/asyncHandler");
 

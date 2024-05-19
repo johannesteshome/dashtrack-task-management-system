@@ -1,15 +1,17 @@
+const configs = require("../configs/configs");
+
 const nodemailerConfig = {
-  // service: "gmail",
-  // auth: {
-  //   user: "johnrobitm@gmail.com",
-  //   pass: "yyqg lcom uwjz psqa",
-  // },
-  host: "smtp.ethereal.email",
-  port: 587,
+  service: "gmail",
   auth: {
-    user: 'zachary.goldner@ethereal.email',
-    pass: '7hgsvTvpMPsZHUEQq5'
-    }
+    user: configs.emailUser,
+    pass: configs.emailPass,
+  },
+  // host: "smtp.ethereal.email",
+  port: 587,
+  // auth: {
+  //   user: "golda.goldner@ethereal.email",
+  //   pass: "cdPWDzaVmQfDJxgKJw",
+  // },
 };
 
 module.exports = nodemailerConfig;

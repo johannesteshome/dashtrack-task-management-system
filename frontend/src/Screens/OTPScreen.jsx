@@ -8,6 +8,8 @@ import {
     UserSendOTP
 } from "../Redux/features/authActions"
 import { useNavigate } from "react-router-dom";
+import { FetchCurrentUser } from "../Redux/features/dataActions";
+import { useSelector } from "react-redux";
 
 
 
@@ -38,9 +40,10 @@ const OTPScreen = () => {
       setLoading(true);
       console.log(formvalue);
           dispatch(UserSendOTP(formvalue)).then((res) => {
-              if (res.meta.requestStatus === "fulfilled") {
+              if (res.payload.success) {
                   notify("Login Successful");
-                  setLoading(false);
+                setLoading(false); 
+                // dispatch(FetchCurrentUser(res.payload.user._id))
                   return navigate("/dashboard");
               }
               if (res.meta.requestStatus === "rejected") {

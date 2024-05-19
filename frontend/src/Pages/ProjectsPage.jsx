@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
 import AddTeamMemberModal from "./AddTeamMemberModal";
 import CreateTeamModal from "./CreateTeamModal";
-import { DeleteProject, GetMyProjects } from "../Redux/features/dataActions";
+import {
+  DeleteProject,
+  GetMyProjects,
+  GetOneProject,
+  RemoveMember
+} from "../Redux/features/dataActions";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +24,7 @@ const ProjectsPage = () => {
     toast(message);
   };
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (!project) {
@@ -39,7 +45,7 @@ const ProjectsPage = () => {
     {
       title: "Action",
       render: () => (
-        <a className='bg-red-500 text-white px-4 py-1 rounded '>Delete</a>
+        <a className='bg-red-500 text-white px-4 py-1 rounded hover:bg-white'>Delete</a>
       ),
     },
   ];
@@ -58,7 +64,7 @@ const ProjectsPage = () => {
     {
       title: "Action",
       render: () => (
-        <a className='bg-red-500 text-white px-4 py-1 rounded '>Remove</a>
+        <a className='bg-red-500 text-white px-4 py-1 rounded hover:bg-white  ' >Remove</a>
       ),
     },
   ];
@@ -89,6 +95,17 @@ const ProjectsPage = () => {
   const showPopConfirm = () => {
     setPopOpen(true);
   };
+
+  // const removeMember = (key) => {
+  //   dispatch(RemoveMember({_id: project._id, userId: key })).then((res) => {
+  //     if (res.payload.success) {
+  //       dispatch(GetOneProject(project._id));
+  //       return notify("Member Removed Successfuly");
+  //     } else {
+  //       return notify(res.payload.message);
+  //     }
+  //   });
+  // }
 
   const handleOk = () => {
     setConfirmLoading(true);

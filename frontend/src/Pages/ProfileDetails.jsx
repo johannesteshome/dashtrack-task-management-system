@@ -23,17 +23,9 @@ const items = [
 
 const ProfileDetails = () => {
   const [current, setCurrent] = useState("personal");
-  const { name, email, _id } = useSelector((state) => state.data.loggedInUser);
+  const { name, email, _id } = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  // console.log(role, "role");
-
-  //useEffect to fetch all departments
-  // useEffect(() => {
-  //   dispatch(FetchAllDepartments());
-  // }, []);
-
-  // const departments = useSelector((state) => state.data.departments);
-  // const user = useSelector((state) => state.data.loggedInUser);
+  
   const [initialValues, setInitialValues] = useState({
     name: name,
     email:  email,

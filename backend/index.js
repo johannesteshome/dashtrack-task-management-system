@@ -23,23 +23,19 @@ connection;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// console.log(configs.productionClientURL, "url");
+
 app.use(cookieParser(configs.cookieSecret));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3001",
     credentials: true,
-    optionSuccessStatus: 200,
   })
 );
 // app.set("trust proxy", 1);
 
 const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  },
-});
+const io = require("socket.io")(server);
 require("./socket/socketio.js")(io);
 // const io = socketIO(server);
 
@@ -49,7 +45,7 @@ app.use("/user", userRouter);
 app.use("/project", projetRouter);
 app.use("/team", teamRouter);
 app.use("/task", taskRouter);
-app.use('/notification', notificationRouter)
+app.use("/notification", notificationRouter);
 
 // app.listen(configs.port, async () => {
 //   try {

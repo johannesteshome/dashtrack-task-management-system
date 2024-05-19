@@ -5,6 +5,7 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET,
   cookieSecret: process.env.COOKIE_SECRET,
   port: process.env.PORT,
+  productionClientURL: process.env.PRODUCTION_CLIENT_URL,
   cloudinaryURL: process.env.CLOUDINARY_URL,
   tokenExpiresIn: process.env.TOKEN_EXPIRES_IN,
   nodeEnv: process.env.NODE_ENV,

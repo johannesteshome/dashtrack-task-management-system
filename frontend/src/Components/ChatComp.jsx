@@ -26,7 +26,7 @@ export default function ChatComp({id, socket}) {
         socket.on("receiveMessage",(chat)=>{
             fetchData()
             // console.log("Message notified")
-            inputRef.current.focus()
+            // inputRef.current.focus()
         })
     },[socket])
 
@@ -35,7 +35,8 @@ export default function ChatComp({id, socket}) {
             const response=await axios.put(`${url}/addChat/${id}`,chat)
             socket.emit("send_Message",id)
             console.log(response.data)
-            inputRef.current.focus();}
+            // inputRef.current.focus();
+        }
         catch(error){
             console.log(error)
         }

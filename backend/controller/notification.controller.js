@@ -1,7 +1,7 @@
 const { NotificationModel } = require("../models/Notification.model");
 // const { UserModel } = require("../models/User.model");
 const { StatusCodes } = require("http-status-codes");
-const { UserModel } = require("../models/user.model");
+const { UserModel } = require("../models/User.model");
 
 // @desc Get all notifications
 // @Route GET /notes
